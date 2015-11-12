@@ -1,0 +1,804 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DomainModel xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" dslVersion="2.0.0.0" name="ClubManagement" namespace="TrackrModels" showPropertiesCompartment="true" xmlns="http://www.telerik.com/ORM">
+  <orm:orm name="ClubManagement" backend="mssql" default-schema="dbo" xmlns:orm="http://tempuri.org/ORM">
+    <orm:namespace name="TrackrModels" default="true">
+      <orm:class name="WebUserInfo" uniqueId="0664256c-b54b-43fd-945c-6d2959ecdc6f">
+        <orm:table name="WebUserInfo" />
+        <orm:identity>
+          <orm:single-field field-name="_userID" />
+        </orm:identity>
+        <orm:concurrency strategy="changed" />
+        <orm:field name="_userID" property="UserID" behavior="readwrite" uniqueId="3e4009ad-a0de-4b72-be66-101588062a40" type="System.Int32">
+          <orm:column name="UserID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_fName" property="FName" behavior="readwrite" uniqueId="fce7fb20-3f09-49ea-b14c-4aad0850e093" type="System.String">
+          <orm:column name="FName" sql-type="nvarchar" nullable="false" length="30" scale="0" ado-type="UnicodeStringVariableLength" />
+        </orm:field>
+        <orm:field name="_mInitial" property="MInitial" behavior="readwrite" uniqueId="a912378c-f851-44fa-b5b2-8bed1cd75551" type="System.Nullable`1[[System.Char, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
+          <orm:column name="MInitial" sql-type="nvarchar" nullable="true" length="1" scale="0" ado-type="UnicodeStringVariableLength" />
+        </orm:field>
+        <orm:field name="_lName" property="LName" behavior="readwrite" uniqueId="31e70c1f-da03-426d-828b-76f4c92822b7" type="System.String">
+          <orm:column name="LName" sql-type="nvarchar" nullable="false" length="30" scale="0" ado-type="UnicodeStringVariableLength" />
+        </orm:field>
+        <orm:field name="_transactions" property="Transactions" behavior="readwrite" uniqueId="46a32d7b-7bdc-4e6a-b4cb-7d45d3182162" type="TrackrModels.Transaction">
+          <orm:collection element-class="TrackrModels.Transaction" inverse-field="_webUserInfo" order-by="" uniqueId="fbb16b7e-a286-49e2-9748-7bb628179a62" />
+        </orm:field>
+        <orm:field name="_transactions1" property="Transactions1" behavior="readwrite" uniqueId="b0a73827-7e08-4440-8e6d-ae6740e27842" type="TrackrModels.Transaction">
+          <orm:collection element-class="TrackrModels.Transaction" inverse-field="_webUserInfo1" order-by="" uniqueId="a7abd31b-08df-4819-8b77-3c286dde6fa8" />
+        </orm:field>
+      </orm:class>
+      <orm:class name="TransactionType" uniqueId="d60e9c75-9e4e-4a9e-a1f6-46e74117d59c">
+        <orm:table name="TransactionTypes" />
+        <orm:identity>
+          <orm:key-generator name="autoinc">
+            <orm:key-generator-member property-name="TransactionTypeID" />
+          </orm:key-generator>
+          <orm:single-field field-name="_transactionTypeID" />
+        </orm:identity>
+        <orm:concurrency strategy="changed" />
+        <orm:field name="_transactionTypeID" property="TransactionTypeID" behavior="readwrite" uniqueId="ffb6efd0-1b97-4a3c-96a6-551f47bf79c7" type="System.Int32">
+          <orm:column name="TransactionTypeID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_name" property="Name" behavior="readwrite" uniqueId="34f8ff9a-5ef8-42ab-af2d-19fd9b6c145f" type="System.String">
+          <orm:column name="Name" sql-type="nvarchar" nullable="false" length="100" scale="0" ado-type="UnicodeStringVariableLength" />
+        </orm:field>
+        <orm:field name="_description" property="Description" behavior="readwrite" uniqueId="99b4f274-c849-48ba-b216-68f975250acb" type="System.String">
+          <orm:column name="Description" sql-type="nvarchar" nullable="true" length="200" scale="0" ado-type="UnicodeStringVariableLength" />
+        </orm:field>
+        <orm:field name="_activeStartDt" property="ActiveStartDt" behavior="readwrite" uniqueId="86fb434d-309b-4653-8a7a-c2fc95e25c0d" type="System.DateTime">
+          <orm:column name="ActiveStartDt" sql-type="datetime" nullable="false" length="0" scale="0" ado-type="DateTime" />
+        </orm:field>
+        <orm:field name="_activeEndDt" property="ActiveEndDt" behavior="readwrite" uniqueId="d5c9288e-0fc5-418f-813c-8ddec904b1d4" type="System.DateTime">
+          <orm:column name="ActiveEndDt" sql-type="datetime" nullable="false" length="0" scale="0" ado-type="DateTime" />
+        </orm:field>
+        <orm:field name="_amount" property="Amount" behavior="readwrite" uniqueId="d1482354-8fe8-48f2-9f07-71fb7e0571ab" type="System.Decimal">
+          <orm:column name="Amount" sql-type="decimal" nullable="false" length="9" scale="2" ado-type="Decimal" />
+        </orm:field>
+        <orm:field name="_transactions" property="Transactions" behavior="readwrite" uniqueId="72e8895a-a103-43c2-a92f-b6222c373f21" type="TrackrModels.Transaction">
+          <orm:collection element-class="TrackrModels.Transaction" inverse-field="_transactionType" order-by="" uniqueId="67f76882-2b28-4c8d-b3cc-ae5069c7144c" />
+        </orm:field>
+      </orm:class>
+      <orm:class name="Transaction" uniqueId="c532279e-283d-4418-9f22-16bf8ffe4e04">
+        <orm:table name="Transactions" />
+        <orm:identity>
+          <orm:key-generator name="autoinc">
+            <orm:key-generator-member property-name="TransactionID" />
+          </orm:key-generator>
+          <orm:single-field field-name="_transactionID" />
+        </orm:identity>
+        <orm:concurrency strategy="changed" />
+        <orm:field name="_transactionID" property="TransactionID" behavior="readwrite" uniqueId="527d161e-6bb4-4792-982a-6ead2665ce9c" type="System.Int64">
+          <orm:column name="TransactionID" sql-type="bigint" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int64" />
+        </orm:field>
+        <orm:field name="_amount" property="Amount" behavior="readwrite" uniqueId="bdb570f2-4a96-4dd8-bc98-7aaf0b227835" type="System.Decimal">
+          <orm:column name="Amount" sql-type="decimal" nullable="false" length="9" scale="2" ado-type="Decimal" />
+        </orm:field>
+        <orm:field name="_transactionTypeID" property="TransactionTypeID" behavior="readwrite" uniqueId="a8855a65-4314-4311-a52d-61f2a43b5f66" type="System.Int32">
+          <orm:column name="TransactionTypeID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_publicNotes" property="PublicNotes" behavior="readwrite" uniqueId="d33f5caf-dd93-4715-a14e-e23d267e5fa0" type="System.String">
+          <orm:column name="PublicNotes" sql-type="nvarchar" nullable="false" length="100" scale="0" ado-type="UnicodeStringVariableLength" />
+        </orm:field>
+        <orm:field name="_privateNotes" property="PrivateNotes" behavior="readwrite" uniqueId="d63555cc-6289-4525-997a-1f552fcec27a" type="System.String">
+          <orm:column name="PrivateNotes" sql-type="nvarchar" nullable="false" length="250" scale="0" ado-type="UnicodeStringVariableLength" />
+        </orm:field>
+        <orm:field name="_date" property="Date" behavior="readwrite" uniqueId="87420894-598b-41b1-9f22-7871d0f67a2d" type="System.DateTime">
+          <orm:column name="Date" sql-type="date" nullable="false" length="0" scale="0" ado-type="Date" />
+        </orm:field>
+        <orm:field name="_playerID" property="PlayerID" behavior="readwrite" uniqueId="aff76e9b-b3cb-49a7-abab-86032cf02b3d" type="System.Int32">
+          <orm:column name="PlayerID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_active" property="Active" behavior="readwrite" uniqueId="31873aa2-39c0-4e0f-8796-4a76b87edf4b" type="System.Boolean">
+          <orm:column name="Active" sql-type="bit" nullable="false" length="0" scale="0" has-default-value="true" ado-type="Bit" />
+        </orm:field>
+        <orm:field name="_createDt" property="CreateDt" behavior="readwrite" uniqueId="ef4ee254-a6ed-4aac-9141-a53bea8584ab" type="System.DateTime">
+          <orm:column name="CreateDt" sql-type="datetime" nullable="false" length="0" scale="0" ado-type="DateTime" />
+        </orm:field>
+        <orm:field name="_createUserID" property="CreateUserID" behavior="readwrite" uniqueId="f80d4f99-0413-40f3-a0fc-68235291b33c" type="System.Int32">
+          <orm:column name="CreateUserID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_modifyDt" property="ModifyDt" behavior="readwrite" uniqueId="6aa9ae59-90e8-4eb1-b900-b810e84b78ad" type="System.Nullable`1[[System.DateTime, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
+          <orm:column name="ModifyDt" sql-type="datetime" nullable="true" length="0" scale="0" ado-type="DateTime" />
+        </orm:field>
+        <orm:field name="_modifyUserID" property="ModifyUserID" behavior="readwrite" uniqueId="b52efe38-8016-478c-8639-8bcae416c535" type="System.Nullable`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
+          <orm:column name="ModifyUserID" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_player" property="Player" behavior="readwrite" uniqueId="5a5ca688-60e6-4034-a571-7eaf68a123f2" type="TrackrModels.Player">
+          <orm:reference uniqueId="17d53c36-6bbf-4829-b016-49606933865a" association-name="TransactionHasPlayer">
+            <orm:sharedfield name="_playerID" target-class="TrackrModels.Player" target-field="_playerID" />
+            <orm:constraint name="FK_Transactions_Players" delete-action="dbdefaultrule" destination-table="Players" />
+          </orm:reference>
+        </orm:field>
+        <orm:field name="_transactionType" property="TransactionType" behavior="readwrite" uniqueId="5b804d4b-c291-4643-82a7-6567ff990ebd" type="TrackrModels.TransactionType">
+          <orm:reference uniqueId="67f76882-2b28-4c8d-b3cc-ae5069c7144c" association-name="TransactionHasTransactionType">
+            <orm:sharedfield name="_transactionTypeID" target-class="TrackrModels.TransactionType" target-field="_transactionTypeID" />
+            <orm:constraint name="FK_Transactions_TransactionTypes" delete-action="dbdefaultrule" destination-table="TransactionTypes" />
+          </orm:reference>
+        </orm:field>
+        <orm:field name="_webUserInfo" property="WebUserInfo" behavior="readwrite" uniqueId="83f4d5d7-f4f2-4c47-abaa-522c7775c515" type="TrackrModels.WebUserInfo">
+          <orm:reference uniqueId="fbb16b7e-a286-49e2-9748-7bb628179a62" association-name="TransactionHasWebUserInfo">
+            <orm:sharedfield name="_createUserID" target-class="TrackrModels.WebUserInfo" target-field="_userID" />
+            <orm:constraint name="FK_Transactions_WebUserData" delete-action="dbdefaultrule" destination-table="WebUserInfo" />
+          </orm:reference>
+        </orm:field>
+        <orm:field name="_webUserInfo1" property="WebUserInfo1" behavior="readwrite" uniqueId="0b2d0d24-f8fe-44a9-ac97-dda1e342da1c" type="TrackrModels.WebUserInfo">
+          <orm:reference uniqueId="a7abd31b-08df-4819-8b77-3c286dde6fa8" association-name="TransactionHasWebUserInfo1">
+            <orm:sharedfield name="_modifyUserID" target-class="TrackrModels.WebUserInfo" target-field="_userID" />
+            <orm:constraint name="FK_Transactions_WebUserData1" delete-action="dbdefaultrule" destination-table="WebUserInfo" />
+          </orm:reference>
+        </orm:field>
+      </orm:class>
+      <orm:class name="Team" uniqueId="d2786033-1068-4d65-995a-8e3cad1d128e">
+        <orm:table name="Teams" />
+        <orm:identity>
+          <orm:key-generator name="autoinc">
+            <orm:key-generator-member property-name="TeamID" />
+          </orm:key-generator>
+          <orm:single-field field-name="_teamID" />
+        </orm:identity>
+        <orm:concurrency strategy="changed" />
+        <orm:field name="_teamID" property="TeamID" behavior="readwrite" uniqueId="bf16121d-df76-4013-acfa-68489f615d68" type="System.Int32">
+          <orm:column name="TeamID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_teamName" property="TeamName" behavior="readwrite" uniqueId="3886bb91-446d-4837-ae96-40b4d5896f54" type="System.String">
+          <orm:column name="TeamName" sql-type="varchar" nullable="false" length="100" scale="0" ado-type="StringVariableLength" />
+        </orm:field>
+        <orm:field name="_programID" property="ProgramID" behavior="readwrite" uniqueId="a2ce9f09-d689-4b22-b987-50378f22a993" type="System.Int32">
+          <orm:column name="ProgramID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_startYear" property="StartYear" behavior="readwrite" uniqueId="c1ef74e6-e73e-459c-b98b-57fb8f78e01c" type="System.DateTime">
+          <orm:column name="StartYear" sql-type="datetime" nullable="false" length="0" scale="0" ado-type="DateTime" />
+        </orm:field>
+        <orm:field name="_endYear" property="EndYear" behavior="readwrite" uniqueId="15165c17-826c-468b-831e-e702406730c9" type="System.DateTime">
+          <orm:column name="EndYear" sql-type="datetime" nullable="false" length="0" scale="0" ado-type="DateTime" />
+        </orm:field>
+        <orm:field name="_maxRosterSize" property="MaxRosterSize" behavior="readwrite" uniqueId="ae20f911-03f2-46af-9551-615f6b564171" type="System.Int16">
+          <orm:column name="MaxRosterSize" sql-type="smallint" nullable="false" length="0" scale="0" ado-type="Int16" />
+        </orm:field>
+        <orm:field name="_minRosterSize" property="MinRosterSize" behavior="readwrite" uniqueId="12bb65fb-198b-4583-a770-b3648cf595fb" type="System.Int16">
+          <orm:column name="MinRosterSize" sql-type="smallint" nullable="false" length="0" scale="0" ado-type="Int16" />
+        </orm:field>
+        <orm:field name="_program" property="Program" behavior="readwrite" uniqueId="332d180a-e615-481f-b524-3bcb0d500dce" type="TrackrModels.Program">
+          <orm:reference uniqueId="802bddbb-d5ff-4681-b6b9-6c5000687ea3" association-name="TeamHasProgram">
+            <orm:sharedfield name="_programID" target-class="TrackrModels.Program" target-field="_programID" />
+            <orm:constraint name="FK_Teams_Teams" delete-action="dbdefaultrule" destination-table="Programs" />
+          </orm:reference>
+        </orm:field>
+        <orm:field name="_teamPlayers" property="TeamPlayers" behavior="readwrite" uniqueId="9010a595-f702-4a4b-b7e9-61ab4ae42577" type="TrackrModels.TeamPlayer">
+          <orm:collection element-class="TrackrModels.TeamPlayer" inverse-field="_team" order-by="" uniqueId="1461b9d0-65bc-467d-9222-6db6886f1d17" />
+        </orm:field>
+      </orm:class>
+      <orm:class name="Program" uniqueId="bc797f95-9d5f-4138-98ff-2a39f4bd70cd">
+        <orm:table name="Programs" />
+        <orm:identity>
+          <orm:key-generator name="autoinc">
+            <orm:key-generator-member property-name="ProgramID" />
+          </orm:key-generator>
+          <orm:single-field field-name="_programID" />
+        </orm:identity>
+        <orm:concurrency strategy="changed" />
+        <orm:field name="_programID" property="ProgramID" behavior="readwrite" uniqueId="495452e3-38bd-4314-aadd-d3bc5f0b0331" type="System.Int32">
+          <orm:column name="ProgramID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_programName" property="ProgramName" behavior="readwrite" uniqueId="544e73c1-e8ed-4cc1-a511-d16f6bab3fe1" type="System.String">
+          <orm:column name="ProgramName" sql-type="varchar" nullable="false" length="100" scale="0" ado-type="StringVariableLength" />
+        </orm:field>
+        <orm:field name="_clubID" property="ClubID" behavior="readwrite" uniqueId="87d1f808-c653-4a98-8d87-d48ef322ec49" type="System.Int32">
+          <orm:column name="ClubID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_club" property="Club" behavior="readwrite" uniqueId="532b00fe-e2e1-4eeb-ba18-cdd3ecf24e5c" type="TrackrModels.Club">
+          <orm:reference uniqueId="d5abb3e9-2dd5-4453-a355-45918f1fef23" association-name="ProgramHasClub">
+            <orm:sharedfield name="_clubID" target-class="TrackrModels.Club" target-field="_clubID" />
+            <orm:constraint name="FK_Programs_Clubs" delete-action="dbdefaultrule" destination-table="Clubs" />
+          </orm:reference>
+        </orm:field>
+        <orm:field name="_teams" property="Teams" behavior="readwrite" uniqueId="8b84d734-0e5a-44a8-a8da-860dd389ac79" type="TrackrModels.Team">
+          <orm:collection element-class="TrackrModels.Team" inverse-field="_program" order-by="" uniqueId="802bddbb-d5ff-4681-b6b9-6c5000687ea3" />
+        </orm:field>
+      </orm:class>
+      <orm:class name="Player" uniqueId="b534a3e6-cbd7-41ea-93bf-7964a28fbe02">
+        <orm:table name="Players" />
+        <orm:identity>
+          <orm:key-generator name="autoinc">
+            <orm:key-generator-member property-name="PlayerID" />
+          </orm:key-generator>
+          <orm:single-field field-name="_playerID" />
+        </orm:identity>
+        <orm:concurrency strategy="changed" />
+        <orm:field name="_playerID" property="PlayerID" behavior="readwrite" uniqueId="0c92f7d0-6c3e-4faf-bd23-d4bf8f780164" type="System.Int32">
+          <orm:column name="PlayerID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_dateOfBirth" property="DateOfBirth" behavior="readwrite" uniqueId="24e563a3-b68b-4fb5-a04a-8655fabf5131" type="System.DateTime">
+          <orm:column name="DateOfBirth" sql-type="date" nullable="false" length="0" scale="0" ado-type="Date" />
+        </orm:field>
+        <orm:field name="_mInitial" property="MInitial" behavior="readwrite" uniqueId="9043a1f2-04c1-4aea-9d66-b17eb64d0e77" type="System.Nullable`1[[System.Char, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
+          <orm:column name="MInitial" sql-type="nvarchar" nullable="true" length="1" scale="0" ado-type="UnicodeStringVariableLength" />
+        </orm:field>
+        <orm:field name="_lName" property="LName" behavior="readwrite" uniqueId="c35265b1-d27e-49c6-b2c9-6737463bb19a" type="System.String">
+          <orm:column name="LName" sql-type="nvarchar" nullable="false" length="30" scale="0" ado-type="UnicodeStringVariableLength" />
+        </orm:field>
+        <orm:field name="_fName" property="FName" behavior="readwrite" uniqueId="98e98d35-e7f9-42fb-a27c-7d138f7697a3" type="System.String">
+          <orm:column name="FName" sql-type="nvarchar" nullable="false" length="30" scale="0" ado-type="UnicodeStringVariableLength" />
+        </orm:field>
+        <orm:field name="_transactions" property="Transactions" behavior="readwrite" uniqueId="122a83c1-04f6-4f33-b753-3b5e1abc181b" type="TrackrModels.Transaction">
+          <orm:collection element-class="TrackrModels.Transaction" inverse-field="_player" order-by="" uniqueId="17d53c36-6bbf-4829-b016-49606933865a" />
+        </orm:field>
+        <orm:field name="_playerPasses" property="PlayerPasses" behavior="readwrite" uniqueId="876e7733-4f83-4189-8a0a-a626a6760cb1" type="TrackrModels.PlayerPass">
+          <orm:collection element-class="TrackrModels.PlayerPass" inverse-field="_player" order-by="" uniqueId="d000aeef-9556-4d02-9139-260fb79cf2af" />
+        </orm:field>
+        <orm:field name="_teamPlayers" property="TeamPlayers" behavior="readwrite" uniqueId="fb38666f-2abe-45d2-8175-0a6440419b23" type="TrackrModels.TeamPlayer">
+          <orm:collection element-class="TrackrModels.TeamPlayer" inverse-field="_player" order-by="" uniqueId="ddd56e36-4049-459b-8fc6-29db7757842c" />
+        </orm:field>
+      </orm:class>
+      <orm:class name="Club" uniqueId="bbc75fb2-a0dc-4d4c-9c46-3acd3a92fce7">
+        <orm:table name="Clubs" />
+        <orm:identity>
+          <orm:key-generator name="autoinc">
+            <orm:key-generator-member property-name="ClubID" />
+          </orm:key-generator>
+          <orm:single-field field-name="_clubID" />
+        </orm:identity>
+        <orm:concurrency strategy="changed" />
+        <orm:field name="_clubID" property="ClubID" behavior="readwrite" uniqueId="e9e22a5e-2c27-4a85-be17-f62778511ec7" type="System.Int32">
+          <orm:column name="ClubID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_clubName" property="ClubName" behavior="readwrite" uniqueId="98238d10-dd2b-4e50-8ae0-b04b88029cfd" type="System.String">
+          <orm:column name="ClubName" sql-type="varchar" nullable="false" length="100" scale="0" ado-type="StringVariableLength" />
+        </orm:field>
+        <orm:field name="_programs" property="Programs" behavior="readwrite" uniqueId="822dee46-d5f1-463d-a1c9-9b8c29dd18b7" type="TrackrModels.Program">
+          <orm:collection element-class="TrackrModels.Program" inverse-field="_club" order-by="" uniqueId="d5abb3e9-2dd5-4453-a355-45918f1fef23" />
+        </orm:field>
+      </orm:class>
+      <orm:class name="PlayerPass" uniqueId="cc46e759-acc2-42af-82bd-c75dee018045">
+        <orm:table name="PlayerPasses" />
+        <orm:identity>
+          <orm:key-generator name="autoinc">
+            <orm:key-generator-member property-name="PlayerPassID" />
+          </orm:key-generator>
+          <orm:single-field field-name="_playerPassID" />
+        </orm:identity>
+        <orm:concurrency strategy="changed" />
+        <orm:field name="_playerPassID" property="PlayerPassID" behavior="readwrite" uniqueId="5f28d80b-6e3f-42f1-bd7a-ecc8e3074e07" type="System.Int32">
+          <orm:column name="PlayerPassID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_photo" property="Photo" behavior="readwrite" uniqueId="c415f7f8-f558-495b-a9e4-b3538de8a415" type="System.Byte[]">
+          <orm:column name="Photo" sql-type="varbinary(max)" nullable="true" length="0" scale="0" ado-type="LongVarBinary" />
+        </orm:field>
+        <orm:field name="_passNumber" property="PassNumber" behavior="readwrite" uniqueId="2b38b592-ff02-44ae-8aca-bb7a247fef7d" type="System.String">
+          <orm:column name="PassNumber" sql-type="nvarchar" nullable="true" length="50" scale="0" ado-type="UnicodeStringVariableLength" />
+        </orm:field>
+        <orm:field name="_expires" property="Expires" behavior="readwrite" uniqueId="3b7ba48a-ff3f-42e4-a7a3-475bed30f26e" type="System.DateTime">
+          <orm:column name="Expires" sql-type="date" nullable="false" length="0" scale="0" ado-type="Date" />
+        </orm:field>
+        <orm:field name="_playerID" property="PlayerID" behavior="readwrite" uniqueId="bfecd7ce-8e7a-446f-8e29-27b36a79c9a5" type="System.Int32">
+          <orm:column name="PlayerID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_player" property="Player" behavior="readwrite" uniqueId="5fdc6d8e-df2a-4e9d-be20-653e0c6062ae" type="TrackrModels.Player">
+          <orm:reference uniqueId="d000aeef-9556-4d02-9139-260fb79cf2af" association-name="PlayerPassHasPlayer">
+            <orm:sharedfield name="_playerID" target-class="TrackrModels.Player" target-field="_playerID" />
+            <orm:constraint name="FK_PlayerPassID_Players" delete-action="dbdefaultrule" destination-table="Players" />
+          </orm:reference>
+        </orm:field>
+        <orm:field name="_teamPlayers" property="TeamPlayers" behavior="readwrite" uniqueId="78b6c29b-3d7a-456b-a1e4-89c13a986c58" type="TrackrModels.TeamPlayer" dependent="true">
+          <orm:collection element-class="TrackrModels.TeamPlayer" inverse-field="_playerPass" managed="true" order-by="" uniqueId="d817665e-6fc0-421b-9d2e-72ffa1db1937" />
+        </orm:field>
+        <orm:index name="UniquePlayerPerYear" unique="true">
+          <orm:columnMapping>
+            <orm:column name="PlayerID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+          </orm:columnMapping>
+          <orm:columnMapping>
+            <orm:column name="Expires" sql-type="date" nullable="false" length="0" scale="0" ado-type="Date" />
+          </orm:columnMapping>
+        </orm:index>
+      </orm:class>
+      <orm:class name="TeamPlayer" uniqueId="f459290d-2db6-4ca4-9f7d-d582a9160ad8">
+        <orm:table name="TeamPlayers" />
+        <orm:identity>
+          <orm:key-generator name="autoinc">
+            <orm:key-generator-member property-name="TeamPlayerID" />
+          </orm:key-generator>
+          <orm:single-field field-name="_teamPlayerID" />
+        </orm:identity>
+        <orm:concurrency strategy="changed" />
+        <orm:field name="_teamPlayerID" property="TeamPlayerID" behavior="readwrite" uniqueId="0ba9931e-b47d-4906-83c0-c1c91174b6fe" type="System.Int32">
+          <orm:column name="TeamPlayerID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_teamID" property="TeamID" behavior="readwrite" uniqueId="67336a62-2a71-4e6a-a18d-70077ad711f7" type="System.Int32">
+          <orm:column name="TeamID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_playerPassID" property="PlayerPassID" behavior="readwrite" uniqueId="f4d4933e-086f-4a5f-a6ed-6e5e10cbd8b0" type="System.Nullable`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
+          <orm:column name="PlayerPassID" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_isSecondary" property="IsSecondary" behavior="readwrite" uniqueId="b13547d2-0131-4dd4-b696-fa0549b43792" type="System.Boolean">
+          <orm:column name="IsSecondary" sql-type="bit" nullable="false" length="0" scale="0" has-default-value="true" ado-type="Bit" />
+        </orm:field>
+        <orm:field name="_playerID" property="PlayerID" behavior="readwrite" uniqueId="20d3878d-8306-4bff-9612-ebafa8900b1d" type="System.Nullable`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
+          <orm:column name="PlayerID" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_team" property="Team" behavior="readwrite" uniqueId="ee6d90d0-0553-43a8-8e33-4fab5c6e741f" type="TrackrModels.Team">
+          <orm:reference uniqueId="1461b9d0-65bc-467d-9222-6db6886f1d17" association-name="TeamPlayerHasTeam">
+            <orm:sharedfield name="_teamID" target-class="TrackrModels.Team" target-field="_teamID" />
+            <orm:constraint name="FK_TeamPlayers_Teams" delete-action="dbdefaultrule" destination-table="Teams" />
+          </orm:reference>
+        </orm:field>
+        <orm:field name="_playerPass" property="PlayerPass" behavior="readwrite" uniqueId="a87a4db3-77d9-4288-b329-925cf38a084f" type="TrackrModels.PlayerPass">
+          <orm:reference uniqueId="d817665e-6fc0-421b-9d2e-72ffa1db1937" association-name="TeamPlayerHasPlayerPass">
+            <orm:sharedfield name="_playerPassID" target-class="TrackrModels.PlayerPass" target-field="_playerPassID" />
+            <orm:constraint name="FK_TeamPlayers_PlayerPasses" delete-action="dbdefaultrule" destination-table="PlayerPasses" />
+          </orm:reference>
+        </orm:field>
+        <orm:field name="_player" property="Player" behavior="readwrite" uniqueId="a991e5d3-62a2-4c4b-aee6-34b0596c40ad" type="TrackrModels.Player">
+          <orm:reference uniqueId="ddd56e36-4049-459b-8fc6-29db7757842c" association-name="TeamPlayerHasPlayer">
+            <orm:sharedfield name="_playerID" target-class="TrackrModels.Player" target-field="_playerID" />
+            <orm:constraint name="FK_TeamPlayers_Players" delete-action="dbdefaultrule" destination-table="Players" />
+          </orm:reference>
+        </orm:field>
+        <orm:index name="PlayerOnSameTeamOnlyOnce" unique="true">
+          <orm:columnMapping>
+            <orm:column name="PlayerPassID" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+          </orm:columnMapping>
+          <orm:columnMapping>
+            <orm:column name="TeamID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+          </orm:columnMapping>
+        </orm:index>
+      </orm:class>
+    </orm:namespace>
+    <orm:schema schema="">
+      <orm:table name="WebUserInfo">
+        <orm:column name="UserID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" ado-type="Int32" />
+        <orm:column name="FName" sql-type="nvarchar" nullable="false" length="30" scale="0" ado-type="UnicodeStringVariableLength" />
+        <orm:column name="MInitial" sql-type="nvarchar" nullable="true" length="1" scale="0" ado-type="UnicodeStringVariableLength" />
+        <orm:column name="LName" sql-type="nvarchar" nullable="false" length="30" scale="0" ado-type="UnicodeStringVariableLength" />
+      </orm:table>
+      <orm:table name="TransactionTypes">
+        <orm:column name="TransactionTypeID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        <orm:column name="Name" sql-type="nvarchar" nullable="false" length="100" scale="0" ado-type="UnicodeStringVariableLength" />
+        <orm:column name="Description" sql-type="nvarchar" nullable="true" length="200" scale="0" ado-type="UnicodeStringVariableLength" />
+        <orm:column name="ActiveStartDt" sql-type="datetime" nullable="false" length="0" scale="0" ado-type="DateTime" />
+        <orm:column name="ActiveEndDt" sql-type="datetime" nullable="false" length="0" scale="0" ado-type="DateTime" />
+        <orm:column name="Amount" sql-type="decimal" nullable="false" length="9" scale="2" ado-type="Decimal" />
+      </orm:table>
+      <orm:table name="Transactions">
+        <orm:column name="TransactionID" sql-type="bigint" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int64" />
+        <orm:column name="Amount" sql-type="decimal" nullable="false" length="9" scale="2" ado-type="Decimal" />
+        <orm:column name="TransactionTypeID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        <orm:column name="PublicNotes" sql-type="nvarchar" nullable="false" length="100" scale="0" ado-type="UnicodeStringVariableLength" />
+        <orm:column name="PrivateNotes" sql-type="nvarchar" nullable="false" length="250" scale="0" ado-type="UnicodeStringVariableLength" />
+        <orm:column name="Date" sql-type="date" nullable="false" length="0" scale="0" ado-type="Date" />
+        <orm:column name="PlayerID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        <orm:column name="Active" sql-type="bit" nullable="false" length="0" scale="0" has-default-value="true" ado-type="Bit" />
+        <orm:column name="CreateDt" sql-type="datetime" nullable="false" length="0" scale="0" ado-type="DateTime" />
+        <orm:column name="CreateUserID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        <orm:column name="ModifyDt" sql-type="datetime" nullable="true" length="0" scale="0" ado-type="DateTime" />
+        <orm:column name="ModifyUserID" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        <orm:constraint name="FK_Transactions_Players" delete-action="dbdefaultrule" destination-table="Players">
+          <orm:column name="PlayerID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:constraint>
+        <orm:constraint name="FK_Transactions_TransactionTypes" delete-action="dbdefaultrule" destination-table="TransactionTypes">
+          <orm:column name="TransactionTypeID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:constraint>
+        <orm:constraint name="FK_Transactions_WebUserData" delete-action="dbdefaultrule" destination-table="WebUserInfo">
+          <orm:column name="CreateUserID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:constraint>
+        <orm:constraint name="FK_Transactions_WebUserData1" delete-action="dbdefaultrule" destination-table="WebUserInfo">
+          <orm:column name="ModifyUserID" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        </orm:constraint>
+      </orm:table>
+      <orm:table name="Teams">
+        <orm:column name="TeamID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        <orm:column name="TeamName" sql-type="varchar" nullable="false" length="100" scale="0" ado-type="StringVariableLength" />
+        <orm:column name="ProgramID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        <orm:column name="StartYear" sql-type="datetime" nullable="false" length="0" scale="0" ado-type="DateTime" />
+        <orm:column name="EndYear" sql-type="datetime" nullable="false" length="0" scale="0" ado-type="DateTime" />
+        <orm:column name="MaxRosterSize" sql-type="smallint" nullable="false" length="0" scale="0" ado-type="Int16" />
+        <orm:column name="MinRosterSize" sql-type="smallint" nullable="false" length="0" scale="0" ado-type="Int16" />
+        <orm:constraint name="FK_Teams_Teams" delete-action="dbdefaultrule" destination-table="Programs">
+          <orm:column name="ProgramID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:constraint>
+      </orm:table>
+      <orm:table name="Programs">
+        <orm:column name="ProgramID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        <orm:column name="ProgramName" sql-type="varchar" nullable="false" length="100" scale="0" ado-type="StringVariableLength" />
+        <orm:column name="ClubID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        <orm:constraint name="FK_Programs_Clubs" delete-action="dbdefaultrule" destination-table="Clubs">
+          <orm:column name="ClubID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:constraint>
+      </orm:table>
+      <orm:table name="Players">
+        <orm:column name="PlayerID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        <orm:column name="DateOfBirth" sql-type="date" nullable="false" length="0" scale="0" ado-type="Date" />
+        <orm:column name="MInitial" sql-type="nvarchar" nullable="true" length="1" scale="0" ado-type="UnicodeStringVariableLength" />
+        <orm:column name="LName" sql-type="nvarchar" nullable="false" length="30" scale="0" ado-type="UnicodeStringVariableLength" />
+        <orm:column name="FName" sql-type="nvarchar" nullable="false" length="30" scale="0" ado-type="UnicodeStringVariableLength" />
+      </orm:table>
+      <orm:table name="Clubs">
+        <orm:column name="ClubID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        <orm:column name="ClubName" sql-type="varchar" nullable="false" length="100" scale="0" ado-type="StringVariableLength" />
+      </orm:table>
+      <orm:table name="PlayerPasses">
+        <orm:column name="PlayerPassID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        <orm:column name="Photo" sql-type="varbinary(max)" nullable="true" length="0" scale="0" ado-type="LongVarBinary" />
+        <orm:column name="PassNumber" sql-type="nvarchar" nullable="true" length="50" scale="0" ado-type="UnicodeStringVariableLength" />
+        <orm:column name="Expires" sql-type="date" nullable="false" length="0" scale="0" ado-type="Date" />
+        <orm:column name="PlayerID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        <orm:index name="UniquePlayerPerYear" unique="true">
+          <orm:columnMapping>
+            <orm:column name="PlayerID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+          </orm:columnMapping>
+          <orm:columnMapping>
+            <orm:column name="Expires" sql-type="date" nullable="false" length="0" scale="0" ado-type="Date" />
+          </orm:columnMapping>
+        </orm:index>
+        <orm:constraint name="FK_PlayerPassID_Players" delete-action="dbdefaultrule" destination-table="Players">
+          <orm:column name="PlayerID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:constraint>
+      </orm:table>
+      <orm:table name="TeamPlayers">
+        <orm:column name="TeamPlayerID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        <orm:column name="TeamID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        <orm:column name="PlayerPassID" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        <orm:column name="IsSecondary" sql-type="bit" nullable="false" length="0" scale="0" has-default-value="true" ado-type="Bit" />
+        <orm:column name="PlayerID" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        <orm:index name="PlayerOnSameTeamOnlyOnce" unique="true">
+          <orm:columnMapping>
+            <orm:column name="PlayerPassID" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+          </orm:columnMapping>
+          <orm:columnMapping>
+            <orm:column name="TeamID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+          </orm:columnMapping>
+        </orm:index>
+        <orm:constraint name="FK_TeamPlayers_Teams" delete-action="dbdefaultrule" destination-table="Teams">
+          <orm:column name="TeamID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:constraint>
+        <orm:constraint name="FK_TeamPlayers_PlayerPasses" delete-action="dbdefaultrule" destination-table="PlayerPasses">
+          <orm:column name="PlayerPassID" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        </orm:constraint>
+        <orm:constraint name="FK_TeamPlayers_Players" delete-action="dbdefaultrule" destination-table="Players">
+          <orm:column name="PlayerID" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        </orm:constraint>
+      </orm:table>
+    </orm:schema>
+    <orm:relational-naming-settings>
+      <orm:remove-leading-underscore>False</orm:remove-leading-underscore>
+      <orm:source-strategy>Property</orm:source-strategy>
+      <orm:remove-camel-case>False</orm:remove-camel-case>
+    </orm:relational-naming-settings>
+  </orm:orm>
+  <ModelSettings xmlns="">
+    <AppConfigConnectionPropertyName>ClubManagementConnection</AppConfigConnectionPropertyName>
+    <AppConfigConnectionString>data source=dempsey.cgya5ichg1th.us-west-2.rds.amazonaws.com,1433;initial catalog=ClubManagement;persist security info=True;user id=alex;password=casciani</AppConfigConnectionString>
+    <InitialCatalog>ClubManagement</InitialCatalog>
+    <NamingSettings>
+      <ClassRules>
+        <CaseMode>PascalCase</CaseMode>
+        <PluralizationMode>Singularize</PluralizationMode>
+      </ClassRules>
+      <FieldRules>
+        <AddPrefix>_</AddPrefix>
+        <CaseMode>CamelCase</CaseMode>
+      </FieldRules>
+      <PropertyRules>
+        <CaseMode>PascalCase</CaseMode>
+      </PropertyRules>
+      <NavigationPropertyRules />
+    </NamingSettings>
+    <CodeGenerationSettings>
+      <ImplementISerializable>true</ImplementISerializable>
+      <MappingDefinitionType>Xml</MappingDefinitionType>
+    </CodeGenerationSettings>
+    <SchemaUpdateSettings>
+      <DeploymentProject>TrackrModels</DeploymentProject>
+    </SchemaUpdateSettings>
+    <BackendConfigurationSettings>
+      <BackendConfiguration>
+        <Backend>MsSql</Backend>
+        <ProviderName>System.Data.SqlClient</ProviderName>
+        <Logging>
+          <MetricStoreSnapshotInterval>0</MetricStoreSnapshotInterval>
+        </Logging>
+      </BackendConfiguration>
+    </BackendConfigurationSettings>
+  </ModelSettings>
+  <Types>
+    <DomainClass Id="0664256c-b54b-43fd-945c-6d2959ecdc6f" name="WebUserInfo" namespace="TrackrModels" showPropertiesCompartment="true" concurrencyMode="Changed" showNavigationCompartment="true" showImplementationCompartment="true">
+      <Property Id="3e4009ad-a0de-4b72-be66-101588062a40" name="UserID" type="Int32" label="UserID : Int32" kind="Persistent" identity="true" fieldName="_userID" />
+      <Property Id="fce7fb20-3f09-49ea-b14c-4aad0850e093" name="FName" label="FName : String" kind="Persistent" fieldName="_fName" />
+      <Property Id="31e70c1f-da03-426d-828b-76f4c92822b7" name="LName" label="LName : String" kind="Persistent" fieldName="_lName" />
+      <Property Id="a912378c-f851-44fa-b5b2-8bed1cd75551" name="MInitial" type="Char" label="MInitial : Char" nullable="true" kind="Persistent" fieldName="_mInitial" />
+      <navigationalProperties>
+        <classHasNavigationalProperties Id="7c22f1e7-3c67-4f83-a34f-e2f6eedbd43c">
+          <NavigationalProperty Id="46a32d7b-7bdc-4e6a-b4cb-7d45d3182162" name="Transactions" type="IList&lt;Transaction&gt;" label="Transactions : IList&lt;Transaction&gt;" nullable="true" kind="Persistent" fieldName="_transactions" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+        <classHasNavigationalProperties Id="8f726068-2283-4029-9d0c-3fa301f13882">
+          <NavigationalProperty Id="b0a73827-7e08-4440-8e6d-ae6740e27842" name="Transactions1" type="IList&lt;Transaction&gt;" label="Transactions1 : IList&lt;Transaction&gt;" nullable="true" kind="Persistent" fieldName="_transactions1" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+      </navigationalProperties>
+    </DomainClass>
+    <DomainClass Id="d60e9c75-9e4e-4a9e-a1f6-46e74117d59c" name="TransactionType" namespace="TrackrModels" showPropertiesCompartment="true" identityMechanism="DatabaseServerCalculated" concurrencyMode="Changed" showNavigationCompartment="true" showImplementationCompartment="true" identityMechanismMember="TransactionTypeID">
+      <Property Id="ffb6efd0-1b97-4a3c-96a6-551f47bf79c7" name="TransactionTypeID" type="Int32" label="TransactionTypeID : Int32" kind="Persistent" identity="true" fieldName="_transactionTypeID" />
+      <Property Id="d5c9288e-0fc5-418f-813c-8ddec904b1d4" name="ActiveEndDt" type="DateTime" label="ActiveEndDt : DateTime" kind="Persistent" fieldName="_activeEndDt" />
+      <Property Id="86fb434d-309b-4653-8a7a-c2fc95e25c0d" name="ActiveStartDt" type="DateTime" label="ActiveStartDt : DateTime" kind="Persistent" fieldName="_activeStartDt" />
+      <Property Id="d1482354-8fe8-48f2-9f07-71fb7e0571ab" name="Amount" type="Decimal" label="Amount : Decimal" kind="Persistent" fieldName="_amount" />
+      <Property Id="99b4f274-c849-48ba-b216-68f975250acb" name="Description" label="Description : String" kind="Persistent" fieldName="_description" />
+      <Property Id="34f8ff9a-5ef8-42ab-af2d-19fd9b6c145f" name="Name" label="Name : String" kind="Persistent" fieldName="_name" />
+      <navigationalProperties>
+        <classHasNavigationalProperties Id="f2af6d6b-9627-4773-bf6f-760ee6889768">
+          <NavigationalProperty Id="72e8895a-a103-43c2-a92f-b6222c373f21" name="Transactions" type="IList&lt;Transaction&gt;" label="Transactions : IList&lt;Transaction&gt;" nullable="true" kind="Persistent" fieldName="_transactions" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+      </navigationalProperties>
+    </DomainClass>
+    <DomainClass Id="c532279e-283d-4418-9f22-16bf8ffe4e04" name="Transaction" namespace="TrackrModels" showPropertiesCompartment="true" identityMechanism="DatabaseServerCalculated" concurrencyMode="Changed" showNavigationCompartment="true" showImplementationCompartment="true" identityMechanismMember="TransactionID">
+      <Property Id="527d161e-6bb4-4792-982a-6ead2665ce9c" name="TransactionID" type="Int64" label="TransactionID : Int64" kind="Persistent" identity="true" fieldName="_transactionID" />
+      <Property Id="31873aa2-39c0-4e0f-8796-4a76b87edf4b" name="Active" type="Boolean" label="Active : Boolean" kind="Persistent" fieldName="_active" />
+      <Property Id="bdb570f2-4a96-4dd8-bc98-7aaf0b227835" name="Amount" type="Decimal" label="Amount : Decimal" kind="Persistent" fieldName="_amount" />
+      <Property Id="ef4ee254-a6ed-4aac-9141-a53bea8584ab" name="CreateDt" type="DateTime" label="CreateDt : DateTime" kind="Persistent" fieldName="_createDt" />
+      <Property Id="f80d4f99-0413-40f3-a0fc-68235291b33c" name="CreateUserID" type="Int32" label="CreateUserID : Int32" kind="Persistent" fieldName="_createUserID" />
+      <Property Id="87420894-598b-41b1-9f22-7871d0f67a2d" name="Date" type="DateTime" label="Date : DateTime" kind="Persistent" fieldName="_date" />
+      <Property Id="6aa9ae59-90e8-4eb1-b900-b810e84b78ad" name="ModifyDt" type="DateTime" label="ModifyDt : DateTime" nullable="true" kind="Persistent" fieldName="_modifyDt" />
+      <Property Id="b52efe38-8016-478c-8639-8bcae416c535" name="ModifyUserID" type="Int32" label="ModifyUserID : Int32" nullable="true" kind="Persistent" fieldName="_modifyUserID" />
+      <Property Id="aff76e9b-b3cb-49a7-abab-86032cf02b3d" name="PlayerID" type="Int32" label="PlayerID : Int32" kind="Persistent" fieldName="_playerID" />
+      <Property Id="d63555cc-6289-4525-997a-1f552fcec27a" name="PrivateNotes" label="PrivateNotes : String" kind="Persistent" fieldName="_privateNotes" />
+      <Property Id="d33f5caf-dd93-4715-a14e-e23d267e5fa0" name="PublicNotes" label="PublicNotes : String" kind="Persistent" fieldName="_publicNotes" />
+      <Property Id="a8855a65-4314-4311-a52d-61f2a43b5f66" name="TransactionTypeID" type="Int32" label="TransactionTypeID : Int32" kind="Persistent" fieldName="_transactionTypeID" />
+      <AssociationTargets>
+        <Association Id="17d53c36-6bbf-4829-b016-49606933865a" SourceMultiplicity="One" name="TransactionHasPlayer">
+          <DomainClassMoniker name="/ClubManagement/Player" />
+          <targetNavigationalProperty>
+            <associationDefinesTargetProperty Id="abe2b14d-b97d-4162-8cb7-007f0428e00f">
+              <NavigationalPropertyMoniker name="/ClubManagement/Player/Transactions" />
+            </associationDefinesTargetProperty>
+          </targetNavigationalProperty>
+          <sourceNavigationalProperty>
+            <associationDefinesSourceProperty Id="b44fe7b9-bb4e-4126-8843-8c2b65e2dcd3">
+              <NavigationalPropertyMoniker name="/ClubManagement/Transaction/Player" />
+            </associationDefinesSourceProperty>
+          </sourceNavigationalProperty>
+        </Association>
+        <Association Id="67f76882-2b28-4c8d-b3cc-ae5069c7144c" SourceMultiplicity="One" name="TransactionHasTransactionType">
+          <DomainClassMoniker name="/ClubManagement/TransactionType" />
+          <targetNavigationalProperty>
+            <associationDefinesTargetProperty Id="d3ddd5ca-7284-4f41-aa09-f3c15e38b22e">
+              <NavigationalPropertyMoniker name="/ClubManagement/TransactionType/Transactions" />
+            </associationDefinesTargetProperty>
+          </targetNavigationalProperty>
+          <sourceNavigationalProperty>
+            <associationDefinesSourceProperty Id="82d5d78e-9364-4adb-ad39-265bd4996971">
+              <NavigationalPropertyMoniker name="/ClubManagement/Transaction/TransactionType" />
+            </associationDefinesSourceProperty>
+          </sourceNavigationalProperty>
+        </Association>
+        <Association Id="fbb16b7e-a286-49e2-9748-7bb628179a62" SourceMultiplicity="One" name="TransactionHasWebUserInfo">
+          <DomainClassMoniker name="/ClubManagement/WebUserInfo" />
+          <targetNavigationalProperty>
+            <associationDefinesTargetProperty Id="5399a506-35a5-4b4c-977b-63a8a3b6d1f6">
+              <NavigationalPropertyMoniker name="/ClubManagement/WebUserInfo/Transactions" />
+            </associationDefinesTargetProperty>
+          </targetNavigationalProperty>
+          <sourceNavigationalProperty>
+            <associationDefinesSourceProperty Id="66e48724-e9d4-4d9b-b8ff-7e8659215539">
+              <NavigationalPropertyMoniker name="/ClubManagement/Transaction/WebUserInfo" />
+            </associationDefinesSourceProperty>
+          </sourceNavigationalProperty>
+        </Association>
+        <Association Id="a7abd31b-08df-4819-8b77-3c286dde6fa8" SourceMultiplicity="ZeroOne" name="TransactionHasWebUserInfo1">
+          <DomainClassMoniker name="/ClubManagement/WebUserInfo" />
+          <targetNavigationalProperty>
+            <associationDefinesTargetProperty Id="83e41fbd-7284-4b8b-a602-4809cf61aa51">
+              <NavigationalPropertyMoniker name="/ClubManagement/WebUserInfo/Transactions1" />
+            </associationDefinesTargetProperty>
+          </targetNavigationalProperty>
+          <sourceNavigationalProperty>
+            <associationDefinesSourceProperty Id="97bba0cd-85f7-4f87-a0fc-b9ef1d3acae0">
+              <NavigationalPropertyMoniker name="/ClubManagement/Transaction/WebUserInfo1" />
+            </associationDefinesSourceProperty>
+          </sourceNavigationalProperty>
+        </Association>
+      </AssociationTargets>
+      <navigationalProperties>
+        <classHasNavigationalProperties Id="e9e4fc75-919f-4054-bc03-792fd48f6fad">
+          <NavigationalProperty Id="5a5ca688-60e6-4034-a571-7eaf68a123f2" name="Player" type="Player" label="Player : Player" nullable="true" kind="Persistent" fieldName="_player" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+        <classHasNavigationalProperties Id="d70bda79-fb9c-4563-8441-babfa0607a81">
+          <NavigationalProperty Id="5b804d4b-c291-4643-82a7-6567ff990ebd" name="TransactionType" type="TransactionType" label="TransactionType : TransactionType" nullable="true" kind="Persistent" fieldName="_transactionType" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+        <classHasNavigationalProperties Id="a1a441e6-09ea-4dca-9288-7b30f5446c9e">
+          <NavigationalProperty Id="83f4d5d7-f4f2-4c47-abaa-522c7775c515" name="WebUserInfo" type="WebUserInfo" label="WebUserInfo : WebUserInfo" nullable="true" kind="Persistent" fieldName="_webUserInfo" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+        <classHasNavigationalProperties Id="b28a40a1-9003-4e4b-9637-cd3816be8e47">
+          <NavigationalProperty Id="0b2d0d24-f8fe-44a9-ac97-dda1e342da1c" name="WebUserInfo1" type="WebUserInfo" label="WebUserInfo1 : WebUserInfo" nullable="true" kind="Persistent" fieldName="_webUserInfo1" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+      </navigationalProperties>
+    </DomainClass>
+    <DomainClass Id="d2786033-1068-4d65-995a-8e3cad1d128e" name="Team" namespace="TrackrModels" showPropertiesCompartment="true" identityMechanism="DatabaseServerCalculated" concurrencyMode="Changed" showNavigationCompartment="true" showImplementationCompartment="true" identityMechanismMember="TeamID">
+      <Property Id="bf16121d-df76-4013-acfa-68489f615d68" name="TeamID" type="Int32" label="TeamID : Int32" kind="Persistent" identity="true" fieldName="_teamID" />
+      <Property Id="15165c17-826c-468b-831e-e702406730c9" name="EndYear" type="DateTime" label="EndYear : DateTime" kind="Persistent" fieldName="_endYear" />
+      <Property Id="ae20f911-03f2-46af-9551-615f6b564171" name="MaxRosterSize" type="Int16" label="MaxRosterSize : Int16" kind="Persistent" fieldName="_maxRosterSize" />
+      <Property Id="12bb65fb-198b-4583-a770-b3648cf595fb" name="MinRosterSize" type="Int16" label="MinRosterSize : Int16" kind="Persistent" fieldName="_minRosterSize" />
+      <Property Id="a2ce9f09-d689-4b22-b987-50378f22a993" name="ProgramID" type="Int32" label="ProgramID : Int32" kind="Persistent" fieldName="_programID" />
+      <Property Id="c1ef74e6-e73e-459c-b98b-57fb8f78e01c" name="StartYear" type="DateTime" label="StartYear : DateTime" kind="Persistent" fieldName="_startYear" />
+      <Property Id="3886bb91-446d-4837-ae96-40b4d5896f54" name="TeamName" label="TeamName : String" kind="Persistent" fieldName="_teamName" />
+      <AssociationTargets>
+        <Association Id="802bddbb-d5ff-4681-b6b9-6c5000687ea3" SourceMultiplicity="One" name="TeamHasProgram">
+          <DomainClassMoniker name="/ClubManagement/Program" />
+          <targetNavigationalProperty>
+            <associationDefinesTargetProperty Id="0aade85b-841a-4558-ba9f-bc0df188280d">
+              <NavigationalPropertyMoniker name="/ClubManagement/Program/Teams" />
+            </associationDefinesTargetProperty>
+          </targetNavigationalProperty>
+          <sourceNavigationalProperty>
+            <associationDefinesSourceProperty Id="e8809934-799c-4638-8e44-cce485883321">
+              <NavigationalPropertyMoniker name="/ClubManagement/Team/Program" />
+            </associationDefinesSourceProperty>
+          </sourceNavigationalProperty>
+        </Association>
+      </AssociationTargets>
+      <navigationalProperties>
+        <classHasNavigationalProperties Id="b47b4613-db68-402d-979b-5a88ced68d2b">
+          <NavigationalProperty Id="332d180a-e615-481f-b524-3bcb0d500dce" name="Program" type="Program" label="Program : Program" nullable="true" kind="Persistent" fieldName="_program" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+        <classHasNavigationalProperties Id="ac82c12e-61d8-4b58-832e-263576e448c5">
+          <NavigationalProperty Id="9010a595-f702-4a4b-b7e9-61ab4ae42577" name="TeamPlayers" type="IList&lt;TeamPlayer&gt;" label="TeamPlayers : IList&lt;TeamPlayer&gt;" nullable="true" kind="Persistent" fieldName="_teamPlayers" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+      </navigationalProperties>
+    </DomainClass>
+    <DomainClass Id="bc797f95-9d5f-4138-98ff-2a39f4bd70cd" name="Program" namespace="TrackrModels" showPropertiesCompartment="true" identityMechanism="DatabaseServerCalculated" concurrencyMode="Changed" showNavigationCompartment="true" showImplementationCompartment="true" identityMechanismMember="ProgramID">
+      <Property Id="495452e3-38bd-4314-aadd-d3bc5f0b0331" name="ProgramID" type="Int32" label="ProgramID : Int32" kind="Persistent" identity="true" fieldName="_programID" />
+      <Property Id="87d1f808-c653-4a98-8d87-d48ef322ec49" name="ClubID" type="Int32" label="ClubID : Int32" kind="Persistent" fieldName="_clubID" />
+      <Property Id="544e73c1-e8ed-4cc1-a511-d16f6bab3fe1" name="ProgramName" label="ProgramName : String" kind="Persistent" fieldName="_programName" />
+      <AssociationTargets>
+        <Association Id="d5abb3e9-2dd5-4453-a355-45918f1fef23" SourceMultiplicity="One" name="ProgramHasClub">
+          <DomainClassMoniker name="/ClubManagement/Club" />
+          <targetNavigationalProperty>
+            <associationDefinesTargetProperty Id="c374fb18-7114-4f0e-b12b-a0702c4ac253">
+              <NavigationalPropertyMoniker name="/ClubManagement/Club/Programs" />
+            </associationDefinesTargetProperty>
+          </targetNavigationalProperty>
+          <sourceNavigationalProperty>
+            <associationDefinesSourceProperty Id="094e1544-aa2a-4cea-b0fa-da943de1ecdc">
+              <NavigationalPropertyMoniker name="/ClubManagement/Program/Club" />
+            </associationDefinesSourceProperty>
+          </sourceNavigationalProperty>
+        </Association>
+      </AssociationTargets>
+      <navigationalProperties>
+        <classHasNavigationalProperties Id="683308b6-a00a-41c1-8c2a-65ff21abd518">
+          <NavigationalProperty Id="8b84d734-0e5a-44a8-a8da-860dd389ac79" name="Teams" type="IList&lt;Team&gt;" label="Teams : IList&lt;Team&gt;" nullable="true" kind="Persistent" fieldName="_teams" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+        <classHasNavigationalProperties Id="02b6850f-3b96-45b4-bae6-091ea52aa6b9">
+          <NavigationalProperty Id="532b00fe-e2e1-4eeb-ba18-cdd3ecf24e5c" name="Club" type="Club" label="Club : Club" nullable="true" kind="Persistent" fieldName="_club" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+      </navigationalProperties>
+    </DomainClass>
+    <DomainClass Id="b534a3e6-cbd7-41ea-93bf-7964a28fbe02" name="Player" namespace="TrackrModels" showPropertiesCompartment="true" identityMechanism="DatabaseServerCalculated" concurrencyMode="Changed" showNavigationCompartment="true" showImplementationCompartment="true" identityMechanismMember="PlayerID">
+      <Property Id="0c92f7d0-6c3e-4faf-bd23-d4bf8f780164" name="PlayerID" type="Int32" label="PlayerID : Int32" kind="Persistent" identity="true" fieldName="_playerID" />
+      <Property Id="24e563a3-b68b-4fb5-a04a-8655fabf5131" name="DateOfBirth" type="DateTime" label="DateOfBirth : DateTime" kind="Persistent" fieldName="_dateOfBirth" />
+      <Property Id="9043a1f2-04c1-4aea-9d66-b17eb64d0e77" name="MInitial" type="Char" label="MInitial : Char" nullable="true" kind="Persistent" fieldName="_mInitial" />
+      <Property Id="c35265b1-d27e-49c6-b2c9-6737463bb19a" name="LName" label="LName : String" kind="Persistent" fieldName="_lName" />
+      <Property Id="98e98d35-e7f9-42fb-a27c-7d138f7697a3" name="FName" label="FName : String" kind="Persistent" fieldName="_fName" />
+      <navigationalProperties>
+        <classHasNavigationalProperties Id="67f2ba34-a527-429c-80d2-ab38dc7961ab">
+          <NavigationalProperty Id="122a83c1-04f6-4f33-b753-3b5e1abc181b" name="Transactions" type="IList&lt;Transaction&gt;" label="Transactions : IList&lt;Transaction&gt;" nullable="true" kind="Persistent" fieldName="_transactions" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+        <classHasNavigationalProperties Id="eca7f0d0-a384-4ee7-a370-869803dd00c5">
+          <NavigationalProperty Id="876e7733-4f83-4189-8a0a-a626a6760cb1" name="PlayerPasses" type="IList&lt;PlayerPass&gt;" label="PlayerPasses : IList&lt;PlayerPass&gt;" nullable="true" kind="Persistent" fieldName="_playerPasses" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+        <classHasNavigationalProperties Id="76d83385-e281-46bf-ab4d-5047da90f698">
+          <NavigationalProperty Id="fb38666f-2abe-45d2-8175-0a6440419b23" name="TeamPlayers" type="IList&lt;TeamPlayer&gt;" label="TeamPlayers : IList&lt;TeamPlayer&gt;" nullable="true" kind="Persistent" fieldName="_teamPlayers" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+      </navigationalProperties>
+    </DomainClass>
+    <DomainClass Id="bbc75fb2-a0dc-4d4c-9c46-3acd3a92fce7" name="Club" namespace="TrackrModels" showPropertiesCompartment="true" identityMechanism="DatabaseServerCalculated" concurrencyMode="Changed" showNavigationCompartment="true" showImplementationCompartment="true" identityMechanismMember="ClubID">
+      <Property Id="e9e22a5e-2c27-4a85-be17-f62778511ec7" name="ClubID" type="Int32" label="ClubID : Int32" kind="Persistent" identity="true" fieldName="_clubID" />
+      <Property Id="98238d10-dd2b-4e50-8ae0-b04b88029cfd" name="ClubName" label="ClubName : String" kind="Persistent" fieldName="_clubName" />
+      <navigationalProperties>
+        <classHasNavigationalProperties Id="c7c5bfce-79a5-43e6-9404-f646d5b7b2e1">
+          <NavigationalProperty Id="822dee46-d5f1-463d-a1c9-9b8c29dd18b7" name="Programs" type="IList&lt;Program&gt;" label="Programs : IList&lt;Program&gt;" nullable="true" kind="Persistent" fieldName="_programs" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+      </navigationalProperties>
+    </DomainClass>
+    <DomainClass Id="cc46e759-acc2-42af-82bd-c75dee018045" name="PlayerPass" namespace="TrackrModels" showPropertiesCompartment="true" identityMechanism="DatabaseServerCalculated" concurrencyMode="Changed" showNavigationCompartment="true" showImplementationCompartment="true" identityMechanismMember="PlayerPassID">
+      <Property Id="5f28d80b-6e3f-42f1-bd7a-ecc8e3074e07" name="PlayerPassID" type="Int32" label="PlayerPassID : Int32" kind="Persistent" identity="true" fieldName="_playerPassID" />
+      <Property Id="3b7ba48a-ff3f-42e4-a7a3-475bed30f26e" name="Expires" type="DateTime" label="Expires : DateTime" kind="Persistent" fieldName="_expires" />
+      <Property Id="2b38b592-ff02-44ae-8aca-bb7a247fef7d" name="PassNumber" label="PassNumber : String" kind="Persistent" fieldName="_passNumber" />
+      <Property Id="c415f7f8-f558-495b-a9e4-b3538de8a415" name="Photo" type="Byte[]" label="Photo : Byte[]" kind="Persistent" fieldName="_photo" />
+      <Property Id="bfecd7ce-8e7a-446f-8e29-27b36a79c9a5" name="PlayerID" type="Int32" label="PlayerID : Int32" kind="Persistent" fieldName="_playerID" />
+      <AssociationTargets>
+        <Association Id="d000aeef-9556-4d02-9139-260fb79cf2af" SourceMultiplicity="One" name="PlayerPassHasPlayer">
+          <DomainClassMoniker name="/ClubManagement/Player" />
+          <targetNavigationalProperty>
+            <associationDefinesTargetProperty Id="9d20ca18-8d46-4eb2-8848-264725860038">
+              <NavigationalPropertyMoniker name="/ClubManagement/Player/PlayerPasses" />
+            </associationDefinesTargetProperty>
+          </targetNavigationalProperty>
+          <sourceNavigationalProperty>
+            <associationDefinesSourceProperty Id="d4f5d1c0-3ae5-4219-afbd-9456519eac75">
+              <NavigationalPropertyMoniker name="/ClubManagement/PlayerPass/Player" />
+            </associationDefinesSourceProperty>
+          </sourceNavigationalProperty>
+        </Association>
+      </AssociationTargets>
+      <navigationalProperties>
+        <classHasNavigationalProperties Id="bd1f4e71-f865-4008-b2a2-38808971f362">
+          <NavigationalProperty Id="78b6c29b-3d7a-456b-a1e4-89c13a986c58" name="TeamPlayers" type="IList&lt;TeamPlayer&gt;" label="TeamPlayers : IList&lt;TeamPlayer&gt;" nullable="true" kind="Persistent" fieldName="_teamPlayers" isDependent="true" isManaged="true" />
+        </classHasNavigationalProperties>
+        <classHasNavigationalProperties Id="8d3f3c53-7898-48e8-9138-39f0acd92009">
+          <NavigationalProperty Id="5fdc6d8e-df2a-4e9d-be20-653e0c6062ae" name="Player" type="Player" label="Player : Player" nullable="true" kind="Persistent" fieldName="_player" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+      </navigationalProperties>
+    </DomainClass>
+    <DomainClass Id="f459290d-2db6-4ca4-9f7d-d582a9160ad8" name="TeamPlayer" namespace="TrackrModels" showPropertiesCompartment="true" identityMechanism="DatabaseServerCalculated" concurrencyMode="Changed" showNavigationCompartment="true" showImplementationCompartment="true" identityMechanismMember="TeamPlayerID">
+      <Property Id="0ba9931e-b47d-4906-83c0-c1c91174b6fe" name="TeamPlayerID" type="Int32" label="TeamPlayerID : Int32" kind="Persistent" identity="true" fieldName="_teamPlayerID" />
+      <Property Id="b13547d2-0131-4dd4-b696-fa0549b43792" name="IsSecondary" type="Boolean" label="IsSecondary : Boolean" kind="Persistent" fieldName="_isSecondary" />
+      <Property Id="f4d4933e-086f-4a5f-a6ed-6e5e10cbd8b0" name="PlayerPassID" type="Int32" label="PlayerPassID : Int32" nullable="true" kind="Persistent" fieldName="_playerPassID" />
+      <Property Id="67336a62-2a71-4e6a-a18d-70077ad711f7" name="TeamID" type="Int32" label="TeamID : Int32" kind="Persistent" fieldName="_teamID" />
+      <Property Id="20d3878d-8306-4bff-9612-ebafa8900b1d" name="PlayerID" type="Int32" label="PlayerID : Int32" nullable="true" kind="Persistent" fieldName="_playerID" />
+      <AssociationTargets>
+        <Association Id="1461b9d0-65bc-467d-9222-6db6886f1d17" SourceMultiplicity="One" name="TeamPlayerHasTeam">
+          <DomainClassMoniker name="/ClubManagement/Team" />
+          <targetNavigationalProperty>
+            <associationDefinesTargetProperty Id="d1974d9a-6572-4a7e-b376-51a1eceec53b">
+              <NavigationalPropertyMoniker name="/ClubManagement/Team/TeamPlayers" />
+            </associationDefinesTargetProperty>
+          </targetNavigationalProperty>
+          <sourceNavigationalProperty>
+            <associationDefinesSourceProperty Id="206c5145-5716-48a9-be76-94b0ec2ab3f3">
+              <NavigationalPropertyMoniker name="/ClubManagement/TeamPlayer/Team" />
+            </associationDefinesSourceProperty>
+          </sourceNavigationalProperty>
+        </Association>
+        <Association Id="d817665e-6fc0-421b-9d2e-72ffa1db1937" SourceMultiplicity="One" name="TeamPlayerHasPlayerPass">
+          <DomainClassMoniker name="/ClubManagement/PlayerPass" />
+          <targetNavigationalProperty>
+            <associationDefinesTargetProperty Id="a0a0d03e-445e-4b8e-91fb-7dc4173a1796">
+              <NavigationalPropertyMoniker name="/ClubManagement/PlayerPass/TeamPlayers" />
+            </associationDefinesTargetProperty>
+          </targetNavigationalProperty>
+          <sourceNavigationalProperty>
+            <associationDefinesSourceProperty Id="29386693-bc88-4dfe-9e0b-e494260bfe01">
+              <NavigationalPropertyMoniker name="/ClubManagement/TeamPlayer/PlayerPass" />
+            </associationDefinesSourceProperty>
+          </sourceNavigationalProperty>
+        </Association>
+        <Association Id="ddd56e36-4049-459b-8fc6-29db7757842c" SourceMultiplicity="ZeroOne" name="TeamPlayerHasPlayer">
+          <DomainClassMoniker name="/ClubManagement/Player" />
+          <targetNavigationalProperty>
+            <associationDefinesTargetProperty Id="89d3b05c-4d58-41df-a302-60c74eab8f62">
+              <NavigationalPropertyMoniker name="/ClubManagement/Player/TeamPlayers" />
+            </associationDefinesTargetProperty>
+          </targetNavigationalProperty>
+          <sourceNavigationalProperty>
+            <associationDefinesSourceProperty Id="fa75334b-bdbb-4cb6-b6c8-ec45e08a5f3b">
+              <NavigationalPropertyMoniker name="/ClubManagement/TeamPlayer/Player" />
+            </associationDefinesSourceProperty>
+          </sourceNavigationalProperty>
+        </Association>
+      </AssociationTargets>
+      <navigationalProperties>
+        <classHasNavigationalProperties Id="d612baae-9e05-4e23-b56a-bb18093e74d3">
+          <NavigationalProperty Id="ee6d90d0-0553-43a8-8e33-4fab5c6e741f" name="Team" type="Team" label="Team : Team" nullable="true" kind="Persistent" fieldName="_team" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+        <classHasNavigationalProperties Id="7398af11-7293-49df-b58c-f97fc9805a70">
+          <NavigationalProperty Id="a87a4db3-77d9-4288-b329-925cf38a084f" name="PlayerPass" type="PlayerPass" label="PlayerPass : PlayerPass" nullable="true" kind="Persistent" fieldName="_playerPass" isDependent="false" isManaged="true" />
+        </classHasNavigationalProperties>
+        <classHasNavigationalProperties Id="f1a57904-6945-47ec-9333-9645007d24e2">
+          <NavigationalProperty Id="a991e5d3-62a2-4c4b-aee6-34b0596c40ad" name="Player" type="Player" label="Player : Player" nullable="true" kind="Persistent" fieldName="_player" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+      </navigationalProperties>
+    </DomainClass>
+  </Types>
+  <domainContext>
+    <domainModelHasDomainContext Id="242d1b49-d412-485c-b5ca-793640a0667d">
+      <domainContainer name="ClubManagement" namespace="TrackrModels" showPropertiesCompartment="true">
+        <entitySetProperty name="WebUserInfos" namespace="TrackrModels" type="WebUserInfo" label="WebUserInfos : IQueryable&lt;TrackrModels.WebUserInfo&gt;" />
+        <entitySetProperty name="TransactionTypes" namespace="TrackrModels" type="TransactionType" label="TransactionTypes : IQueryable&lt;TrackrModels.TransactionType&gt;" />
+        <entitySetProperty name="Transactions" namespace="TrackrModels" type="Transaction" label="Transactions : IQueryable&lt;TrackrModels.Transaction&gt;" />
+        <entitySetProperty name="Teams" namespace="TrackrModels" type="Team" label="Teams : IQueryable&lt;TrackrModels.Team&gt;" />
+        <entitySetProperty name="Programs" namespace="TrackrModels" type="Program" label="Programs : IQueryable&lt;TrackrModels.Program&gt;" />
+        <entitySetProperty name="Players" namespace="TrackrModels" type="Player" label="Players : IQueryable&lt;TrackrModels.Player&gt;" />
+        <entitySetProperty name="Clubs" namespace="TrackrModels" type="Club" label="Clubs : IQueryable&lt;TrackrModels.Club&gt;" />
+        <entitySetProperty name="PlayerPasses" namespace="TrackrModels" type="PlayerPass" label="PlayerPasses : IQueryable&lt;TrackrModels.PlayerPass&gt;" />
+        <entitySetProperty name="TeamPlayers" namespace="TrackrModels" type="TeamPlayer" label="TeamPlayers : IQueryable&lt;TrackrModels.TeamPlayer&gt;" />
+      </domainContainer>
+    </domainModelHasDomainContext>
+  </domainContext>
+</DomainModel>

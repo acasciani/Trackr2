@@ -1,0 +1,390 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DomainModel xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" dslVersion="2.0.0.0" name="UserManagement" namespace="TrackrModels" showPropertiesCompartment="true" xmlns="http://www.telerik.com/ORM">
+  <orm:orm name="UserManagement" backend="mssql" default-schema="dbo" xmlns:orm="http://tempuri.org/ORM">
+    <orm:namespace name="TrackrModels" default="true">
+      <orm:class name="WebUser" uniqueId="af528235-fa30-4a48-83ec-c830227ba074">
+        <orm:table name="WebUsers" />
+        <orm:identity>
+          <orm:key-generator name="autoinc">
+            <orm:key-generator-member property-name="UserID" />
+          </orm:key-generator>
+          <orm:single-field field-name="_userID" />
+        </orm:identity>
+        <orm:concurrency strategy="changed" />
+        <orm:field name="_userID" property="UserID" behavior="readwrite" uniqueId="aa9e5bdd-89b4-4716-85c3-94c6f6a6716f" type="System.Int32">
+          <orm:column name="UserID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_email" property="Email" behavior="readwrite" uniqueId="717729c4-62e8-4eb9-83c7-878b74acac36" type="System.String">
+          <orm:column name="Email" sql-type="nvarchar" nullable="false" length="200" scale="0" ado-type="UnicodeStringVariableLength" />
+        </orm:field>
+        <orm:field name="_password" property="Password" behavior="readwrite" uniqueId="efd012c3-79fc-4e8a-aa83-bed54291e8cb" type="System.String">
+          <orm:column name="Password" sql-type="nvarchar" nullable="false" length="128" scale="0" ado-type="UnicodeStringVariableLength" />
+        </orm:field>
+        <orm:field name="_scopeAssignments" property="ScopeAssignments" behavior="readwrite" uniqueId="5f013196-918a-47d6-9235-d616983dff06" type="TrackrModels.ScopeAssignment">
+          <orm:collection element-class="TrackrModels.ScopeAssignment" inverse-field="_webUser" order-by="" uniqueId="f3bde9fa-95cd-4b6c-b1d2-62aed54621c2" />
+        </orm:field>
+      </orm:class>
+      <orm:class name="Scope" uniqueId="f4317e2f-ade7-4bf9-ae12-7cc7b5ceb026">
+        <orm:table name="Scopes" />
+        <orm:identity>
+          <orm:key-generator name="autoinc">
+            <orm:key-generator-member property-name="ScopeID" />
+          </orm:key-generator>
+          <orm:single-field field-name="_scopeID" />
+        </orm:identity>
+        <orm:concurrency strategy="changed" />
+        <orm:field name="_scopeID" property="ScopeID" behavior="readwrite" uniqueId="2545e734-19c4-44cc-8005-365e046d058a" type="System.Int32">
+          <orm:column name="ScopeID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_scopeName" property="ScopeName" behavior="readwrite" uniqueId="21f4a319-6723-4919-ae78-c2460a098fea" type="System.String">
+          <orm:column name="ScopeName" sql-type="nvarchar" nullable="false" length="50" scale="0" ado-type="UnicodeStringVariableLength" />
+        </orm:field>
+        <orm:field name="_scopeAssignments" property="ScopeAssignments" behavior="readwrite" uniqueId="ecd0c293-a973-4d3e-9514-40ce1a093704" type="TrackrModels.ScopeAssignment">
+          <orm:collection element-class="TrackrModels.ScopeAssignment" inverse-field="_scope" order-by="" uniqueId="609e3012-697c-4098-a07e-072f9b2cc370" />
+        </orm:field>
+      </orm:class>
+      <orm:class name="ScopeAssignment" uniqueId="59b0d82d-e6c4-4918-8767-6314c6383b6d">
+        <orm:table name="ScopeAssignments" />
+        <orm:identity>
+          <orm:key-generator name="autoinc">
+            <orm:key-generator-member property-name="ScopeAssignmentID" />
+          </orm:key-generator>
+          <orm:single-field field-name="_scopeAssignmentID" />
+        </orm:identity>
+        <orm:concurrency strategy="changed" />
+        <orm:field name="_scopeAssignmentID" property="ScopeAssignmentID" behavior="readwrite" uniqueId="825410d1-a2cb-4c47-8bcc-14cc69a3c152" type="System.Int32">
+          <orm:column name="ScopeAssignmentID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_userID" property="UserID" behavior="readwrite" uniqueId="6e94588f-1dea-40b6-9a12-8e540ac487ff" type="System.Int32">
+          <orm:column name="UserID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_roleID" property="RoleID" behavior="readwrite" uniqueId="405f4d8f-d9a5-4812-a193-0b3c3d787bfd" type="System.Nullable`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
+          <orm:column name="RoleID" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_permissionID" property="PermissionID" behavior="readwrite" uniqueId="d0f0ef74-57ad-41a9-9a53-983ad22617ad" type="System.Nullable`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
+          <orm:column name="PermissionID" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_scopeID" property="ScopeID" behavior="readwrite" uniqueId="daa50168-0bde-4c3f-9568-11d2577c4296" type="System.Int32">
+          <orm:column name="ScopeID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_resourceID" property="ResourceID" behavior="readwrite" uniqueId="51ed3a54-1af7-438c-8ffa-8113d233d1f1" type="System.Int32">
+          <orm:column name="ResourceID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_isDeny" property="IsDeny" behavior="readwrite" uniqueId="25b5116a-e60e-45e6-a0d7-0ebbf2488a4a" type="System.Boolean">
+          <orm:column name="IsDeny" sql-type="bit" nullable="false" length="0" scale="0" has-default-value="true" ado-type="Bit" />
+        </orm:field>
+        <orm:field name="_permission" property="Permission" behavior="readwrite" uniqueId="393447b4-74bb-4c1b-8e69-7c049bb97509" type="TrackrModels.Permission">
+          <orm:reference uniqueId="ab85e40d-41f5-479d-b0ad-5954283c62e1" association-name="ScopeAssignmentHasPermission">
+            <orm:sharedfield name="_permissionID" target-class="TrackrModels.Permission" target-field="_permissionID" />
+            <orm:constraint name="FK_ScopeAssignments_Permissions" delete-action="dbdefaultrule" destination-table="Permissions" />
+          </orm:reference>
+        </orm:field>
+        <orm:field name="_role" property="Role" behavior="readwrite" uniqueId="22c1eed8-4214-4a14-810e-18b2cae9aa84" type="TrackrModels.Role">
+          <orm:reference uniqueId="281b75e6-c6b2-44d4-be03-c8175108273c" association-name="ScopeAssignmentHasRole">
+            <orm:sharedfield name="_roleID" target-class="TrackrModels.Role" target-field="_roleID" />
+            <orm:constraint name="FK_ScopeAssignments_Roles" delete-action="dbdefaultrule" destination-table="Roles" />
+          </orm:reference>
+        </orm:field>
+        <orm:field name="_webUser" property="WebUser" behavior="readwrite" uniqueId="a9cf528b-7948-406a-bb4c-5ff27fd86f46" type="TrackrModels.WebUser">
+          <orm:reference uniqueId="f3bde9fa-95cd-4b6c-b1d2-62aed54621c2" association-name="ScopeAssignmentHasWebUser">
+            <orm:sharedfield name="_userID" target-class="TrackrModels.WebUser" target-field="_userID" />
+            <orm:constraint name="FK_ScopeAssignments_ScopeAssignments" delete-action="dbdefaultrule" destination-table="WebUsers" />
+          </orm:reference>
+        </orm:field>
+        <orm:field name="_scope" property="Scope" behavior="readwrite" uniqueId="43b0354d-a687-4cd5-a823-b64edd970724" type="TrackrModels.Scope">
+          <orm:reference uniqueId="609e3012-697c-4098-a07e-072f9b2cc370" association-name="ScopeAssignmentHasScope">
+            <orm:sharedfield name="_scopeID" target-class="TrackrModels.Scope" target-field="_scopeID" />
+            <orm:constraint name="FK_ScopeAssignments_Scopes" delete-action="dbdefaultrule" destination-table="Scopes" />
+          </orm:reference>
+        </orm:field>
+      </orm:class>
+      <orm:class name="Role" uniqueId="6fca5e1e-74a8-4328-9430-89ae7326c8a4">
+        <orm:table name="Roles" />
+        <orm:identity>
+          <orm:key-generator name="autoinc">
+            <orm:key-generator-member property-name="RoleID" />
+          </orm:key-generator>
+          <orm:single-field field-name="_roleID" />
+        </orm:identity>
+        <orm:concurrency strategy="changed" />
+        <orm:field name="_roleID" property="RoleID" behavior="readwrite" uniqueId="8b49d618-957a-400b-99ca-9c89f37891a3" type="System.Int32">
+          <orm:column name="RoleID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_roleName" property="RoleName" behavior="readwrite" uniqueId="1dde2e1b-6800-4f4d-87eb-8b6a493f8c91" type="System.String">
+          <orm:column name="RoleName" sql-type="nvarchar" nullable="false" length="100" scale="0" ado-type="UnicodeStringVariableLength" />
+        </orm:field>
+        <orm:field name="_scopeAssignments" property="ScopeAssignments" behavior="readwrite" uniqueId="95aac757-a94d-4da9-bbdc-c015372a4cc8" type="TrackrModels.ScopeAssignment">
+          <orm:collection element-class="TrackrModels.ScopeAssignment" inverse-field="_role" order-by="" uniqueId="281b75e6-c6b2-44d4-be03-c8175108273c" />
+        </orm:field>
+        <orm:field name="_permissions" property="Permissions" behavior="readwrite" uniqueId="6cb6bcf7-2864-45ff-8071-96790bacb514" type="TrackrModels.Permission">
+          <orm:collection element-class="TrackrModels.Permission" inverse-field="_roles" order-by="" uniqueId="405aa91c-7478-4e4d-a176-731a2e8ec99f" />
+        </orm:field>
+      </orm:class>
+      <orm:class name="Permission" uniqueId="0a6dcf76-05ea-43d8-b87f-a291e8d7bfb6">
+        <orm:table name="Permissions" />
+        <orm:identity>
+          <orm:key-generator name="autoinc">
+            <orm:key-generator-member property-name="PermissionID" />
+          </orm:key-generator>
+          <orm:single-field field-name="_permissionID" />
+        </orm:identity>
+        <orm:concurrency strategy="changed" />
+        <orm:field name="_permissionID" property="PermissionID" behavior="readwrite" uniqueId="49ac2607-f328-4e83-a4b4-9ef23c7d67a9" type="System.Int32">
+          <orm:column name="PermissionID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_permissionName" property="PermissionName" behavior="readwrite" uniqueId="46ad7be0-a11b-47fd-adf3-02f0bcad9e72" type="System.String">
+          <orm:column name="PermissionName" sql-type="nvarchar" nullable="false" length="100" scale="0" ado-type="UnicodeStringVariableLength" />
+        </orm:field>
+        <orm:field name="_roles" property="Roles" behavior="readwrite" uniqueId="6dd22a0b-ec38-4fd2-8d11-ee005afe8db3" type="TrackrModels.Role">
+          <orm:join-table uniqueId="405aa91c-7478-4e4d-a176-731a2e8ec99f" association-name="PermissionsHaveRoles">
+            <orm:table name="RolePermissions" join-table="true" />
+            <orm:owner>
+              <orm:constraint name="FK_RolePermissions_Permissions" delete-action="dbdefaultrule" destination-table="Permissions">
+                <orm:column name="PermissionID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" target-class="TrackrModels.Permission" target-field="_permissionID" />
+              </orm:constraint>
+            </orm:owner>
+            <orm:value>
+              <orm:constraint name="FK_RolePermissions_Roles" delete-action="dbdefaultrule" destination-table="Roles">
+                <orm:column name="RoleID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" target-class="TrackrModels.Role" target-field="_roleID" />
+              </orm:constraint>
+            </orm:value>
+          </orm:join-table>
+        </orm:field>
+        <orm:field name="_scopeAssignments" property="ScopeAssignments" behavior="readwrite" uniqueId="e0cb8443-c6d2-49e7-8954-59492a1a9ade" type="TrackrModels.ScopeAssignment">
+          <orm:collection element-class="TrackrModels.ScopeAssignment" inverse-field="_permission" order-by="" uniqueId="ab85e40d-41f5-479d-b0ad-5954283c62e1" />
+        </orm:field>
+      </orm:class>
+    </orm:namespace>
+    <orm:schema schema="">
+      <orm:table name="WebUsers">
+        <orm:column name="UserID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        <orm:column name="Email" sql-type="nvarchar" nullable="false" length="200" scale="0" ado-type="UnicodeStringVariableLength" />
+        <orm:column name="Password" sql-type="nvarchar" nullable="false" length="128" scale="0" ado-type="UnicodeStringVariableLength" />
+      </orm:table>
+      <orm:table name="Scopes">
+        <orm:column name="ScopeID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        <orm:column name="ScopeName" sql-type="nvarchar" nullable="false" length="50" scale="0" ado-type="UnicodeStringVariableLength" />
+      </orm:table>
+      <orm:table name="ScopeAssignments">
+        <orm:column name="ScopeAssignmentID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        <orm:column name="UserID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        <orm:column name="RoleID" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        <orm:column name="PermissionID" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        <orm:column name="ScopeID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        <orm:column name="ResourceID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        <orm:column name="IsDeny" sql-type="bit" nullable="false" length="0" scale="0" has-default-value="true" ado-type="Bit" />
+        <orm:constraint name="FK_ScopeAssignments_Permissions" delete-action="dbdefaultrule" destination-table="Permissions">
+          <orm:column name="PermissionID" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        </orm:constraint>
+        <orm:constraint name="FK_ScopeAssignments_Roles" delete-action="dbdefaultrule" destination-table="Roles">
+          <orm:column name="RoleID" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        </orm:constraint>
+        <orm:constraint name="FK_ScopeAssignments_ScopeAssignments" delete-action="dbdefaultrule" destination-table="WebUsers">
+          <orm:column name="UserID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:constraint>
+        <orm:constraint name="FK_ScopeAssignments_Scopes" delete-action="dbdefaultrule" destination-table="Scopes">
+          <orm:column name="ScopeID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:constraint>
+      </orm:table>
+      <orm:table name="Roles">
+        <orm:column name="RoleID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        <orm:column name="RoleName" sql-type="nvarchar" nullable="false" length="100" scale="0" ado-type="UnicodeStringVariableLength" />
+      </orm:table>
+      <orm:table name="RolePermissions" join-table="true">
+        <orm:column name="RoleID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        <orm:column name="PermissionID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        <orm:constraint name="FK_RolePermissions_Permissions" delete-action="dbdefaultrule" destination-table="Permissions">
+          <orm:column name="PermissionID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:constraint>
+        <orm:constraint name="FK_RolePermissions_Roles" delete-action="dbdefaultrule" destination-table="Roles">
+          <orm:column name="RoleID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:constraint>
+      </orm:table>
+      <orm:table name="Permissions">
+        <orm:column name="PermissionID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        <orm:column name="PermissionName" sql-type="nvarchar" nullable="false" length="100" scale="0" ado-type="UnicodeStringVariableLength" />
+      </orm:table>
+    </orm:schema>
+    <orm:relational-naming-settings>
+      <orm:source-strategy>Property</orm:source-strategy>
+      <orm:remove-camel-case>False</orm:remove-camel-case>
+    </orm:relational-naming-settings>
+  </orm:orm>
+  <ModelSettings xmlns="">
+    <AppConfigConnectionPropertyName>UserManagementConnection</AppConfigConnectionPropertyName>
+    <AppConfigConnectionString>data source=dempsey.cgya5ichg1th.us-west-2.rds.amazonaws.com,1433;initial catalog=UserManagement;persist security info=True;user id=alex;password=casciani;multipleactiveresultsets=True;application name=EntityFramework</AppConfigConnectionString>
+    <InitialCatalog>UserManagement</InitialCatalog>
+    <NamingSettings>
+      <ClassRules>
+        <CaseMode>PascalCase</CaseMode>
+        <PluralizationMode>Singularize</PluralizationMode>
+      </ClassRules>
+      <FieldRules>
+        <AddPrefix>_</AddPrefix>
+        <CaseMode>CamelCase</CaseMode>
+      </FieldRules>
+      <PropertyRules>
+        <CaseMode>PascalCase</CaseMode>
+      </PropertyRules>
+      <NavigationPropertyRules />
+    </NamingSettings>
+    <CodeGenerationSettings>
+      <MappingDefinitionType>Xml</MappingDefinitionType>
+    </CodeGenerationSettings>
+    <SchemaUpdateSettings />
+    <BackendConfigurationSettings>
+      <BackendConfiguration>
+        <Backend>MsSql</Backend>
+        <ProviderName>System.Data.SqlClient</ProviderName>
+      </BackendConfiguration>
+    </BackendConfigurationSettings>
+  </ModelSettings>
+  <Types>
+    <DomainClass Id="af528235-fa30-4a48-83ec-c830227ba074" name="WebUser" namespace="TrackrModels" showPropertiesCompartment="true" identityMechanism="DatabaseServerCalculated" concurrencyMode="Changed" showNavigationCompartment="true" showImplementationCompartment="true" identityMechanismMember="UserID">
+      <Property Id="aa9e5bdd-89b4-4716-85c3-94c6f6a6716f" name="UserID" type="Int32" label="UserID : Int32" kind="Persistent" identity="true" fieldName="_userID" />
+      <Property Id="717729c4-62e8-4eb9-83c7-878b74acac36" name="Email" label="Email : String" kind="Persistent" fieldName="_email" />
+      <Property Id="efd012c3-79fc-4e8a-aa83-bed54291e8cb" name="Password" label="Password : String" kind="Persistent" fieldName="_password" />
+      <navigationalProperties>
+        <classHasNavigationalProperties Id="11bc889f-6326-480c-b769-1463f46e37c9">
+          <NavigationalProperty Id="5f013196-918a-47d6-9235-d616983dff06" name="ScopeAssignments" type="IList&lt;ScopeAssignment&gt;" label="ScopeAssignments : IList&lt;ScopeAssignment&gt;" nullable="true" kind="Persistent" fieldName="_scopeAssignments" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+      </navigationalProperties>
+    </DomainClass>
+    <DomainClass Id="f4317e2f-ade7-4bf9-ae12-7cc7b5ceb026" name="Scope" namespace="TrackrModels" showPropertiesCompartment="true" identityMechanism="DatabaseServerCalculated" concurrencyMode="Changed" showNavigationCompartment="true" showImplementationCompartment="true" identityMechanismMember="ScopeID">
+      <Property Id="2545e734-19c4-44cc-8005-365e046d058a" name="ScopeID" type="Int32" label="ScopeID : Int32" kind="Persistent" identity="true" fieldName="_scopeID" />
+      <Property Id="21f4a319-6723-4919-ae78-c2460a098fea" name="ScopeName" label="ScopeName : String" kind="Persistent" fieldName="_scopeName" />
+      <navigationalProperties>
+        <classHasNavigationalProperties Id="17ee0542-006f-4751-9fd0-3b016c270498">
+          <NavigationalProperty Id="ecd0c293-a973-4d3e-9514-40ce1a093704" name="ScopeAssignments" type="IList&lt;ScopeAssignment&gt;" label="ScopeAssignments : IList&lt;ScopeAssignment&gt;" nullable="true" kind="Persistent" fieldName="_scopeAssignments" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+      </navigationalProperties>
+    </DomainClass>
+    <DomainClass Id="59b0d82d-e6c4-4918-8767-6314c6383b6d" name="ScopeAssignment" namespace="TrackrModels" showPropertiesCompartment="true" identityMechanism="DatabaseServerCalculated" concurrencyMode="Changed" showNavigationCompartment="true" showImplementationCompartment="true" identityMechanismMember="ScopeAssignmentID">
+      <Property Id="825410d1-a2cb-4c47-8bcc-14cc69a3c152" name="ScopeAssignmentID" type="Int32" label="ScopeAssignmentID : Int32" kind="Persistent" identity="true" fieldName="_scopeAssignmentID" />
+      <Property Id="25b5116a-e60e-45e6-a0d7-0ebbf2488a4a" name="IsDeny" type="Boolean" label="IsDeny : Boolean" kind="Persistent" fieldName="_isDeny" />
+      <Property Id="d0f0ef74-57ad-41a9-9a53-983ad22617ad" name="PermissionID" type="Int32" label="PermissionID : Int32" nullable="true" kind="Persistent" fieldName="_permissionID" />
+      <Property Id="51ed3a54-1af7-438c-8ffa-8113d233d1f1" name="ResourceID" type="Int32" label="ResourceID : Int32" kind="Persistent" fieldName="_resourceID" />
+      <Property Id="405f4d8f-d9a5-4812-a193-0b3c3d787bfd" name="RoleID" type="Int32" label="RoleID : Int32" nullable="true" kind="Persistent" fieldName="_roleID" />
+      <Property Id="daa50168-0bde-4c3f-9568-11d2577c4296" name="ScopeID" type="Int32" label="ScopeID : Int32" kind="Persistent" fieldName="_scopeID" />
+      <Property Id="6e94588f-1dea-40b6-9a12-8e540ac487ff" name="UserID" type="Int32" label="UserID : Int32" kind="Persistent" fieldName="_userID" />
+      <AssociationTargets>
+        <Association Id="ab85e40d-41f5-479d-b0ad-5954283c62e1" SourceMultiplicity="ZeroOne" name="ScopeAssignmentHasPermission">
+          <DomainClassMoniker name="/UserManagement/Permission" />
+          <targetNavigationalProperty>
+            <associationDefinesTargetProperty Id="da94cab0-26b7-4d32-b5be-6e3deee8a761">
+              <NavigationalPropertyMoniker name="/UserManagement/Permission/ScopeAssignments" />
+            </associationDefinesTargetProperty>
+          </targetNavigationalProperty>
+          <sourceNavigationalProperty>
+            <associationDefinesSourceProperty Id="8d507c22-aa88-429a-b8a1-6c8cbe1673be">
+              <NavigationalPropertyMoniker name="/UserManagement/ScopeAssignment/Permission" />
+            </associationDefinesSourceProperty>
+          </sourceNavigationalProperty>
+        </Association>
+        <Association Id="281b75e6-c6b2-44d4-be03-c8175108273c" SourceMultiplicity="ZeroOne" name="ScopeAssignmentHasRole">
+          <DomainClassMoniker name="/UserManagement/Role" />
+          <targetNavigationalProperty>
+            <associationDefinesTargetProperty Id="1a3007c5-dca6-4348-ab40-84c5989992ea">
+              <NavigationalPropertyMoniker name="/UserManagement/Role/ScopeAssignments" />
+            </associationDefinesTargetProperty>
+          </targetNavigationalProperty>
+          <sourceNavigationalProperty>
+            <associationDefinesSourceProperty Id="da2deae6-94d3-49e3-a196-c1f2934f670e">
+              <NavigationalPropertyMoniker name="/UserManagement/ScopeAssignment/Role" />
+            </associationDefinesSourceProperty>
+          </sourceNavigationalProperty>
+        </Association>
+        <Association Id="f3bde9fa-95cd-4b6c-b1d2-62aed54621c2" SourceMultiplicity="One" name="ScopeAssignmentHasWebUser">
+          <DomainClassMoniker name="/UserManagement/WebUser" />
+          <targetNavigationalProperty>
+            <associationDefinesTargetProperty Id="7149bf81-8afe-49d5-850c-40c41d5b2f17">
+              <NavigationalPropertyMoniker name="/UserManagement/WebUser/ScopeAssignments" />
+            </associationDefinesTargetProperty>
+          </targetNavigationalProperty>
+          <sourceNavigationalProperty>
+            <associationDefinesSourceProperty Id="c8af08b6-21ff-42a2-8798-d2767179a2c1">
+              <NavigationalPropertyMoniker name="/UserManagement/ScopeAssignment/WebUser" />
+            </associationDefinesSourceProperty>
+          </sourceNavigationalProperty>
+        </Association>
+        <Association Id="609e3012-697c-4098-a07e-072f9b2cc370" SourceMultiplicity="One" name="ScopeAssignmentHasScope">
+          <DomainClassMoniker name="/UserManagement/Scope" />
+          <targetNavigationalProperty>
+            <associationDefinesTargetProperty Id="5e7b0c11-4d29-472d-a1fb-8672f0fcd27c">
+              <NavigationalPropertyMoniker name="/UserManagement/Scope/ScopeAssignments" />
+            </associationDefinesTargetProperty>
+          </targetNavigationalProperty>
+          <sourceNavigationalProperty>
+            <associationDefinesSourceProperty Id="9ec80ff7-ae3a-4072-bd46-ae3196dc86e9">
+              <NavigationalPropertyMoniker name="/UserManagement/ScopeAssignment/Scope" />
+            </associationDefinesSourceProperty>
+          </sourceNavigationalProperty>
+        </Association>
+      </AssociationTargets>
+      <navigationalProperties>
+        <classHasNavigationalProperties Id="65dc138c-3b8a-41c8-a50a-976da2a20414">
+          <NavigationalProperty Id="393447b4-74bb-4c1b-8e69-7c049bb97509" name="Permission" type="Permission" label="Permission : Permission" nullable="true" kind="Persistent" fieldName="_permission" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+        <classHasNavigationalProperties Id="297d4774-6c8c-4146-b4ff-6191f26e94e7">
+          <NavigationalProperty Id="22c1eed8-4214-4a14-810e-18b2cae9aa84" name="Role" type="Role" label="Role : Role" nullable="true" kind="Persistent" fieldName="_role" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+        <classHasNavigationalProperties Id="56368559-866d-40e2-9b79-2e657e843546">
+          <NavigationalProperty Id="a9cf528b-7948-406a-bb4c-5ff27fd86f46" name="WebUser" type="WebUser" label="WebUser : WebUser" nullable="true" kind="Persistent" fieldName="_webUser" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+        <classHasNavigationalProperties Id="ab53a691-570a-44e2-bfcd-a29b14c2ec1f">
+          <NavigationalProperty Id="43b0354d-a687-4cd5-a823-b64edd970724" name="Scope" type="Scope" label="Scope : Scope" nullable="true" kind="Persistent" fieldName="_scope" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+      </navigationalProperties>
+    </DomainClass>
+    <DomainClass Id="6fca5e1e-74a8-4328-9430-89ae7326c8a4" name="Role" namespace="TrackrModels" showPropertiesCompartment="true" identityMechanism="DatabaseServerCalculated" concurrencyMode="Changed" showNavigationCompartment="true" showImplementationCompartment="true" identityMechanismMember="RoleID">
+      <Property Id="8b49d618-957a-400b-99ca-9c89f37891a3" name="RoleID" type="Int32" label="RoleID : Int32" kind="Persistent" identity="true" fieldName="_roleID" />
+      <Property Id="1dde2e1b-6800-4f4d-87eb-8b6a493f8c91" name="RoleName" label="RoleName : String" kind="Persistent" fieldName="_roleName" />
+      <navigationalProperties>
+        <classHasNavigationalProperties Id="67d5d288-c724-4843-9e68-e6940738e0d5">
+          <NavigationalProperty Id="95aac757-a94d-4da9-bbdc-c015372a4cc8" name="ScopeAssignments" type="IList&lt;ScopeAssignment&gt;" label="ScopeAssignments : IList&lt;ScopeAssignment&gt;" nullable="true" kind="Persistent" fieldName="_scopeAssignments" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+        <classHasNavigationalProperties Id="19cd63ed-bcf0-4ea4-a6a9-775601dc60d3">
+          <NavigationalProperty Id="6cb6bcf7-2864-45ff-8071-96790bacb514" name="Permissions" type="IList&lt;Permission&gt;" label="Permissions : IList&lt;Permission&gt;" nullable="true" kind="Persistent" fieldName="_permissions" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+      </navigationalProperties>
+    </DomainClass>
+    <DomainClass Id="0a6dcf76-05ea-43d8-b87f-a291e8d7bfb6" name="Permission" namespace="TrackrModels" showPropertiesCompartment="true" identityMechanism="DatabaseServerCalculated" concurrencyMode="Changed" showNavigationCompartment="true" showImplementationCompartment="true" identityMechanismMember="PermissionID">
+      <Property Id="49ac2607-f328-4e83-a4b4-9ef23c7d67a9" name="PermissionID" type="Int32" label="PermissionID : Int32" kind="Persistent" identity="true" fieldName="_permissionID" />
+      <Property Id="46ad7be0-a11b-47fd-adf3-02f0bcad9e72" name="PermissionName" label="PermissionName : String" kind="Persistent" fieldName="_permissionName" />
+      <AssociationTargets>
+        <Association Id="405aa91c-7478-4e4d-a176-731a2e8ec99f" name="PermissionsHaveRoles">
+          <DomainClassMoniker name="/UserManagement/Role" />
+          <targetNavigationalProperty>
+            <associationDefinesTargetProperty Id="5b977174-40f7-4c56-91a0-caa786fda0ce">
+              <NavigationalPropertyMoniker name="/UserManagement/Role/Permissions" />
+            </associationDefinesTargetProperty>
+          </targetNavigationalProperty>
+          <sourceNavigationalProperty>
+            <associationDefinesSourceProperty Id="17329902-29ba-4c5d-9675-77f3b9310343">
+              <NavigationalPropertyMoniker name="/UserManagement/Permission/Roles" />
+            </associationDefinesSourceProperty>
+          </sourceNavigationalProperty>
+        </Association>
+      </AssociationTargets>
+      <navigationalProperties>
+        <classHasNavigationalProperties Id="6c792e2f-be5d-49ac-a7b7-67a724a244d9">
+          <NavigationalProperty Id="e0cb8443-c6d2-49e7-8954-59492a1a9ade" name="ScopeAssignments" type="IList&lt;ScopeAssignment&gt;" label="ScopeAssignments : IList&lt;ScopeAssignment&gt;" nullable="true" kind="Persistent" fieldName="_scopeAssignments" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+        <classHasNavigationalProperties Id="69063157-d3ff-4b08-b097-4958b550eae1">
+          <NavigationalProperty Id="6dd22a0b-ec38-4fd2-8d11-ee005afe8db3" name="Roles" type="IList&lt;Role&gt;" label="Roles : IList&lt;Role&gt;" nullable="true" kind="Persistent" fieldName="_roles" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+      </navigationalProperties>
+    </DomainClass>
+  </Types>
+  <domainContext>
+    <domainModelHasDomainContext Id="c6dd559c-9940-444f-ad43-e37bbf671b13">
+      <domainContainer name="UserManagement" namespace="TrackrModels" showPropertiesCompartment="true">
+        <entitySetProperty name="WebUsers" namespace="TrackrModels" type="WebUser" label="WebUsers : IQueryable&lt;TrackrModels.WebUser&gt;" />
+        <entitySetProperty name="Scopes" namespace="TrackrModels" type="Scope" label="Scopes : IQueryable&lt;TrackrModels.Scope&gt;" />
+        <entitySetProperty name="ScopeAssignments" namespace="TrackrModels" type="ScopeAssignment" label="ScopeAssignments : IQueryable&lt;TrackrModels.ScopeAssignment&gt;" />
+        <entitySetProperty name="Roles" namespace="TrackrModels" type="Role" label="Roles : IQueryable&lt;TrackrModels.Role&gt;" />
+        <entitySetProperty name="Permissions" namespace="TrackrModels" type="Permission" label="Permissions : IQueryable&lt;TrackrModels.Permission&gt;" />
+      </domainContainer>
+    </domainModelHasDomainContext>
+  </domainContext>
+</DomainModel>

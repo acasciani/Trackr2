@@ -1,0 +1,22 @@
+﻿/* Move down content because we have a fixed navbar that is 50px tall */
+body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+
+.text-right{
+    text-align:right;
+}
+
+.navbar.bottom .navbar-text {
+    margin-right: 15px;
+    margin-left: 15px;
+}
+
+.navbar.bottom.navbar-fixed-bottom {
+}
+
+.img-responsive{
+    display: initial;
+}

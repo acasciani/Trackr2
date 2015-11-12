@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type='text/xsl' href='_EFConversionWizard_Files/ConversionWizardLog.xslt'?>
+<UpgradeLog>
+  <Properties>
+    <Property Name="Solution" Value="Trackr" />
+    <Property Name="Solution File" Value="C:\dev\trackr\Trackr.sln" />
+    <Property Name="Project" Value="TrackrModels" />
+    <Property Name="Project File" Value="C:\dev\trackr\TrackrModels\TrackrModels.csproj" />
+    <Property Name="Date" Value="Monday, September 21, 2015" />
+    <Property Name="Time" Value="12:00 AM" />
+    <Property Name="Conversion File" Value="UserManagement.edmx" />
+    <Property Name="Output Directory" Value="C:\dev\trackr\TrackrModels" />
+    <Property Name="Backup Directory" Value="C:\dev\trackr\TrackrModels\TrackrModels_Backup" />
+  </Properties>
+  <Events />
+  <ManualActions />
+  <Errors>
+    <Error>
+      <Message>The provider did not return a ProviderManifest instance.</Message>
+      <Message>Could not determine storage version; a valid storage connection or a version hint is required.</Message>
+      <Message>   at System.Data.SqlClient.SqlVersionUtils.GetSqlVersion(String versionHint)</Message>
+      <Message>   at System.Data.SqlClient.SqlProviderManifest..ctor(String manifestToken)</Message>
+      <Message>   at System.Data.SqlClient.SqlProviderServices.GetDbProviderManifest(String versionHint)</Message>
+      <Message>   at System.Data.Common.DbProviderServices.GetProviderManifest(String manifestToken)</Message>
+    </Error>
+  </Errors>
+</UpgradeLog>
