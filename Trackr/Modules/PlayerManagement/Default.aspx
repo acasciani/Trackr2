@@ -12,7 +12,7 @@
                 <Columns>
                     <asp:BoundField DataField="LastName" SortExpression="LastName" HeaderText="Last name" ItemStyle-CssClass="col-xs-3" />
                     <asp:BoundField DataField="FirstName" SortExpression="FirstName" HeaderText="First name" ItemStyle-CssClass="col-xs-3" />
-                    <asp:BoundField DataField="Age" SortExpression="Age" HeaderText="Age" />
+                    <asp:BoundField DataField="BirthDate" SortExpression="BirthDate" HeaderText="Birth Date" DataFormatString="{0:MM/dd/yyyy}" />
                     <asp:TemplateField ItemStyle-CssClass="col-xs-1">
                         <ItemTemplate>
                             <a href="Manage.aspx?id=<%#Eval("PlayerID") %>" class="glyphicon glyphicon-edit" title="Edit player"></a>
