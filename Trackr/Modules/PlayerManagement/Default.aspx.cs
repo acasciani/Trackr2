@@ -16,8 +16,8 @@ namespace Trackr.Modules.PlayerManagement
         {
             public string FirstName { get; set; }
             public string LastName { get; set; }
-            public int Age { get; set; }
-            public DateTime BirthDate { get; set; }
+            public int? Age { get; set; }
+            public DateTime? BirthDate { get; set; }
             public int PlayerID { get; set; }
         }
 
@@ -37,10 +37,10 @@ namespace Trackr.Modules.PlayerManagement
             {
                 var allInfo = pc.Get().Select(i => new PlayerResult
                 {
-                    Age = DateTime.Today.Year - i.DateOfBirth.Year,
-                    BirthDate = i.DateOfBirth,
-                    FirstName = i.FName,
-                    LastName = i.LName,
+                    Age = i.Person.DateOfBirth.HasValue ? DateTime.Today.Year - i.Person.DateOfBirth.Value.Year : (int?)null,
+                    BirthDate = i.Person.DateOfBirth.HasValue ? i.Person.DateOfBirth.Value : (DateTime?)null,
+                    FirstName = i.Person.FName,
+                    LastName = i.Person.LName,
                     PlayerID = i.PlayerID
                 });
 

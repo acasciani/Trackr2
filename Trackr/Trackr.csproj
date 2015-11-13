@@ -205,6 +205,7 @@
     <Content Include="Account\Web.config" />
     <Content Include="Modules\PlayerManagement\PlayerManagement.master" />
     <Content Include="Content\Web.config" />
+    <Compile Include="Controllers\AddressesController.cs" />
     <Compile Include="Controllers\Scoping\TeamsController.Partial.cs" />
     <None Include="Properties\PublishProfiles\Stage.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
@@ -241,6 +242,7 @@
     <Content Include="Default.aspx" />
     <Content Include="favicon.ico" />
     <Content Include="Site.Master" />
+    <Content Include="Source\Controls\AddressBook.ascx" />
     <Content Include="Source\Controls\AlertBox.ascx" />
     <Content Include="Source\Controls\ProgramTeamPlayerPicker.ascx" />
     <Content Include="Source\Wizards\PlayerManagement.ascx" />
@@ -283,6 +285,7 @@
     <Compile Include="Controllers\OpenAccessBaseApiController.Partial.cs" />
     <Compile Include="Controllers\Scoping\PlayersController.Partial.cs" />
     <Compile Include="Controllers\Scoping\ProgramsController.Partial.cs" />
+    <Compile Include="Controllers\GuardiansController.cs" />
     <Compile Include="Modules\PlayerManagement\Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -312,6 +315,7 @@
       <DependentUpon>Manage.aspx</DependentUpon>
     </Compile>
     <Compile Include="Controllers\PlayerPassesController.cs" />
+    <Compile Include="Controllers\PeopleController.cs" />
     <Compile Include="Repositories\ClubManagementRepositories.cs" />
     <Compile Include="Controllers\ClubsController.cs" />
     <Compile Include="Controllers\Partials\ScopeAssignmentsController.Partial.cs" />
@@ -366,6 +370,13 @@
     </Compile>
     <Compile Include="SiteNotLoggedIn.Master.designer.cs">
       <DependentUpon>SiteNotLoggedIn.Master</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Controls\AddressBook.ascx.cs">
+      <DependentUpon>AddressBook.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Source\Controls\AddressBook.ascx.designer.cs">
+      <DependentUpon>AddressBook.ascx</DependentUpon>
     </Compile>
     <Compile Include="Source\Controls\AlertBox.ascx.cs">
       <DependentUpon>AlertBox.ascx</DependentUpon>

@@ -10,7 +10,7 @@ namespace Trackr.Utils
 
     public static class UserInputUtils
     {
-        public static void Populate(this DropDownList ddl, DropDownType type, string defaultSelectionValue = null, int[] retainIndices = null)
+        public static void Populate(this DropDownList ddl, DropDownType type, string defaultSelectionValue = null, bool retainFirst = false)
         {
             switch (type)
             {
@@ -41,6 +41,7 @@ namespace Trackr.Utils
                 default: break;
             }
 
+            Reset(ddl, retainFirst);
             ddl.DataValueField = "Value";
             ddl.DataTextField = "Label";
             ddl.DataBind();
@@ -49,8 +50,10 @@ namespace Trackr.Utils
         }
 
 
-        public static void Populate_ScopeValues(this DropDownList ddl, int scopeTypeID, string defaultSelectionValue = null, int[] retainIndices = null)
+        public static void Populate_ScopeValues(this DropDownList ddl, int scopeTypeID, string defaultSelectionValue = null, bool retainFirst = false)
         {
+            Reset(ddl, retainFirst);
+
             using(ScopeAssignmentsController sac = new ScopeAssignmentsController()){
                 var scopeValues = sac.GetScopeValueDisplay(scopeTypeID);
                 ddl.DataSource = scopeValues.Select(i => new { Label = i.Value, Value = i.Key }).OrderBy(i => i.Label);
@@ -59,6 +62,18 @@ namespace Trackr.Utils
                 ddl.DataBind();
 
                 SelectDefault(ddl, defaultSelectionValue);
+            }
+        }
+
+        public static void Reset(this DropDownList ddl, bool keepFirst)
+        {
+            ListItem first = keepFirst && ddl.Items.Count > 0 ? ddl.Items[0] : null;
+
+            ddl.Items.Clear();
+            
+            if (first != null)
+            {
+                ddl.Items.Add(first);
             }
         }
 

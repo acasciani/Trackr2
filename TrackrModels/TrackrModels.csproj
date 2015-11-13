@@ -72,6 +72,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Address.generated.cs">
+      <DependentUpon>ClubManagement.rlinq</DependentUpon>
+    </Compile>
     <Compile Include="Club.generated.cs">
       <DependentUpon>ClubManagement.rlinq</DependentUpon>
     </Compile>
@@ -80,8 +83,14 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ClubManagement.rlinq</DependentUpon>
     </Compile>
+    <Compile Include="Guardian.generated.cs">
+      <DependentUpon>ClubManagement.rlinq</DependentUpon>
+    </Compile>
     <Compile Include="Permission.generated.cs">
       <DependentUpon>UserManagement.rlinq</DependentUpon>
+    </Compile>
+    <Compile Include="Person.generated.cs">
+      <DependentUpon>ClubManagement.rlinq</DependentUpon>
     </Compile>
     <Compile Include="Player.generated.cs">
       <DependentUpon>ClubManagement.rlinq</DependentUpon>

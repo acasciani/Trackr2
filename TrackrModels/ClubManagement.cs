@@ -122,6 +122,30 @@ namespace TrackrModels
 			}
 		}
 		
+		public IQueryable<Person> People 
+		{
+			get
+			{
+				return this.GetAll<Person>();
+			}
+		}
+		
+		public IQueryable<Guardian> Guardians 
+		{
+			get
+			{
+				return this.GetAll<Guardian>();
+			}
+		}
+		
+		public IQueryable<Address> Addresses 
+		{
+			get
+			{
+				return this.GetAll<Address>();
+			}
+		}
+		
 		public static BackendConfiguration GetBackendConfiguration()
 		{
 			BackendConfiguration backend = new BackendConfiguration();
@@ -177,6 +201,18 @@ namespace TrackrModels
 			get;
 		}
 		IQueryable<TeamPlayer> TeamPlayers
+		{
+			get;
+		}
+		IQueryable<Person> People
+		{
+			get;
+		}
+		IQueryable<Guardian> Guardians
+		{
+			get;
+		}
+		IQueryable<Address> Addresses
 		{
 			get;
 		}

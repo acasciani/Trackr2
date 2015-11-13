@@ -23,18 +23,18 @@ using TrackrModels;
 namespace TrackrModels	
 {
 	[System.Serializable()]
-	public partial class Player : System.Runtime.Serialization.ISerializable
+	public partial class Guardian : System.Runtime.Serialization.ISerializable
 	{
-		private int _playerID;
-		public virtual int PlayerID
+		private int _guardianID;
+		public virtual int GuardianID
 		{
 			get
 			{
-				return this._playerID;
+				return this._guardianID;
 			}
 			set
 			{
-				this._playerID = value;
+				this._guardianID = value;
 			}
 		}
 		
@@ -51,6 +51,45 @@ namespace TrackrModels
 			}
 		}
 		
+		private int _playerID;
+		public virtual int PlayerID
+		{
+			get
+			{
+				return this._playerID;
+			}
+			set
+			{
+				this._playerID = value;
+			}
+		}
+		
+		private byte _sortOrder;
+		public virtual byte SortOrder
+		{
+			get
+			{
+				return this._sortOrder;
+			}
+			set
+			{
+				this._sortOrder = value;
+			}
+		}
+		
+		private Player _player;
+		public virtual Player Player
+		{
+			get
+			{
+				return this._player;
+			}
+			set
+			{
+				this._player = value;
+			}
+		}
+		
 		private Person _person;
 		public virtual Person Person
 		{
@@ -64,59 +103,27 @@ namespace TrackrModels
 			}
 		}
 		
-		private IList<Transaction> _transactions = new List<Transaction>();
-		public virtual IList<Transaction> Transactions
-		{
-			get
-			{
-				return this._transactions;
-			}
-		}
-		
-		private IList<PlayerPass> _playerPasses = new List<PlayerPass>();
-		public virtual IList<PlayerPass> PlayerPasses
-		{
-			get
-			{
-				return this._playerPasses;
-			}
-		}
-		
-		private IList<TeamPlayer> _teamPlayers = new List<TeamPlayer>();
-		public virtual IList<TeamPlayer> TeamPlayers
-		{
-			get
-			{
-				return this._teamPlayers;
-			}
-		}
-		
-		private IList<Guardian> _guardians = new List<Guardian>();
-		public virtual IList<Guardian> Guardians
-		{
-			get
-			{
-				return this._guardians;
-			}
-		}
-		
 		#region ISerializable Implementation
 		
-		public Player()
+		public Guardian()
 		{
 		}
 		
-		protected Player(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
+		protected Guardian(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
 		{
-			this.PlayerID = info.GetInt32("PlayerID");
+			this.GuardianID = info.GetInt32("GuardianID");
 			this.PersonID = info.GetInt32("PersonID");
+			this.PlayerID = info.GetInt32("PlayerID");
+			this.SortOrder = info.GetByte("SortOrder");
 			CustomizeDeserializationProcess(info, context);
 		}
 		
 		public virtual void GetObjectData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
 		{
-			info.AddValue("PlayerID", this.PlayerID, typeof(int));
+			info.AddValue("GuardianID", this.GuardianID, typeof(int));
 			info.AddValue("PersonID", this.PersonID, typeof(int));
+			info.AddValue("PlayerID", this.PlayerID, typeof(int));
+			info.AddValue("SortOrder", this.SortOrder, typeof(byte));
 			CustomizeSerializationProcess(info, context);
 		}
 		

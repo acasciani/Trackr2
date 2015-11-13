@@ -23,21 +23,8 @@ using TrackrModels;
 namespace TrackrModels	
 {
 	[System.Serializable()]
-	public partial class Player : System.Runtime.Serialization.ISerializable
+	public partial class Person : System.Runtime.Serialization.ISerializable
 	{
-		private int _playerID;
-		public virtual int PlayerID
-		{
-			get
-			{
-				return this._playerID;
-			}
-			set
-			{
-				this._playerID = value;
-			}
-		}
-		
 		private int _personID;
 		public virtual int PersonID
 		{
@@ -51,43 +38,68 @@ namespace TrackrModels
 			}
 		}
 		
-		private Person _person;
-		public virtual Person Person
+		private string _fName;
+		public virtual string FName
 		{
 			get
 			{
-				return this._person;
+				return this._fName;
 			}
 			set
 			{
-				this._person = value;
+				this._fName = value;
 			}
 		}
 		
-		private IList<Transaction> _transactions = new List<Transaction>();
-		public virtual IList<Transaction> Transactions
+		private System.Nullable<System.Char> _mInitial;
+		public virtual System.Nullable<System.Char> MInitial
 		{
 			get
 			{
-				return this._transactions;
+				return this._mInitial;
+			}
+			set
+			{
+				this._mInitial = value;
 			}
 		}
 		
-		private IList<PlayerPass> _playerPasses = new List<PlayerPass>();
-		public virtual IList<PlayerPass> PlayerPasses
+		private string _lName;
+		public virtual string LName
 		{
 			get
 			{
-				return this._playerPasses;
+				return this._lName;
+			}
+			set
+			{
+				this._lName = value;
 			}
 		}
 		
-		private IList<TeamPlayer> _teamPlayers = new List<TeamPlayer>();
-		public virtual IList<TeamPlayer> TeamPlayers
+		private DateTime? _dateOfBirth;
+		public virtual DateTime? DateOfBirth
 		{
 			get
 			{
-				return this._teamPlayers;
+				return this._dateOfBirth;
+			}
+			set
+			{
+				this._dateOfBirth = value;
+			}
+		}
+		
+		private byte? _gender;
+		public virtual byte? Gender
+		{
+			get
+			{
+				return this._gender;
+			}
+			set
+			{
+				this._gender = value;
 			}
 		}
 		
@@ -100,23 +112,40 @@ namespace TrackrModels
 			}
 		}
 		
+		private IList<Address> _addresses = new List<Address>();
+		public virtual IList<Address> Addresses
+		{
+			get
+			{
+				return this._addresses;
+			}
+		}
+		
 		#region ISerializable Implementation
 		
-		public Player()
+		public Person()
 		{
 		}
 		
-		protected Player(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
+		protected Person(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
 		{
-			this.PlayerID = info.GetInt32("PlayerID");
 			this.PersonID = info.GetInt32("PersonID");
+			this.FName = info.GetString("FName");
+			this.MInitial = (System.Nullable<System.Char>)info.GetValue("MInitial", typeof(System.Nullable<System.Char>));
+			this.LName = info.GetString("LName");
+			this.DateOfBirth = (DateTime?)info.GetValue("DateOfBirth", typeof(DateTime?));
+			this.Gender = (byte?)info.GetValue("Gender", typeof(byte?));
 			CustomizeDeserializationProcess(info, context);
 		}
 		
 		public virtual void GetObjectData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
 		{
-			info.AddValue("PlayerID", this.PlayerID, typeof(int));
 			info.AddValue("PersonID", this.PersonID, typeof(int));
+			info.AddValue("FName", this.FName, typeof(string));
+			info.AddValue("MInitial", this.MInitial, typeof(System.Nullable<System.Char>));
+			info.AddValue("LName", this.LName, typeof(string));
+			info.AddValue("DateOfBirth", this.DateOfBirth, typeof(DateTime?));
+			info.AddValue("Gender", this.Gender, typeof(byte?));
 			CustomizeSerializationProcess(info, context);
 		}
 		

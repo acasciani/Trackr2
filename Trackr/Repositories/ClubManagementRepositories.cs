@@ -10,9 +10,24 @@ using TrackrModels;
 
 namespace Trackr
 {
+    public partial class AddressRepository : OpenAccessBaseRepository<TrackrModels.Address, TrackrModels.ClubManagement>
+    {
+
+    }
+
 	public partial class ClubRepository : OpenAccessBaseRepository<TrackrModels.Club, TrackrModels.ClubManagement>
     {
 	
+    }
+
+    public partial class GuardianRepository : OpenAccessBaseRepository<TrackrModels.Guardian, TrackrModels.ClubManagement>
+    {
+
+    }
+
+    public partial class PersonRepository : OpenAccessBaseRepository<TrackrModels.Person, TrackrModels.ClubManagement>
+    {
+
     }
 
     public partial class PlayerPassRepository : OpenAccessBaseRepository<TrackrModels.PlayerPass, TrackrModels.ClubManagement>
@@ -54,5 +69,4 @@ namespace Trackr
     {
 	
     }
-
 }

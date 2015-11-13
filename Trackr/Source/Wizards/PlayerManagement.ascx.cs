@@ -98,11 +98,11 @@ namespace Trackr.Source.Wizards
                 fetch.LoadWith<PlayerPass>(i => i.Photo);
 
                 Player player = pc.GetScopedEntity(CurrentUser.UserID, (WasNew ? Permissions.PlayerManagement.CreatePlayer : Permissions.PlayerManagement.EditPlayer), PrimaryKey.Value, fetch);
-                txtFirstName.Text = player.FName;
-                txtLastName.Text = player.LName;
-                txtMiddleInitial.Text = player.MInitial.HasValue ? player.MInitial.Value.ToString() : "";
+                txtFirstName.Text = player.Person.FName;
+                txtLastName.Text = player.Person.LName;
+                txtMiddleInitial.Text = player.Person.MInitial.HasValue ? player.Person.MInitial.Value.ToString() : "";
 
-                txtDateOfBirth.Text = player.DateOfBirth.ToString("yyyy-MM-dd");
+                txtDateOfBirth.Text = player.Person.DateOfBirth.HasValue ? player.Person.DateOfBirth.Value.ToString("yyyy-MM-dd") : "";
 
                 // Load player pass info, note there should only be one there should be a constraint on the player id and expiration date
                 PlayerPass playerPass = player.PlayerPasses.Where(i => DateTime.Today <= i.Expires).FirstOrDefault();
@@ -122,10 +122,15 @@ namespace Trackr.Source.Wizards
             {
                 Player player = IsNew ? new Player() : pc.Get(PrimaryKey.Value);
 
-                player.DateOfBirth = DateTime.Parse(txtDateOfBirth.Text);
-                player.FName = txtFirstName.Text;
-                player.MInitial = string.IsNullOrWhiteSpace(txtMiddleInitial.Text) ? (char?)null : txtMiddleInitial.Text.ToCharArray()[0];
-                player.LName = txtLastName.Text;
+                if (IsNew)
+                {
+                    player.Person = new Person();
+                }
+
+                player.Person.DateOfBirth = DateTime.Parse(txtDateOfBirth.Text);
+                player.Person.FName = txtFirstName.Text;
+                player.Person.MInitial = string.IsNullOrWhiteSpace(txtMiddleInitial.Text) ? (char?)null : txtMiddleInitial.Text.ToCharArray()[0];
+                player.Person.LName = txtLastName.Text;
 
                 if (IsNew)
                 {
@@ -467,6 +472,7 @@ namespace Trackr.Source.Wizards
 
                 // populate
                 txtPassExpires.Text = pass.Expires.ToString("yyyy-MM-dd");
+                txtPassNumber.Text = pass.PassNumber;
                 OldPlayerPicture = pass.Photo;
                 NewPlayerPicture = pass.Photo;
 
@@ -517,7 +523,15 @@ namespace Trackr.Source.Wizards
             DateTime exp;
             if (DateTime.TryParse(args.Value, out exp))
             {
-                args.IsValid = PlayerPasses.Count(i => i.PlayerID == PrimaryKey.Value && i.Expires == exp) == 0;
+                int? playerPassID = gvPlayerPasses.EditIndex != -1 ? PlayerPasses[gvPlayerPasses.EditIndex].PlayerPassID : (int?)null;
+                if (!playerPassID.HasValue)
+                {
+                    args.IsValid = PlayerPasses.Count(i => i.PlayerID == PrimaryKey.Value && i.Expires == exp) == 0;
+                }
+                else
+                {
+                    args.IsValid = PlayerPasses.Count(i => i.PlayerID == PrimaryKey.Value && i.Expires == exp && i.PlayerPassID != playerPassID.Value) == 0;
+                }
             }
         }
 

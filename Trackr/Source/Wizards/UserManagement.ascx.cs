@@ -200,7 +200,7 @@ namespace Trackr.Source.Wizards
             int scopeID;
             if (int.TryParse(ddlScopeType.SelectedValue, out scopeID))
             {
-                ddlScopeValue.Populate_ScopeValues(scopeID, retainIndices: new int[] { 0 });
+                ddlScopeValue.Populate_ScopeValues(scopeID, retainFirst: true);
                 ddlScopeValue.Focus();
             }
         }

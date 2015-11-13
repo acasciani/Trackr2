@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using TrackrModels;
+using Trackr.Utils;
 
 namespace Trackr.Source.Controls
 {
@@ -96,6 +97,7 @@ namespace Trackr.Source.Controls
                     Value = i.ProgramID
                 }).OrderBy(i => i.Label).ToList();
 
+                ddlProgram.Reset(true);
                 ddlProgram.DataSource = programs;
                 ddlProgram.DataTextField = "Label";
                 ddlProgram.DataValueField = "Value";
@@ -116,6 +118,7 @@ namespace Trackr.Source.Controls
                     })
                     .OrderBy(i => i.Label).ToList();
 
+                ddlTeam.Reset(true);
                 ddlTeam.DataSource = teams;
                 ddlTeam.DataTextField = "Label";
                 ddlTeam.DataValueField = "Value";

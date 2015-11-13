@@ -208,17 +208,14 @@
         <orm:field name="_playerID" property="PlayerID" behavior="readwrite" uniqueId="0c92f7d0-6c3e-4faf-bd23-d4bf8f780164" type="System.Int32">
           <orm:column name="PlayerID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
         </orm:field>
-        <orm:field name="_dateOfBirth" property="DateOfBirth" behavior="readwrite" uniqueId="24e563a3-b68b-4fb5-a04a-8655fabf5131" type="System.DateTime">
-          <orm:column name="DateOfBirth" sql-type="date" nullable="false" length="0" scale="0" ado-type="Date" />
+        <orm:field name="_personID" property="PersonID" behavior="readwrite" uniqueId="dfce10d6-1ef4-4087-98aa-05654efb0fc5" type="System.Int32">
+          <orm:column name="PersonID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
         </orm:field>
-        <orm:field name="_mInitial" property="MInitial" behavior="readwrite" uniqueId="9043a1f2-04c1-4aea-9d66-b17eb64d0e77" type="System.Nullable`1[[System.Char, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
-          <orm:column name="MInitial" sql-type="nvarchar" nullable="true" length="1" scale="0" ado-type="UnicodeStringVariableLength" />
-        </orm:field>
-        <orm:field name="_lName" property="LName" behavior="readwrite" uniqueId="c35265b1-d27e-49c6-b2c9-6737463bb19a" type="System.String">
-          <orm:column name="LName" sql-type="nvarchar" nullable="false" length="30" scale="0" ado-type="UnicodeStringVariableLength" />
-        </orm:field>
-        <orm:field name="_fName" property="FName" behavior="readwrite" uniqueId="98e98d35-e7f9-42fb-a27c-7d138f7697a3" type="System.String">
-          <orm:column name="FName" sql-type="nvarchar" nullable="false" length="30" scale="0" ado-type="UnicodeStringVariableLength" />
+        <orm:field name="_person" property="Person" behavior="readwrite" uniqueId="2395c5e2-4cbf-4e20-bd27-ff69bfc21c6f" type="TrackrModels.Person" default-fetch-group="true" dependent="true">
+          <orm:reference uniqueId="16c30e64-5a96-48b6-a96a-303ffb8252cc" association-name="PlayerHasPerson">
+            <orm:sharedfield name="_personID" target-class="TrackrModels.Person" target-field="_personID" />
+            <orm:constraint name="FK_Players_People" delete-action="dbdefaultrule" destination-table="People" />
+          </orm:reference>
         </orm:field>
         <orm:field name="_transactions" property="Transactions" behavior="readwrite" uniqueId="122a83c1-04f6-4f33-b753-3b5e1abc181b" type="TrackrModels.Transaction">
           <orm:collection element-class="TrackrModels.Transaction" inverse-field="_player" order-by="" uniqueId="17d53c36-6bbf-4829-b016-49606933865a" />
@@ -228,6 +225,9 @@
         </orm:field>
         <orm:field name="_teamPlayers" property="TeamPlayers" behavior="readwrite" uniqueId="fb38666f-2abe-45d2-8175-0a6440419b23" type="TrackrModels.TeamPlayer">
           <orm:collection element-class="TrackrModels.TeamPlayer" inverse-field="_player" order-by="" uniqueId="ddd56e36-4049-459b-8fc6-29db7757842c" />
+        </orm:field>
+        <orm:field name="_guardians" property="Guardians" behavior="readwrite" uniqueId="fc0eae40-db2e-47b5-bc7f-a425e20b7411" type="TrackrModels.Guardian">
+          <orm:collection element-class="TrackrModels.Guardian" inverse-field="_player" order-by="" uniqueId="a4fc5df8-3b5a-43e7-85e6-36e47fb42b5a" />
         </orm:field>
       </orm:class>
       <orm:class name="Club" uniqueId="bbc75fb2-a0dc-4d4c-9c46-3acd3a92fce7">
@@ -342,6 +342,111 @@
           </orm:columnMapping>
         </orm:index>
       </orm:class>
+      <orm:class name="Person" uniqueId="2d068340-0893-47ec-9942-1e5e5780edf8">
+        <orm:table name="People" />
+        <orm:identity>
+          <orm:key-generator name="autoinc">
+            <orm:key-generator-member property-name="PersonID" />
+          </orm:key-generator>
+          <orm:single-field field-name="_personID" />
+        </orm:identity>
+        <orm:concurrency strategy="changed" />
+        <orm:field name="_personID" property="PersonID" behavior="readwrite" uniqueId="03b51280-3cbd-469e-8a2e-11aa99e48cc9" type="System.Int32">
+          <orm:column name="PersonID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_fName" property="FName" behavior="readwrite" uniqueId="5000608d-91f2-4188-b9d2-86de73fa156a" type="System.String">
+          <orm:column name="FName" sql-type="nvarchar" nullable="false" length="30" scale="0" ado-type="UnicodeStringVariableLength" />
+        </orm:field>
+        <orm:field name="_mInitial" property="MInitial" behavior="readwrite" uniqueId="6f76d842-b3ed-4865-a982-970b2a1fb01e" type="System.Nullable`1[[System.Char, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
+          <orm:column name="MInitial" sql-type="nvarchar" nullable="true" length="1" scale="0" ado-type="UnicodeStringVariableLength" />
+        </orm:field>
+        <orm:field name="_lName" property="LName" behavior="readwrite" uniqueId="d3a24ebe-7170-4685-a450-bb909e48517f" type="System.String">
+          <orm:column name="LName" sql-type="nvarchar" nullable="false" length="30" scale="0" ado-type="UnicodeStringVariableLength" />
+        </orm:field>
+        <orm:field name="_dateOfBirth" property="DateOfBirth" behavior="readwrite" uniqueId="f0a6f949-2f51-4d4e-bb8f-29426cb360c7" type="System.Nullable`1[[System.DateTime, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
+          <orm:column name="DateOfBirth" sql-type="date" nullable="true" length="0" scale="0" ado-type="Date" />
+        </orm:field>
+        <orm:field name="_gender" property="Gender" behavior="readwrite" uniqueId="d5c2b8b6-40b6-48ca-bc0d-441643fa395c" type="System.Nullable`1[[System.Byte, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
+          <orm:column name="Gender" sql-type="tinyint" nullable="true" length="0" scale="0" ado-type="Byte" />
+        </orm:field>
+        <orm:field name="_guardians" property="Guardians" behavior="readwrite" uniqueId="7c0c4a12-add5-4dd4-86fc-b0e87244139e" type="TrackrModels.Guardian">
+          <orm:collection element-class="TrackrModels.Guardian" inverse-field="_person" order-by="" uniqueId="e7bc19ce-a67f-418d-9eb6-91f4ccba29ea" />
+        </orm:field>
+        <orm:field name="_addresses" property="Addresses" behavior="readwrite" uniqueId="0a108568-1ff9-4387-b16d-59e4febdcf94" type="TrackrModels.Address">
+          <orm:collection element-class="TrackrModels.Address" inverse-field="_person" order-by="" uniqueId="8bc6d170-c00d-4cba-8e04-dc75f6fdb867" />
+        </orm:field>
+      </orm:class>
+      <orm:class name="Guardian" uniqueId="f9e226b5-203b-494d-b033-ac05193b8e60">
+        <orm:table name="Guardians" />
+        <orm:identity>
+          <orm:key-generator name="autoinc">
+            <orm:key-generator-member property-name="GuardianID" />
+          </orm:key-generator>
+          <orm:single-field field-name="_guardianID" />
+        </orm:identity>
+        <orm:concurrency strategy="changed" />
+        <orm:field name="_guardianID" property="GuardianID" behavior="readwrite" uniqueId="fe5422dd-9c53-47b4-b838-414995f1d3c2" type="System.Int32">
+          <orm:column name="GuardianID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_personID" property="PersonID" behavior="readwrite" uniqueId="2e97959b-2be8-406f-8ca4-d346b1825c99" type="System.Int32">
+          <orm:column name="PersonID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_playerID" property="PlayerID" behavior="readwrite" uniqueId="872bc558-da62-4ffe-a830-27ba4fc85633" type="System.Int32">
+          <orm:column name="PlayerID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_sortOrder" property="SortOrder" behavior="readwrite" uniqueId="8c5c62b7-48c6-4c8a-b829-5bf95c2990bb" type="System.Byte">
+          <orm:column name="SortOrder" sql-type="tinyint" nullable="false" length="0" scale="0" ado-type="Byte" />
+        </orm:field>
+        <orm:field name="_player" property="Player" behavior="readwrite" uniqueId="3f75e32a-50b4-4aa9-b5dd-2a7689606c0c" type="TrackrModels.Player">
+          <orm:reference uniqueId="a4fc5df8-3b5a-43e7-85e6-36e47fb42b5a" association-name="GuardianHasPlayer">
+            <orm:sharedfield name="_playerID" target-class="TrackrModels.Player" target-field="_playerID" />
+            <orm:constraint name="FK_Guardians_Players" delete-action="dbdefaultrule" destination-table="Players" />
+          </orm:reference>
+        </orm:field>
+        <orm:field name="_person" property="Person" behavior="readwrite" uniqueId="b9536000-5749-403b-a191-9352103867ff" type="TrackrModels.Person">
+          <orm:reference uniqueId="e7bc19ce-a67f-418d-9eb6-91f4ccba29ea" association-name="GuardianHasPerson">
+            <orm:sharedfield name="_personID" target-class="TrackrModels.Person" target-field="_personID" />
+            <orm:constraint name="FK_Guardians_People" delete-action="dbdefaultrule" destination-table="People" />
+          </orm:reference>
+        </orm:field>
+      </orm:class>
+      <orm:class name="Address" uniqueId="56524b10-542a-429d-96b9-575fe165d13c">
+        <orm:table name="Addresses" />
+        <orm:identity>
+          <orm:single-field field-name="_addressID" />
+        </orm:identity>
+        <orm:concurrency strategy="changed" />
+        <orm:field name="_addressID" property="AddressID" behavior="readwrite" uniqueId="da310edc-a473-4040-bcb4-8050366a1ed6" type="System.Int32">
+          <orm:column name="AddressID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_street1" property="Street1" behavior="readwrite" uniqueId="69c568d5-2d4c-4499-8ec1-51f3e7d2819a" type="System.String">
+          <orm:column name="Street1" sql-type="nvarchar" nullable="true" length="30" scale="0" ado-type="UnicodeStringVariableLength" />
+        </orm:field>
+        <orm:field name="_street2" property="Street2" behavior="readwrite" uniqueId="a9e4f0ce-29e3-4091-a32b-20ae50792ecc" type="System.String">
+          <orm:column name="Street2" sql-type="nvarchar" nullable="true" length="30" scale="0" ado-type="UnicodeStringVariableLength" />
+        </orm:field>
+        <orm:field name="_city" property="City" behavior="readwrite" uniqueId="6afd79a3-5ef7-49b7-8a48-41082a150b97" type="System.String">
+          <orm:column name="City" sql-type="nvarchar" nullable="true" length="20" scale="0" ado-type="UnicodeStringVariableLength" />
+        </orm:field>
+        <orm:field name="_state" property="State" behavior="readwrite" uniqueId="9bd1574f-e349-4cd9-b6d0-67f51d460dc8" type="System.String">
+          <orm:column name="State" sql-type="nvarchar" nullable="true" length="2" scale="0" ado-type="UnicodeStringVariableLength" />
+        </orm:field>
+        <orm:field name="_zipCode" property="ZipCode" behavior="readwrite" uniqueId="a5064988-69cb-40be-a681-56cf4bc9713e" type="System.String">
+          <orm:column name="ZipCode" sql-type="nvarchar" nullable="true" length="5" scale="0" ado-type="UnicodeStringVariableLength" />
+        </orm:field>
+        <orm:field name="_personID" property="PersonID" behavior="readwrite" uniqueId="8d027098-9ca2-4935-8907-30650ebda2ce" type="System.Int32">
+          <orm:column name="PersonID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_sortOrder" property="SortOrder" behavior="readwrite" uniqueId="e2b4ac69-f9b6-4e33-b4d0-b0a97d7944de" type="System.Byte">
+          <orm:column name="SortOrder" sql-type="tinyint" nullable="false" length="0" scale="0" has-default-value="true" ado-type="Byte" />
+        </orm:field>
+        <orm:field name="_person" property="Person" behavior="readwrite" uniqueId="1145475e-6fdf-41c4-8654-3a48ccbe7efe" type="TrackrModels.Person">
+          <orm:reference uniqueId="8bc6d170-c00d-4cba-8e04-dc75f6fdb867" association-name="AddressHasPerson">
+            <orm:sharedfield name="_personID" target-class="TrackrModels.Person" target-field="_personID" />
+            <orm:constraint name="FK_Addresses_Addresses" delete-action="dbdefaultrule" destination-table="People" />
+          </orm:reference>
+        </orm:field>
+      </orm:class>
     </orm:namespace>
     <orm:schema schema="">
       <orm:table name="WebUserInfo">
@@ -406,10 +511,10 @@
       </orm:table>
       <orm:table name="Players">
         <orm:column name="PlayerID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
-        <orm:column name="DateOfBirth" sql-type="date" nullable="false" length="0" scale="0" ado-type="Date" />
-        <orm:column name="MInitial" sql-type="nvarchar" nullable="true" length="1" scale="0" ado-type="UnicodeStringVariableLength" />
-        <orm:column name="LName" sql-type="nvarchar" nullable="false" length="30" scale="0" ado-type="UnicodeStringVariableLength" />
-        <orm:column name="FName" sql-type="nvarchar" nullable="false" length="30" scale="0" ado-type="UnicodeStringVariableLength" />
+        <orm:column name="PersonID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        <orm:constraint name="FK_Players_People" delete-action="dbdefaultrule" destination-table="People">
+          <orm:column name="PersonID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:constraint>
       </orm:table>
       <orm:table name="Clubs">
         <orm:column name="ClubID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
@@ -455,6 +560,39 @@
         </orm:constraint>
         <orm:constraint name="FK_TeamPlayers_Players" delete-action="dbdefaultrule" destination-table="Players">
           <orm:column name="PlayerID" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        </orm:constraint>
+      </orm:table>
+      <orm:table name="People">
+        <orm:column name="PersonID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        <orm:column name="FName" sql-type="nvarchar" nullable="false" length="30" scale="0" ado-type="UnicodeStringVariableLength" />
+        <orm:column name="MInitial" sql-type="nvarchar" nullable="true" length="1" scale="0" ado-type="UnicodeStringVariableLength" />
+        <orm:column name="LName" sql-type="nvarchar" nullable="false" length="30" scale="0" ado-type="UnicodeStringVariableLength" />
+        <orm:column name="DateOfBirth" sql-type="date" nullable="true" length="0" scale="0" ado-type="Date" />
+        <orm:column name="Gender" sql-type="tinyint" nullable="true" length="0" scale="0" ado-type="Byte" />
+      </orm:table>
+      <orm:table name="Guardians">
+        <orm:column name="GuardianID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        <orm:column name="PersonID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        <orm:column name="PlayerID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        <orm:column name="SortOrder" sql-type="tinyint" nullable="false" length="0" scale="0" ado-type="Byte" />
+        <orm:constraint name="FK_Guardians_Players" delete-action="dbdefaultrule" destination-table="Players">
+          <orm:column name="PlayerID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:constraint>
+        <orm:constraint name="FK_Guardians_People" delete-action="dbdefaultrule" destination-table="People">
+          <orm:column name="PersonID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:constraint>
+      </orm:table>
+      <orm:table name="Addresses">
+        <orm:column name="AddressID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" ado-type="Int32" />
+        <orm:column name="Street1" sql-type="nvarchar" nullable="true" length="30" scale="0" ado-type="UnicodeStringVariableLength" />
+        <orm:column name="Street2" sql-type="nvarchar" nullable="true" length="30" scale="0" ado-type="UnicodeStringVariableLength" />
+        <orm:column name="City" sql-type="nvarchar" nullable="true" length="20" scale="0" ado-type="UnicodeStringVariableLength" />
+        <orm:column name="State" sql-type="nvarchar" nullable="true" length="2" scale="0" ado-type="UnicodeStringVariableLength" />
+        <orm:column name="ZipCode" sql-type="nvarchar" nullable="true" length="5" scale="0" ado-type="UnicodeStringVariableLength" />
+        <orm:column name="PersonID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        <orm:column name="SortOrder" sql-type="tinyint" nullable="false" length="0" scale="0" has-default-value="true" ado-type="Byte" />
+        <orm:constraint name="FK_Addresses_Addresses" delete-action="dbdefaultrule" destination-table="People">
+          <orm:column name="PersonID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
         </orm:constraint>
       </orm:table>
     </orm:schema>
@@ -671,10 +809,17 @@
     </DomainClass>
     <DomainClass Id="b534a3e6-cbd7-41ea-93bf-7964a28fbe02" name="Player" namespace="TrackrModels" showPropertiesCompartment="true" identityMechanism="DatabaseServerCalculated" concurrencyMode="Changed" showNavigationCompartment="true" showImplementationCompartment="true" identityMechanismMember="PlayerID">
       <Property Id="0c92f7d0-6c3e-4faf-bd23-d4bf8f780164" name="PlayerID" type="Int32" label="PlayerID : Int32" kind="Persistent" identity="true" fieldName="_playerID" />
-      <Property Id="24e563a3-b68b-4fb5-a04a-8655fabf5131" name="DateOfBirth" type="DateTime" label="DateOfBirth : DateTime" kind="Persistent" fieldName="_dateOfBirth" />
-      <Property Id="9043a1f2-04c1-4aea-9d66-b17eb64d0e77" name="MInitial" type="Char" label="MInitial : Char" nullable="true" kind="Persistent" fieldName="_mInitial" />
-      <Property Id="c35265b1-d27e-49c6-b2c9-6737463bb19a" name="LName" label="LName : String" kind="Persistent" fieldName="_lName" />
-      <Property Id="98e98d35-e7f9-42fb-a27c-7d138f7697a3" name="FName" label="FName : String" kind="Persistent" fieldName="_fName" />
+      <Property Id="dfce10d6-1ef4-4087-98aa-05654efb0fc5" name="PersonID" type="Int32" label="PersonID : Int32" kind="Persistent" fieldName="_personID" />
+      <AssociationTargets>
+        <Association Id="16c30e64-5a96-48b6-a96a-303ffb8252cc" SourceMultiplicity="One" name="PlayerHasPerson">
+          <DomainClassMoniker name="/ClubManagement/Person" />
+          <sourceNavigationalProperty>
+            <associationDefinesSourceProperty Id="8b38dcf3-5a30-4ed4-a854-f7c53b3fa886">
+              <NavigationalPropertyMoniker name="/ClubManagement/Player/Person" />
+            </associationDefinesSourceProperty>
+          </sourceNavigationalProperty>
+        </Association>
+      </AssociationTargets>
       <navigationalProperties>
         <classHasNavigationalProperties Id="67f2ba34-a527-429c-80d2-ab38dc7961ab">
           <NavigationalProperty Id="122a83c1-04f6-4f33-b753-3b5e1abc181b" name="Transactions" type="IList&lt;Transaction&gt;" label="Transactions : IList&lt;Transaction&gt;" nullable="true" kind="Persistent" fieldName="_transactions" isDependent="false" isManaged="false" />
@@ -684,6 +829,12 @@
         </classHasNavigationalProperties>
         <classHasNavigationalProperties Id="76d83385-e281-46bf-ab4d-5047da90f698">
           <NavigationalProperty Id="fb38666f-2abe-45d2-8175-0a6440419b23" name="TeamPlayers" type="IList&lt;TeamPlayer&gt;" label="TeamPlayers : IList&lt;TeamPlayer&gt;" nullable="true" kind="Persistent" fieldName="_teamPlayers" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+        <classHasNavigationalProperties Id="324d9ae3-c6ce-45f8-b63b-458b6bb03259">
+          <NavigationalProperty Id="2395c5e2-4cbf-4e20-bd27-ff69bfc21c6f" name="Person" type="Person" label="Person : Person" nullable="true" kind="Persistent" loadBehavior="Eager" fieldName="_person" isDependent="true" isManaged="false" />
+        </classHasNavigationalProperties>
+        <classHasNavigationalProperties Id="c30dc2f9-b67b-4dcd-b54c-5295315c09cd">
+          <NavigationalProperty Id="fc0eae40-db2e-47b5-bc7f-a425e20b7411" name="Guardians" type="IList&lt;Guardian&gt;" label="Guardians : IList&lt;Guardian&gt;" nullable="true" kind="Persistent" fieldName="_guardians" isDependent="false" isManaged="false" />
         </classHasNavigationalProperties>
       </navigationalProperties>
     </DomainClass>
@@ -785,6 +936,94 @@
         </classHasNavigationalProperties>
       </navigationalProperties>
     </DomainClass>
+    <DomainClass Id="2d068340-0893-47ec-9942-1e5e5780edf8" name="Person" namespace="TrackrModels" showPropertiesCompartment="true" identityMechanism="DatabaseServerCalculated" concurrencyMode="Changed" showNavigationCompartment="true" showImplementationCompartment="true" identityMechanismMember="PersonID">
+      <Property Id="03b51280-3cbd-469e-8a2e-11aa99e48cc9" name="PersonID" type="Int32" label="PersonID : Int32" kind="Persistent" identity="true" fieldName="_personID" />
+      <Property Id="f0a6f949-2f51-4d4e-bb8f-29426cb360c7" name="DateOfBirth" type="DateTime" label="DateOfBirth : DateTime" nullable="true" kind="Persistent" fieldName="_dateOfBirth" />
+      <Property Id="5000608d-91f2-4188-b9d2-86de73fa156a" name="FName" label="FName : String" kind="Persistent" fieldName="_fName" />
+      <Property Id="d5c2b8b6-40b6-48ca-bc0d-441643fa395c" name="Gender" type="Byte" label="Gender : Byte" nullable="true" kind="Persistent" fieldName="_gender" />
+      <Property Id="d3a24ebe-7170-4685-a450-bb909e48517f" name="LName" label="LName : String" kind="Persistent" fieldName="_lName" />
+      <Property Id="6f76d842-b3ed-4865-a982-970b2a1fb01e" name="MInitial" type="Char" label="MInitial : Char" nullable="true" kind="Persistent" fieldName="_mInitial" />
+      <navigationalProperties>
+        <classHasNavigationalProperties Id="f8b4b613-0021-4697-bd22-ce825377dce5">
+          <NavigationalProperty Id="7c0c4a12-add5-4dd4-86fc-b0e87244139e" name="Guardians" type="IList&lt;Guardian&gt;" label="Guardians : IList&lt;Guardian&gt;" nullable="true" kind="Persistent" fieldName="_guardians" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+        <classHasNavigationalProperties Id="03c23e64-0a44-4cd5-90e9-415dfcb4b47b">
+          <NavigationalProperty Id="0a108568-1ff9-4387-b16d-59e4febdcf94" name="Addresses" type="IList&lt;Address&gt;" label="Addresses : IList&lt;Address&gt;" nullable="true" kind="Persistent" fieldName="_addresses" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+      </navigationalProperties>
+    </DomainClass>
+    <DomainClass Id="f9e226b5-203b-494d-b033-ac05193b8e60" name="Guardian" namespace="TrackrModels" showPropertiesCompartment="true" identityMechanism="DatabaseServerCalculated" concurrencyMode="Changed" showNavigationCompartment="true" showImplementationCompartment="true" identityMechanismMember="GuardianID">
+      <Property Id="fe5422dd-9c53-47b4-b838-414995f1d3c2" name="GuardianID" type="Int32" label="GuardianID : Int32" kind="Persistent" identity="true" fieldName="_guardianID" />
+      <Property Id="2e97959b-2be8-406f-8ca4-d346b1825c99" name="PersonID" type="Int32" label="PersonID : Int32" kind="Persistent" fieldName="_personID" />
+      <Property Id="872bc558-da62-4ffe-a830-27ba4fc85633" name="PlayerID" type="Int32" label="PlayerID : Int32" kind="Persistent" fieldName="_playerID" />
+      <Property Id="8c5c62b7-48c6-4c8a-b829-5bf95c2990bb" name="SortOrder" type="Byte" label="SortOrder : Byte" kind="Persistent" fieldName="_sortOrder" />
+      <AssociationTargets>
+        <Association Id="a4fc5df8-3b5a-43e7-85e6-36e47fb42b5a" SourceMultiplicity="One" name="GuardianHasPlayer">
+          <DomainClassMoniker name="/ClubManagement/Player" />
+          <targetNavigationalProperty>
+            <associationDefinesTargetProperty Id="e68fa538-f79a-4d85-bae1-acf5d8078abb">
+              <NavigationalPropertyMoniker name="/ClubManagement/Player/Guardians" />
+            </associationDefinesTargetProperty>
+          </targetNavigationalProperty>
+          <sourceNavigationalProperty>
+            <associationDefinesSourceProperty Id="df485051-7857-4f0b-b123-a6d69c50b3f7">
+              <NavigationalPropertyMoniker name="/ClubManagement/Guardian/Player" />
+            </associationDefinesSourceProperty>
+          </sourceNavigationalProperty>
+        </Association>
+        <Association Id="e7bc19ce-a67f-418d-9eb6-91f4ccba29ea" SourceMultiplicity="One" name="GuardianHasPerson">
+          <DomainClassMoniker name="/ClubManagement/Person" />
+          <targetNavigationalProperty>
+            <associationDefinesTargetProperty Id="d47f38da-6853-467a-8f70-20091aaa3bcb">
+              <NavigationalPropertyMoniker name="/ClubManagement/Person/Guardians" />
+            </associationDefinesTargetProperty>
+          </targetNavigationalProperty>
+          <sourceNavigationalProperty>
+            <associationDefinesSourceProperty Id="e3cc3a05-6cc7-4b63-ad0d-962e9b1c88cf">
+              <NavigationalPropertyMoniker name="/ClubManagement/Guardian/Person" />
+            </associationDefinesSourceProperty>
+          </sourceNavigationalProperty>
+        </Association>
+      </AssociationTargets>
+      <navigationalProperties>
+        <classHasNavigationalProperties Id="adebb464-5cd4-492a-b47c-3d6988596ff2">
+          <NavigationalProperty Id="3f75e32a-50b4-4aa9-b5dd-2a7689606c0c" name="Player" type="Player" label="Player : Player" nullable="true" kind="Persistent" fieldName="_player" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+        <classHasNavigationalProperties Id="684e63e9-ac48-4677-bc59-050e5b8b4bde">
+          <NavigationalProperty Id="b9536000-5749-403b-a191-9352103867ff" name="Person" type="Person" label="Person : Person" nullable="true" kind="Persistent" fieldName="_person" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+      </navigationalProperties>
+    </DomainClass>
+    <DomainClass Id="56524b10-542a-429d-96b9-575fe165d13c" name="Address" namespace="TrackrModels" showPropertiesCompartment="true" concurrencyMode="Changed" showNavigationCompartment="true" showImplementationCompartment="true">
+      <Property Id="da310edc-a473-4040-bcb4-8050366a1ed6" name="AddressID" type="Int32" label="AddressID : Int32" kind="Persistent" identity="true" fieldName="_addressID" />
+      <Property Id="6afd79a3-5ef7-49b7-8a48-41082a150b97" name="City" label="City : String" kind="Persistent" fieldName="_city" />
+      <Property Id="8d027098-9ca2-4935-8907-30650ebda2ce" name="PersonID" type="Int32" label="PersonID : Int32" kind="Persistent" fieldName="_personID" />
+      <Property Id="e2b4ac69-f9b6-4e33-b4d0-b0a97d7944de" name="SortOrder" type="Byte" label="SortOrder : Byte" kind="Persistent" fieldName="_sortOrder" />
+      <Property Id="9bd1574f-e349-4cd9-b6d0-67f51d460dc8" name="State" label="State : String" kind="Persistent" fieldName="_state" />
+      <Property Id="69c568d5-2d4c-4499-8ec1-51f3e7d2819a" name="Street1" label="Street1 : String" kind="Persistent" fieldName="_street1" />
+      <Property Id="a9e4f0ce-29e3-4091-a32b-20ae50792ecc" name="Street2" label="Street2 : String" kind="Persistent" fieldName="_street2" />
+      <Property Id="a5064988-69cb-40be-a681-56cf4bc9713e" name="ZipCode" label="ZipCode : String" kind="Persistent" fieldName="_zipCode" />
+      <AssociationTargets>
+        <Association Id="8bc6d170-c00d-4cba-8e04-dc75f6fdb867" SourceMultiplicity="One" name="AddressHasPerson">
+          <DomainClassMoniker name="/ClubManagement/Person" />
+          <targetNavigationalProperty>
+            <associationDefinesTargetProperty Id="1858a3d1-eea1-449b-82b9-ee8c752c3ac4">
+              <NavigationalPropertyMoniker name="/ClubManagement/Person/Addresses" />
+            </associationDefinesTargetProperty>
+          </targetNavigationalProperty>
+          <sourceNavigationalProperty>
+            <associationDefinesSourceProperty Id="c1e0ed92-c2dc-418b-9fe7-6fb70fba6f29">
+              <NavigationalPropertyMoniker name="/ClubManagement/Address/Person" />
+            </associationDefinesSourceProperty>
+          </sourceNavigationalProperty>
+        </Association>
+      </AssociationTargets>
+      <navigationalProperties>
+        <classHasNavigationalProperties Id="76f4498f-e6b8-460c-a826-81a617f0e9a9">
+          <NavigationalProperty Id="1145475e-6fdf-41c4-8654-3a48ccbe7efe" name="Person" type="Person" label="Person : Person" nullable="true" kind="Persistent" fieldName="_person" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+      </navigationalProperties>
+    </DomainClass>
   </Types>
   <domainContext>
     <domainModelHasDomainContext Id="242d1b49-d412-485c-b5ca-793640a0667d">
@@ -798,6 +1037,9 @@
         <entitySetProperty name="Clubs" namespace="TrackrModels" type="Club" label="Clubs : IQueryable&lt;TrackrModels.Club&gt;" />
         <entitySetProperty name="PlayerPasses" namespace="TrackrModels" type="PlayerPass" label="PlayerPasses : IQueryable&lt;TrackrModels.PlayerPass&gt;" />
         <entitySetProperty name="TeamPlayers" namespace="TrackrModels" type="TeamPlayer" label="TeamPlayers : IQueryable&lt;TrackrModels.TeamPlayer&gt;" />
+        <entitySetProperty name="People" namespace="TrackrModels" type="Person" label="People : IQueryable&lt;TrackrModels.Person&gt;" />
+        <entitySetProperty name="Guardians" namespace="TrackrModels" type="Guardian" label="Guardians : IQueryable&lt;TrackrModels.Guardian&gt;" />
+        <entitySetProperty name="Addresses" namespace="TrackrModels" type="Address" label="Addresses : IQueryable&lt;TrackrModels.Address&gt;" />
       </domainContainer>
     </domainModelHasDomainContext>
   </domainContext>
