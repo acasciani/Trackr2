@@ -112,13 +112,94 @@ namespace Trackr.Source.Wizards {
         protected global::System.Web.UI.WebControls.RequiredFieldValidator validatorDOBRequired;
         
         /// <summary>
-        /// Step2_Picture control.
+        /// Step2_Guardian control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.WizardStep Step2_Picture;
+        protected global::System.Web.UI.WebControls.WizardStep Step2_Guardian;
+        
+        /// <summary>
+        /// gvGuardians control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView gvGuardians;
+        
+        /// <summary>
+        /// lnkAddGuardian control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton lnkAddGuardian;
+        
+        /// <summary>
+        /// pnlAddGuardian control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlAddGuardian;
+        
+        /// <summary>
+        /// txtGuardianFirstName control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtGuardianFirstName;
+        
+        /// <summary>
+        /// txtGuardianMiddleInitial control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtGuardianMiddleInitial;
+        
+        /// <summary>
+        /// txtGuardianLastName control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtGuardianLastName;
+        
+        /// <summary>
+        /// AddressBook control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Trackr.Source.Controls.AddressBook AddressBook;
+        
+        /// <summary>
+        /// lnkSaveGuardian control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton lnkSaveGuardian;
+        
+        /// <summary>
+        /// Step3_Picture control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.WizardStep Step3_Picture;
         
         /// <summary>
         /// gvPlayerPasses control.
@@ -256,13 +337,13 @@ namespace Trackr.Source.Wizards {
         protected global::System.Web.UI.WebControls.Image imgUploadPreview;
         
         /// <summary>
-        /// Step3_Teams control.
+        /// Step4_Teams control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.WizardStep Step3_Teams;
+        protected global::System.Web.UI.WebControls.WizardStep Step4_Teams;
         
         /// <summary>
         /// gvTeamAssignments control.

@@ -1,17 +1,19 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="AddressBook.ascx.cs" Inherits="Trackr.Source.Controls.AddressBook" %>
 
-<ui:AlertBox runat="server" ID="AlertBox" />
+<%@ Register Src="~/Source/Controls/AlertBox.ascx" TagPrefix="ui2" TagName="AlertBox" %>
+
+<ui2:AlertBox runat="server" ID="AlertBox" />
 
 <div class="row">
     <div class="col-sm-12">
-        <asp:GridView runat="server" ID="gvAddressBook" SelectMethod="gvAddressBook_GetData">
+        <asp:GridView runat="server" ID="gvAddressBook" SelectMethod="gvAddressBook_GetData" EmptyDataText="There are no addresses associated to this person.">
             <Columns>
                 <asp:BoundField DataField="Address" />
             </Columns>
         </asp:GridView>
     </div>
 
-    <div class="col-sm-12 text-right">
+    <div class="col-sm-12 text-left">
         <asp:LinkButton runat="server" ID="lnkAddAddress" OnClick="lnkAddAddress_Click" ToolTip="Add new address">
             <span class="glyphicon glyphicon-plus-sign"></span> Add Address
         </asp:LinkButton>

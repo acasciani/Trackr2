@@ -31,6 +31,11 @@ namespace Trackr.Source.Wizards
             get { return ViewState["TeamPlayers"] as List<TeamPlayer>; }
             set { ViewState["TeamPlayers"] = value; }
         }
+        private List<Guardian> Guardians
+        {
+            get { return ViewState["Guardians"] as List<Guardian>; }
+            set { ViewState["Guardians"] = value; }
+        }
 
         protected void Page_Init(object sender, EventArgs e)
         {
@@ -551,6 +556,152 @@ namespace Trackr.Source.Wizards
             }
 
             gvPlayerPasses.DataBind();
+        }
+        #endregion
+
+
+        #region Guardian Administration
+        public IQueryable gvGuardians_GetData()
+        {
+            using (GuardiansController gc = new GuardiansController())
+            {
+                FetchStrategy fetch = new FetchStrategy();
+                fetch.LoadWith<Guardian>(i => i.Person);
+
+                Guardians = gc.GetWhere(i => i.PlayerID == PrimaryKey.Value, fetch).ToList();
+
+                return Guardians.Select(i => new
+                {
+
+                    Guardian = i.Person.FName + " " + i.Person.LName,
+                    IsRemovable = true,
+                    GuardianID = i.GuardianID
+                }).OrderByDescending(i => i.Guardian).AsQueryable();
+            }
+        }
+
+        private void ClearGuardianForm()
+        {
+            txtGuardianFirstName.Text = null;
+            txtGuardianMiddleInitial.Text = null;
+            txtGuardianLastName.Text = null;
+            pnlAddGuardian.Visible = false;
+        }
+
+        private void SaveGuardian(int? guardianID)
+        {
+            using (GuardiansController gc = new GuardiansController())
+            {
+                FetchStrategy fetch = new FetchStrategy();
+                fetch.LoadWith<Guardian>(i => i.Person);
+
+                Guardian guardian = guardianID.HasValue ? gc.GetWhere(i => i.GuardianID == guardianID.Value, fetch).First() : new Guardian();
+
+                if (!guardianID.HasValue)
+                {
+                    guardian.Person = new Person();
+                }
+
+                guardian.Person.FName = txtGuardianFirstName.Text;
+                guardian.Person.MInitial = string.IsNullOrWhiteSpace(txtGuardianMiddleInitial.Text) ? (char?)null : txtGuardianMiddleInitial.Text.Trim().ToCharArray()[0];
+                guardian.Person.LName = txtGuardianLastName.Text;
+
+                if (!guardianID.HasValue)
+                {
+                    guardian.PlayerID = PrimaryKey.Value;
+                    Guardian newGuardian = gc.AddNew(guardian);
+                    AlertBox.SetStatus("Successfully saved new guardian.");
+
+                    Populate_AddressBook(newGuardian.PersonID);
+                }
+                else
+                {
+                    gc.Update(guardian);
+                    AlertBox.SetStatus("Successfully saved existing guardian.");
+
+                    pnlAddGuardian.Visible = false;
+                    gvGuardians.EditIndex = -1;
+                }
+
+                gvGuardians.DataBind();
+            }
+        }
+
+        private void Populate_GuardianEdit(int guardianID)
+        {
+            using (GuardiansController gc = new GuardiansController())
+            {
+                FetchStrategy fetch = new FetchStrategy();
+                fetch.LoadWith<Guardian>(i => i.Person);
+
+                Guardian guardian = gc.GetWhere(i => i.GuardianID == guardianID, fetch).First();
+                ClearGuardianForm();
+
+                // populate
+                txtGuardianFirstName.Text = guardian.Person.FName;
+                txtGuardianMiddleInitial.Text = guardian.Person.MInitial.HasValue ? guardian.Person.MInitial.Value.ToString() : "";
+                txtGuardianLastName.Text = guardian.Person.LName;
+
+                // populate address book
+                Populate_AddressBook(guardian.PersonID);
+
+                pnlAddGuardian.Visible = true;
+            }
+        }
+
+        private void Populate_AddressBook(int personID)
+        {
+            AddressBook.PersonID = personID;
+            AddressBook.DataBind();
+        }
+
+        protected void gvGuardians_RowEditing(object sender, GridViewEditEventArgs e)
+        {
+            Populate_GuardianEdit(Guardians[e.NewEditIndex].GuardianID);
+            gvGuardians.EditIndex = e.NewEditIndex;
+            gvGuardians.DataBind();
+        }
+
+        protected void gvGuardians_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+        {
+            gvGuardians.EditIndex = -1;
+            gvGuardians.DataBind();
+        }
+
+        public void gvGuardians_DeleteItem(int? GuardianID)
+        {
+            ClearGuardianForm();
+
+            if (!GuardianID.HasValue)
+            {
+                return;
+            }
+            using (GuardiansController gc = new GuardiansController())
+            {
+                gc.Delete(GuardianID.Value);
+                AlertBox.SetStatus("Successfully deleted player's guardian.");
+            }
+
+            gvGuardians.DataBind();
+        }
+
+        protected void lnkAddGuardian_Click(object sender, EventArgs e)
+        {
+            ClearGuardianForm();
+            pnlAddGuardian.Visible = true;
+            gvGuardians.EditIndex = -1;
+            gvGuardians.DataBind();
+        }
+
+        protected void lnkSaveGuardian_Click(object sender, EventArgs e)
+        {
+            if (!Page.IsValid)
+            {
+                return;
+            }
+
+            int? guardianID = gvGuardians.EditIndex != -1 ? Guardians[gvGuardians.EditIndex].GuardianID : (int?)null;
+            SaveGuardian(guardianID);
         }
         #endregion
     }

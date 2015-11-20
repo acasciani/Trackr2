@@ -89,7 +89,70 @@
             </div>
         </asp:WizardStep>
 
-        <asp:WizardStep runat="server" ID="Step2_Picture" StepType="Step" Title="Player Passes">
+
+        <asp:WizardStep runat="server" ID="Step2_Guardian" StepType="Step" Title="Guardians">
+            <asp:GridView runat="server" ID="gvGuardians" AutoGenerateColumns="false" SelectMethod="gvGuardians_GetData" EmptyDataText="This player does not have any guardians." CssClass="table table-striped table-hover" 
+                OnRowEditing="gvGuardians_RowEditing" OnRowCancelingEdit="gvGuardians_RowCancelingEdit" DeleteMethod="gvGuardians_DeleteItem" DataKeyNames="GuardianID">
+                <Columns>
+                    <asp:BoundField DataField="Guardian" HeaderText="Guardian" ReadOnly="true" />
+
+                    <asp:TemplateField>
+                        <ItemTemplate>
+                            <asp:LinkButton runat="server" ID="lnkRemoveGuardian" Visible='<%# (bool)Eval("IsRemovable") %>' CommandName="Delete" ToolTip="Remove guardian" CssClass="glyphicon glyphicon-trash" CausesValidation="false"></asp:LinkButton><span runat="server" visible='<%# (bool)Eval("IsRemovable") %>'>&nbsp;&nbsp;</span>
+                            <asp:LinkButton runat="server" ID="lnkEditGuardian" CommandName="Edit" ToolTip="Edit guardian" CssClass="glyphicon glyphicon-edit" CausesValidation="false"></asp:LinkButton>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                </Columns>
+            </asp:GridView>
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <asp:LinkButton runat="server" ID="lnkAddGuardian" OnClick="lnkAddGuardian_Click" CausesValidation="false">
+                        <i class="glyphicon glyphicon-plus-sign"></i> Add Guardian
+                    </asp:LinkButton>
+                </div>
+            </div>
+
+            <asp:Panel runat="server" ID="pnlAddGuardian" Visible="false">
+                <div class="well">
+                    <div class="form-group row">
+                        <label class="col-sm-12 control-label" for="<%=txtGuardianFirstName.ClientID %>">First name</label>
+                        <div class="col-sm-12">
+                            <asp:TextBox runat="server" ID="txtGuardianFirstName" CssClass="form-control" MaxLength="30" />
+                            <asp:RequiredFieldValidator runat="server" ControlToValidate="txtGuardianFirstName" CssClass="text-danger" ErrorMessage="The guardian's first name is required." Display="Dynamic" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-12 control-label" for="<%=txtGuardianMiddleInitial.ClientID %>">Middle initial</label>
+                        <div class="col-sm-12">
+                            <asp:TextBox runat="server" ID="txtGuardianMiddleInitial" CssClass="form-control" MaxLength="1" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-12 control-label" for="<%=txtGuardianLastName.ClientID %>">Last name</label>
+                        <div class="col-sm-12">
+                            <asp:TextBox runat="server" ID="txtGuardianLastName" CssClass="form-control" MaxLength="30" />
+                            <asp:RequiredFieldValidator runat="server" ControlToValidate="txtGuardianLastName" CssClass="text-danger" ErrorMessage="The guardian's last name is required." Display="Dynamic" />
+                        </div>
+                    </div>
+
+                    <hr />
+
+                    <ui:AddressBook runat="server" ID="AddressBook" />
+
+                    <hr />
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <asp:LinkButton runat="server" ID="lnkSaveGuardian" CausesValidation="true" OnClick="lnkSaveGuardian_Click"><i class="glyphicon glyphicon-save"></i> Save Guardian</asp:LinkButton>
+                        </div>
+                    </div>
+                </div>
+            </asp:Panel>
+        </asp:WizardStep>
+
+
+        <asp:WizardStep runat="server" ID="Step3_Picture" StepType="Step" Title="Player Passes">
             <asp:GridView runat="server" ID="gvPlayerPasses" AutoGenerateColumns="false" SelectMethod="gvPlayerPasses_GetData" EmptyDataText="This player does not have any player passes." CssClass="table table-striped table-hover" 
                 OnRowEditing="gvPlayerPasses_RowEditing" OnRowCancelingEdit="gvPlayerPasses_RowCancelingEdit" DeleteMethod="gvPlayerPasses_DeleteItem" DataKeyNames="PlayerPassID">
                 <Columns>
@@ -173,7 +236,7 @@
         </asp:WizardStep>
 
 
-        <asp:WizardStep runat="server" ID="Step3_Teams" StepType="Finish" Title="Teams">
+        <asp:WizardStep runat="server" ID="Step4_Teams" StepType="Finish" Title="Teams">
             <asp:GridView runat="server" ID="gvTeamAssignments" AutoGenerateColumns="false" SelectMethod="gvTeamAssignments_GetData" EmptyDataText="This player is not assigned to any teams." CssClass="table table-striped table-hover" 
                 OnRowEditing="gvTeamAssignments_RowEditing" OnRowCancelingEdit="gvTeamAssignments_RowCancelingEdit" DeleteMethod="gvTeamAssignmentss_DeleteItem" DataKeyNames="TeamPlayerID">
                 <Columns>
@@ -226,6 +289,7 @@
                 </div>
             </asp:Panel>
         </asp:WizardStep>
+
 
         <asp:WizardStep StepType="Complete" Title="Complete">
             Successfully finished editing player. <asp:LinkButton runat="server" ID="lnkEditAgain" OnClick="lnkEditAgain_Click">Continue editing this player</asp:LinkButton> or <a href="Default.aspx">view all players</a>.
