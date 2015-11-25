@@ -161,11 +161,11 @@
                                 </asp:View>
 
                                 <asp:View runat="server">
-                                    Emails
+                                    <ui:EmailAddressBook runat="server" ID="EmailBook" />
                                 </asp:View>
 
                                 <asp:View runat="server">
-                                    Phones
+                                    <ui:PhoneNumberBook runat="server" ID="PhoneNumberBook" />
                                 </asp:View>
                             </asp:MultiView>
                         </div>

@@ -244,6 +244,8 @@
     <Content Include="Site.Master" />
     <Content Include="Source\Controls\AddressBook.ascx" />
     <Content Include="Source\Controls\AlertBox.ascx" />
+    <Content Include="Source\Controls\EmailAddressBook.ascx" />
+    <Content Include="Source\Controls\PhoneNumberBook.ascx" />
     <Content Include="Source\Controls\ProgramTeamPlayerPicker.ascx" />
     <Content Include="Source\Wizards\PlayerManagement.ascx" />
     <Content Include="Source\Wizards\UserManagement.ascx" />
@@ -286,6 +288,7 @@
     <Compile Include="Controllers\Scoping\PlayersController.Partial.cs" />
     <Compile Include="Controllers\Scoping\ProgramsController.Partial.cs" />
     <Compile Include="Controllers\GuardiansController.cs" />
+    <Compile Include="Controllers\EmailAddressesController.cs" />
     <Compile Include="Modules\PlayerManagement\Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -316,6 +319,7 @@
     </Compile>
     <Compile Include="Controllers\PlayerPassesController.cs" />
     <Compile Include="Controllers\PeopleController.cs" />
+    <Compile Include="Controllers\PhoneNumbersController.cs" />
     <Compile Include="Repositories\ClubManagementRepositories.cs" />
     <Compile Include="Controllers\ClubsController.cs" />
     <Compile Include="Controllers\Partials\ScopeAssignmentsController.Partial.cs" />
@@ -384,6 +388,20 @@
     </Compile>
     <Compile Include="Source\Controls\AlertBox.ascx.designer.cs">
       <DependentUpon>AlertBox.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Controls\EmailAddressBook.ascx.cs">
+      <DependentUpon>EmailAddressBook.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Source\Controls\EmailAddressBook.ascx.designer.cs">
+      <DependentUpon>EmailAddressBook.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Controls\PhoneNumberBook.ascx.cs">
+      <DependentUpon>PhoneNumberBook.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Source\Controls\PhoneNumberBook.ascx.designer.cs">
+      <DependentUpon>PhoneNumberBook.ascx</DependentUpon>
     </Compile>
     <Compile Include="Source\Controls\ProgramTeamPlayerPicker.ascx.cs">
       <DependentUpon>ProgramTeamPlayerPicker.ascx</DependentUpon>

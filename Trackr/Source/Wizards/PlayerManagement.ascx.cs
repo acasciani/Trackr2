@@ -647,6 +647,20 @@ namespace Trackr.Source.Wizards
             AddressBook.DataBind();
         }
 
+        private void Populate_PhoneNumberBook(int personID)
+        {
+            PhoneNumberBook.Reset();
+            PhoneNumberBook.PersonID = personID;
+            PhoneNumberBook.DataBind();
+        }
+
+        private void Populate_EmailBook(int personID)
+        {
+            EmailBook.Reset();
+            EmailBook.PersonID = personID;
+            EmailBook.DataBind();
+        }
+
         protected void gvGuardians_RowEditing(object sender, GridViewEditEventArgs e)
         {
             int guardianID = (int)gvGuardians.DataKeys[e.NewEditIndex].Value;
@@ -713,11 +727,23 @@ namespace Trackr.Source.Wizards
                 UpdateGuardianTabs();
                 AddressBook.Reset();
 
-                if (selectedTabIndex == 1)
+                int personID = Guardians.First(i => i.GuardianID == (int)gvGuardians.DataKeys[gvGuardians.EditIndex].Value).PersonID;
+
+                switch(selectedTabIndex)
                 {
-                    // populate address book
-                    int personID = Guardians.First(i => i.GuardianID == (int)gvGuardians.DataKeys[gvGuardians.EditIndex].Value).PersonID;
-                    Populate_AddressBook(personID);
+                    case 1: // populate address book
+                        Populate_AddressBook(personID);
+                        break;
+
+                    case 2: // populate email book
+                        Populate_EmailBook(personID);
+                        break;
+
+                    case 3: // populate phone book
+                        Populate_PhoneNumberBook(personID);
+                        break;
+
+                    default: break;
                 }
             }
         }

@@ -83,6 +83,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ClubManagement.rlinq</DependentUpon>
     </Compile>
+    <Compile Include="EmailAddress.generated.cs">
+      <DependentUpon>ClubManagement.rlinq</DependentUpon>
+    </Compile>
     <Compile Include="Guardian.generated.cs">
       <DependentUpon>ClubManagement.rlinq</DependentUpon>
     </Compile>
@@ -90,6 +93,9 @@
       <DependentUpon>UserManagement.rlinq</DependentUpon>
     </Compile>
     <Compile Include="Person.generated.cs">
+      <DependentUpon>ClubManagement.rlinq</DependentUpon>
+    </Compile>
+    <Compile Include="PhoneNumber.generated.cs">
       <DependentUpon>ClubManagement.rlinq</DependentUpon>
     </Compile>
     <Compile Include="Player.generated.cs">

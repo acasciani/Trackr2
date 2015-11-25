@@ -20,12 +20,22 @@ namespace Trackr
 	
     }
 
+    public partial class EmailAddressRepository : OpenAccessBaseRepository<TrackrModels.EmailAddress, TrackrModels.ClubManagement>
+    {
+
+    }
+
     public partial class GuardianRepository : OpenAccessBaseRepository<TrackrModels.Guardian, TrackrModels.ClubManagement>
     {
 
     }
 
     public partial class PersonRepository : OpenAccessBaseRepository<TrackrModels.Person, TrackrModels.ClubManagement>
+    {
+
+    }
+
+    public partial class PhoneNumberRepository : OpenAccessBaseRepository<TrackrModels.PhoneNumber, TrackrModels.ClubManagement>
     {
 
     }

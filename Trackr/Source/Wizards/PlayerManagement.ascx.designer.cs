@@ -238,6 +238,24 @@ namespace Trackr.Source.Wizards {
         protected global::Trackr.Source.Controls.AddressBook AddressBook;
         
         /// <summary>
+        /// EmailBook control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Trackr.Source.Controls.EmailAddressBook EmailBook;
+        
+        /// <summary>
+        /// PhoneNumberBook control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Trackr.Source.Controls.PhoneNumberBook PhoneNumberBook;
+        
+        /// <summary>
         /// lnkAddEditGuardianClose control.
         /// </summary>
         /// <remarks>

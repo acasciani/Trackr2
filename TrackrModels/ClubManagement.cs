@@ -146,6 +146,22 @@ namespace TrackrModels
 			}
 		}
 		
+		public IQueryable<PhoneNumber> PhoneNumbers 
+		{
+			get
+			{
+				return this.GetAll<PhoneNumber>();
+			}
+		}
+		
+		public IQueryable<EmailAddress> EmailAddresses 
+		{
+			get
+			{
+				return this.GetAll<EmailAddress>();
+			}
+		}
+		
 		public static BackendConfiguration GetBackendConfiguration()
 		{
 			BackendConfiguration backend = new BackendConfiguration();
@@ -213,6 +229,14 @@ namespace TrackrModels
 			get;
 		}
 		IQueryable<Address> Addresses
+		{
+			get;
+		}
+		IQueryable<PhoneNumber> PhoneNumbers
+		{
+			get;
+		}
+		IQueryable<EmailAddress> EmailAddresses
 		{
 			get;
 		}

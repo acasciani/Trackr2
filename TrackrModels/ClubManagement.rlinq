@@ -375,6 +375,12 @@
         <orm:field name="_addresses" property="Addresses" behavior="readwrite" uniqueId="0a108568-1ff9-4387-b16d-59e4febdcf94" type="TrackrModels.Address">
           <orm:collection element-class="TrackrModels.Address" inverse-field="_person" order-by="" uniqueId="8bc6d170-c00d-4cba-8e04-dc75f6fdb867" />
         </orm:field>
+        <orm:field name="_phoneNumbers" property="PhoneNumbers" behavior="readwrite" uniqueId="d8dfcdce-1d8d-4340-843e-6e3c3d48eccf" type="TrackrModels.PhoneNumber">
+          <orm:collection element-class="TrackrModels.PhoneNumber" inverse-field="_person" order-by="" uniqueId="96902e80-5796-4daf-b263-4c633056e479" />
+        </orm:field>
+        <orm:field name="_emailAddresses" property="EmailAddresses" behavior="readwrite" uniqueId="60571906-d0d6-4fd5-8542-97d00e384408" type="TrackrModels.EmailAddress">
+          <orm:collection element-class="TrackrModels.EmailAddress" inverse-field="_person" order-by="" uniqueId="2f6a5adb-ad23-4683-949f-224f037f7df5" />
+        </orm:field>
       </orm:class>
       <orm:class name="Guardian" uniqueId="f9e226b5-203b-494d-b033-ac05193b8e60">
         <orm:table name="Guardians" />
@@ -447,6 +453,68 @@
           <orm:reference uniqueId="8bc6d170-c00d-4cba-8e04-dc75f6fdb867" association-name="AddressHasPerson">
             <orm:sharedfield name="_personID" target-class="TrackrModels.Person" target-field="_personID" />
             <orm:constraint name="FK_Addresses_Addresses" delete-action="dbdefaultrule" destination-table="People" />
+          </orm:reference>
+        </orm:field>
+      </orm:class>
+      <orm:class name="PhoneNumber" uniqueId="d8bd4f43-02e2-4f72-b855-727dc3ebf9b7">
+        <orm:table name="PhoneNumbers" />
+        <orm:identity>
+          <orm:key-generator name="autoinc">
+            <orm:key-generator-member property-name="PhoneNumberID" />
+          </orm:key-generator>
+          <orm:single-field field-name="_phoneNumberID" />
+        </orm:identity>
+        <orm:concurrency strategy="changed" />
+        <orm:field name="_phoneNumberID" property="PhoneNumberID" behavior="readwrite" uniqueId="429149a4-3597-400d-acf5-6e9ecf9d305c" type="System.Int32">
+          <orm:column name="PhoneNumberID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_tenDigit" property="TenDigit" behavior="readwrite" uniqueId="fbeeefb9-7375-458e-a751-7df7f01eca5b" type="System.String">
+          <orm:column name="TenDigit" sql-type="nvarchar" nullable="false" length="10" scale="0" ado-type="UnicodeStringVariableLength" />
+        </orm:field>
+        <orm:field name="_extension" property="Extension" behavior="readwrite" uniqueId="ed89418b-b152-4f11-b61b-b8ab7aa31c3a" type="System.String">
+          <orm:column name="Extension" sql-type="nvarchar" nullable="true" length="10" scale="0" ado-type="UnicodeStringVariableLength" />
+        </orm:field>
+        <orm:field name="_personID" property="PersonID" behavior="readwrite" uniqueId="8fde1c3d-6a6d-4b44-9a32-4c5e42a108e9" type="System.Int32">
+          <orm:column name="PersonID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_sortOrder" property="SortOrder" behavior="readwrite" uniqueId="3528f4d6-990f-4838-8cb0-b2bb37fa58aa" type="System.Byte">
+          <orm:column name="SortOrder" sql-type="tinyint" nullable="false" length="0" scale="0" has-default-value="true" ado-type="Byte" />
+        </orm:field>
+        <orm:field name="_person" property="Person" behavior="readwrite" uniqueId="0013b660-22b8-4262-b79b-3d96690cb7eb" type="TrackrModels.Person">
+          <orm:reference uniqueId="96902e80-5796-4daf-b263-4c633056e479" association-name="PhoneNumberHasPerson">
+            <orm:sharedfield name="_personID" target-class="TrackrModels.Person" target-field="_personID" />
+            <orm:constraint name="FK_PhoneNumbers_People" delete-action="dbdefaultrule" destination-table="People" />
+          </orm:reference>
+        </orm:field>
+      </orm:class>
+      <orm:class name="EmailAddress" uniqueId="a67f6ff4-18e9-4ccf-80d3-daf4c281323e">
+        <orm:table name="EmailAddresses" />
+        <orm:identity>
+          <orm:key-generator name="autoinc">
+            <orm:key-generator-member property-name="EmailAddressID" />
+          </orm:key-generator>
+          <orm:single-field field-name="_emailAddressID" />
+        </orm:identity>
+        <orm:concurrency strategy="changed" />
+        <orm:field name="_emailAddressID" property="EmailAddressID" behavior="readwrite" uniqueId="69cdd4da-2267-4ea6-b396-f5eff9b25826" type="System.Int32">
+          <orm:column name="EmailAddressID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_emailAddress1" property="EmailAddress1" behavior="readwrite" uniqueId="eb20c1dd-d129-48d2-942d-84f8be14defd" type="System.String">
+          <orm:column name="EmailAddress" sql-type="nvarchar" nullable="false" length="100" scale="0" ado-type="UnicodeStringVariableLength" />
+        </orm:field>
+        <orm:field name="_isHTML" property="IsHTML" behavior="readwrite" uniqueId="87e39ee6-210e-4164-ba6d-1b5b15d34f27" type="System.Boolean">
+          <orm:column name="IsHTML" sql-type="bit" nullable="false" length="0" scale="0" has-default-value="true" ado-type="Bit" />
+        </orm:field>
+        <orm:field name="_personID" property="PersonID" behavior="readwrite" uniqueId="ad8bbec2-1aa6-4ae5-823d-0ebe639a54de" type="System.Int32">
+          <orm:column name="PersonID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_sortOrder" property="SortOrder" behavior="readwrite" uniqueId="8f733b2c-1a9f-4631-ac2c-cb9c11f0d21e" type="System.Byte">
+          <orm:column name="SortOrder" sql-type="tinyint" nullable="false" length="0" scale="0" has-default-value="true" ado-type="Byte" />
+        </orm:field>
+        <orm:field name="_person" property="Person" behavior="readwrite" uniqueId="dac71d92-89ec-4d41-896f-573f8a1b4155" type="TrackrModels.Person">
+          <orm:reference uniqueId="2f6a5adb-ad23-4683-949f-224f037f7df5" association-name="EmailAddressHasPerson">
+            <orm:sharedfield name="_personID" target-class="TrackrModels.Person" target-field="_personID" />
+            <orm:constraint name="FK_EmailAddresses_People" delete-action="dbdefaultrule" destination-table="People" />
           </orm:reference>
         </orm:field>
       </orm:class>
@@ -595,6 +663,26 @@
         <orm:column name="PersonID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
         <orm:column name="SortOrder" sql-type="tinyint" nullable="false" length="0" scale="0" has-default-value="true" ado-type="Byte" />
         <orm:constraint name="FK_Addresses_Addresses" delete-action="dbdefaultrule" destination-table="People">
+          <orm:column name="PersonID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:constraint>
+      </orm:table>
+      <orm:table name="PhoneNumbers">
+        <orm:column name="PhoneNumberID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        <orm:column name="TenDigit" sql-type="nvarchar" nullable="false" length="10" scale="0" ado-type="UnicodeStringVariableLength" />
+        <orm:column name="Extension" sql-type="nvarchar" nullable="true" length="10" scale="0" ado-type="UnicodeStringVariableLength" />
+        <orm:column name="PersonID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        <orm:column name="SortOrder" sql-type="tinyint" nullable="false" length="0" scale="0" has-default-value="true" ado-type="Byte" />
+        <orm:constraint name="FK_PhoneNumbers_People" delete-action="dbdefaultrule" destination-table="People">
+          <orm:column name="PersonID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:constraint>
+      </orm:table>
+      <orm:table name="EmailAddresses">
+        <orm:column name="EmailAddressID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        <orm:column name="EmailAddress" sql-type="nvarchar" nullable="false" length="100" scale="0" ado-type="UnicodeStringVariableLength" />
+        <orm:column name="IsHTML" sql-type="bit" nullable="false" length="0" scale="0" has-default-value="true" ado-type="Bit" />
+        <orm:column name="PersonID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        <orm:column name="SortOrder" sql-type="tinyint" nullable="false" length="0" scale="0" has-default-value="true" ado-type="Byte" />
+        <orm:constraint name="FK_EmailAddresses_People" delete-action="dbdefaultrule" destination-table="People">
           <orm:column name="PersonID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
         </orm:constraint>
       </orm:table>
@@ -953,6 +1041,12 @@
         <classHasNavigationalProperties Id="03c23e64-0a44-4cd5-90e9-415dfcb4b47b">
           <NavigationalProperty Id="0a108568-1ff9-4387-b16d-59e4febdcf94" name="Addresses" type="IList&lt;Address&gt;" label="Addresses : IList&lt;Address&gt;" nullable="true" kind="Persistent" fieldName="_addresses" isDependent="false" isManaged="false" />
         </classHasNavigationalProperties>
+        <classHasNavigationalProperties Id="b6b897bc-977e-466a-8c89-c11e3f186716">
+          <NavigationalProperty Id="d8dfcdce-1d8d-4340-843e-6e3c3d48eccf" name="PhoneNumbers" type="IList&lt;PhoneNumber&gt;" label="PhoneNumbers : IList&lt;PhoneNumber&gt;" nullable="true" kind="Persistent" fieldName="_phoneNumbers" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+        <classHasNavigationalProperties Id="d92e15b2-1e94-4a0b-89fc-1e097ea573d0">
+          <NavigationalProperty Id="60571906-d0d6-4fd5-8542-97d00e384408" name="EmailAddresses" type="IList&lt;EmailAddress&gt;" label="EmailAddresses : IList&lt;EmailAddress&gt;" nullable="true" kind="Persistent" fieldName="_emailAddresses" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
       </navigationalProperties>
     </DomainClass>
     <DomainClass Id="f9e226b5-203b-494d-b033-ac05193b8e60" name="Guardian" namespace="TrackrModels" showPropertiesCompartment="true" identityMechanism="DatabaseServerCalculated" concurrencyMode="Changed" showNavigationCompartment="true" showImplementationCompartment="true" identityMechanismMember="GuardianID">
@@ -1027,6 +1121,60 @@
         </classHasNavigationalProperties>
       </navigationalProperties>
     </DomainClass>
+    <DomainClass Id="d8bd4f43-02e2-4f72-b855-727dc3ebf9b7" name="PhoneNumber" namespace="TrackrModels" showPropertiesCompartment="true" identityMechanism="DatabaseServerCalculated" concurrencyMode="Changed" showNavigationCompartment="true" showImplementationCompartment="true" identityMechanismMember="PhoneNumberID">
+      <Property Id="429149a4-3597-400d-acf5-6e9ecf9d305c" name="PhoneNumberID" type="Int32" label="PhoneNumberID : Int32" kind="Persistent" identity="true" fieldName="_phoneNumberID" />
+      <Property Id="ed89418b-b152-4f11-b61b-b8ab7aa31c3a" name="Extension" label="Extension : String" kind="Persistent" fieldName="_extension" />
+      <Property Id="8fde1c3d-6a6d-4b44-9a32-4c5e42a108e9" name="PersonID" type="Int32" label="PersonID : Int32" kind="Persistent" fieldName="_personID" />
+      <Property Id="3528f4d6-990f-4838-8cb0-b2bb37fa58aa" name="SortOrder" type="Byte" label="SortOrder : Byte" kind="Persistent" fieldName="_sortOrder" />
+      <Property Id="fbeeefb9-7375-458e-a751-7df7f01eca5b" name="TenDigit" label="TenDigit : String" kind="Persistent" fieldName="_tenDigit" />
+      <AssociationTargets>
+        <Association Id="96902e80-5796-4daf-b263-4c633056e479" SourceMultiplicity="One" name="PhoneNumberHasPerson">
+          <DomainClassMoniker name="/ClubManagement/Person" />
+          <targetNavigationalProperty>
+            <associationDefinesTargetProperty Id="0a6a96f1-04cc-4632-ac72-34e198d92db6">
+              <NavigationalPropertyMoniker name="/ClubManagement/Person/PhoneNumbers" />
+            </associationDefinesTargetProperty>
+          </targetNavigationalProperty>
+          <sourceNavigationalProperty>
+            <associationDefinesSourceProperty Id="c1b74d2a-f009-4d87-a20c-ea8f281b5318">
+              <NavigationalPropertyMoniker name="/ClubManagement/PhoneNumber/Person" />
+            </associationDefinesSourceProperty>
+          </sourceNavigationalProperty>
+        </Association>
+      </AssociationTargets>
+      <navigationalProperties>
+        <classHasNavigationalProperties Id="e5b0cb02-d7d7-4ec6-b306-b2f794d9a189">
+          <NavigationalProperty Id="0013b660-22b8-4262-b79b-3d96690cb7eb" name="Person" type="Person" label="Person : Person" nullable="true" kind="Persistent" fieldName="_person" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+      </navigationalProperties>
+    </DomainClass>
+    <DomainClass Id="a67f6ff4-18e9-4ccf-80d3-daf4c281323e" name="EmailAddress" namespace="TrackrModels" showPropertiesCompartment="true" identityMechanism="DatabaseServerCalculated" concurrencyMode="Changed" showNavigationCompartment="true" showImplementationCompartment="true" identityMechanismMember="EmailAddressID">
+      <Property Id="69cdd4da-2267-4ea6-b396-f5eff9b25826" name="EmailAddressID" type="Int32" label="EmailAddressID : Int32" kind="Persistent" identity="true" fieldName="_emailAddressID" />
+      <Property Id="eb20c1dd-d129-48d2-942d-84f8be14defd" name="EmailAddress1" label="EmailAddress1 : String" kind="Persistent" fieldName="_emailAddress1" />
+      <Property Id="87e39ee6-210e-4164-ba6d-1b5b15d34f27" name="IsHTML" type="Boolean" label="IsHTML : Boolean" kind="Persistent" fieldName="_isHTML" />
+      <Property Id="ad8bbec2-1aa6-4ae5-823d-0ebe639a54de" name="PersonID" type="Int32" label="PersonID : Int32" kind="Persistent" fieldName="_personID" />
+      <Property Id="8f733b2c-1a9f-4631-ac2c-cb9c11f0d21e" name="SortOrder" type="Byte" label="SortOrder : Byte" kind="Persistent" fieldName="_sortOrder" />
+      <AssociationTargets>
+        <Association Id="2f6a5adb-ad23-4683-949f-224f037f7df5" SourceMultiplicity="One" name="EmailAddressHasPerson">
+          <DomainClassMoniker name="/ClubManagement/Person" />
+          <targetNavigationalProperty>
+            <associationDefinesTargetProperty Id="9b5d9644-f892-4ee1-8b03-c1eba0390d97">
+              <NavigationalPropertyMoniker name="/ClubManagement/Person/EmailAddresses" />
+            </associationDefinesTargetProperty>
+          </targetNavigationalProperty>
+          <sourceNavigationalProperty>
+            <associationDefinesSourceProperty Id="e1d78e14-dbbf-49e4-a7c5-9e129b17d9eb">
+              <NavigationalPropertyMoniker name="/ClubManagement/EmailAddress/Person" />
+            </associationDefinesSourceProperty>
+          </sourceNavigationalProperty>
+        </Association>
+      </AssociationTargets>
+      <navigationalProperties>
+        <classHasNavigationalProperties Id="d0c2b81c-7c8d-4aeb-be3b-7b7748e8315f">
+          <NavigationalProperty Id="dac71d92-89ec-4d41-896f-573f8a1b4155" name="Person" type="Person" label="Person : Person" nullable="true" kind="Persistent" fieldName="_person" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+      </navigationalProperties>
+    </DomainClass>
   </Types>
   <domainContext>
     <domainModelHasDomainContext Id="242d1b49-d412-485c-b5ca-793640a0667d">
@@ -1043,6 +1191,8 @@
         <entitySetProperty name="People" namespace="TrackrModels" type="Person" label="People : IQueryable&lt;TrackrModels.Person&gt;" />
         <entitySetProperty name="Guardians" namespace="TrackrModels" type="Guardian" label="Guardians : IQueryable&lt;TrackrModels.Guardian&gt;" />
         <entitySetProperty name="Addresses" namespace="TrackrModels" type="Address" label="Addresses : IQueryable&lt;TrackrModels.Address&gt;" />
+        <entitySetProperty name="PhoneNumbers" namespace="TrackrModels" type="PhoneNumber" label="PhoneNumbers : IQueryable&lt;TrackrModels.PhoneNumber&gt;" />
+        <entitySetProperty name="EmailAddresses" namespace="TrackrModels" type="EmailAddress" label="EmailAddresses : IQueryable&lt;TrackrModels.EmailAddress&gt;" />
       </domainContainer>
     </domainModelHasDomainContext>
   </domainContext>

@@ -121,6 +121,24 @@ namespace TrackrModels
 			}
 		}
 		
+		private IList<PhoneNumber> _phoneNumbers = new List<PhoneNumber>();
+		public virtual IList<PhoneNumber> PhoneNumbers
+		{
+			get
+			{
+				return this._phoneNumbers;
+			}
+		}
+		
+		private IList<EmailAddress> _emailAddresses = new List<EmailAddress>();
+		public virtual IList<EmailAddress> EmailAddresses
+		{
+			get
+			{
+				return this._emailAddresses;
+			}
+		}
+		
 		#region ISerializable Implementation
 		
 		public Person()
