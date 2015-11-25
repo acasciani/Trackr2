@@ -17,7 +17,12 @@ namespace Trackr.Source.Controls
             public int AddressID { get; set; }
         }
 
-        public int PersonID { get; set; }
+        public int? PersonID
+        {
+            get { return ViewState["AddressBookPersonID"] as int?; }
+            set { ViewState["AddressBookPersonID"] = value; }
+        }
+
         private List<AddressResult> AddressResults
         {
             get { return ViewState["AddressResults"] as List<AddressResult>; }
@@ -35,22 +40,34 @@ namespace Trackr.Source.Controls
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            
+            AlertBox.HideStatus();
+        }
+
+        public void Reset()
+        {
+            ClearForm();
+            divEdit.Visible = false;
+            PersonID = null;
         }
 
         protected void lnkSaveAddress_Click(object sender, EventArgs e)
         {
-            int? addressID = gvAddressBook.EditIndex == -1 ? (int?)null : AddressResults[gvAddressBook.EditIndex].AddressID;
+            if (!PersonID.HasValue)
+            {
+                throw new Exception("Address book does not have a person ID.");
+            }
+
+            int? addressID = gvAddressBook.EditIndex == -1 ? (int?)null : (int)gvAddressBook.DataKeys[gvAddressBook.EditIndex].Value;
 
             using (AddressesController ac = new AddressesController())
             {
                 Address address = addressID.HasValue ? ac.Get(addressID.Value) : new Address();
 
-                address.Street1 = txtAddress1.Text.Trim();
-                address.Street2 = txtAddress2.Text.Trim();
-                address.City = txtCity.Text.Trim();
-                address.State = txtState.Text.Trim();
-                address.ZipCode = txtZipCode.Text.Trim();
+                address.Street1 = string.IsNullOrWhiteSpace(txtAddress1.Text) ? null : txtAddress1.Text.Trim();
+                address.Street2 = string.IsNullOrWhiteSpace(txtAddress2.Text) ? null : txtAddress2.Text.Trim();
+                address.City = string.IsNullOrWhiteSpace(txtCity.Text) ? null : txtCity.Text.Trim();
+                address.State = string.IsNullOrWhiteSpace(txtState.Text) ? null : txtState.Text.Trim();
+                address.ZipCode = string.IsNullOrWhiteSpace(txtZipCode.Text) ? null : txtZipCode.Text.Trim();
 
                 if (addressID.HasValue)
                 {
@@ -60,7 +77,7 @@ namespace Trackr.Source.Controls
                 else
                 {
                     // add
-                    address.PersonID = PersonID;
+                    address.PersonID = PersonID.Value;
                     address.SortOrder = Convert.ToByte(ac.GetWhere(i => i.PersonID == PersonID).Count());
                     ac.AddNew(address);
                 }
@@ -89,6 +106,53 @@ namespace Trackr.Source.Controls
                 }).ToList();
 
                 return AddressResults.AsQueryable();
+            }
+        }
+
+        public void gvAddressBook_DeleteItem(int AddressID)
+        {
+            using (AddressesController ac = new AddressesController())
+            {
+                ac.Delete(AddressID);
+                gvAddressBook.DataBind();
+
+                ClearForm();
+                divEdit.Visible = false;
+
+                AlertBox.SetStatus("Successfully removed address.");
+            }
+        }
+
+        protected void gvAddressBook_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+        {
+            gvAddressBook.EditIndex = -1;
+            gvAddressBook.DataBind();
+
+            ClearForm();
+            divEdit.Visible = false;
+        }
+
+        protected void gvAddressBook_RowEditing(object sender, GridViewEditEventArgs e)
+        {
+            int addressID = (int)gvAddressBook.DataKeys[e.NewEditIndex].Value;
+            Populate_AddressEdit(addressID);
+            gvAddressBook.EditIndex = e.NewEditIndex;
+            gvAddressBook.DataBind();
+        }
+
+        private void Populate_AddressEdit(int addressID)
+        {
+            using (AddressesController ac = new AddressesController())
+            {
+                Address address = ac.Get(addressID);
+
+                txtAddress1.Text = address.Street1;
+                txtAddress2.Text = address.Street2;
+                txtCity.Text = address.City;
+                txtState.Text = address.State;
+                txtZipCode.Text = address.ZipCode;
+
+                divEdit.Visible = true;
             }
         }
     }

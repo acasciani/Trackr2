@@ -6,9 +6,17 @@
 
 <div class="row">
     <div class="col-sm-12">
-        <asp:GridView runat="server" ID="gvAddressBook" SelectMethod="gvAddressBook_GetData" EmptyDataText="There are no addresses associated to this person.">
+        <asp:GridView runat="server" ID="gvAddressBook" SelectMethod="gvAddressBook_GetData" EmptyDataText="There are no addresses associated to this person." CssClass="table" DataKeyNames="AddressID" AutoGenerateColumns="false" 
+            DeleteMethod="gvAddressBook_DeleteItem" OnRowCancelingEdit="gvAddressBook_RowCancelingEdit" OnRowEditing="gvAddressBook_RowEditing">
             <Columns>
-                <asp:BoundField DataField="Address" />
+                <asp:BoundField DataField="Address" ReadOnly="true" />
+
+                <asp:TemplateField>
+                    <ItemTemplate>
+                        <asp:LinkButton runat="server" ID="lnkRemoveAddress" CommandName="Delete" ToolTip="Remove person's address" CssClass="glyphicon glyphicon-trash" CausesValidation="false"></asp:LinkButton>&nbsp;&nbsp;
+                        <asp:LinkButton runat="server" ID="lnkEditAddress" CommandName="Edit" ToolTip="Edit person's address" CssClass="glyphicon glyphicon-edit" CausesValidation="false"></asp:LinkButton>
+                    </ItemTemplate>
+                </asp:TemplateField>
             </Columns>
         </asp:GridView>
     </div>
@@ -25,7 +33,7 @@
     <div class="form-group col-sm-12">
         <label for="<%=txtAddress1.ClientID %>">Address</label>
         <asp:TextBox runat="server" ID="txtAddress1" CssClass="form-control" MaxLength="30" />
-        <asp:RequiredFieldValidator runat="server" ID="valRequiredAddress1" ControlToValidate="txtAddress" CssClass="text-danger" Display="Dynamic" ErrorMessage="A street address is required." />
+        <asp:RequiredFieldValidator runat="server" ID="valRequiredAddress1" ControlToValidate="txtAddress1" CssClass="text-danger" Display="Dynamic" ErrorMessage="A street address is required." />
     </div>
     
     <div class="form-group col-sm-12">
@@ -38,13 +46,15 @@
         <asp:TextBox runat="server" ID="txtCity" CssClass="form-control" MaxLength="20" />
     </div>
     <div class="form-group col-sm-2">
-        <label for="<%=txtState.ClientID %>">City</label>
+        <label for="<%=txtState.ClientID %>">State</label>
         <asp:TextBox runat="server" ID="txtState" CssClass="form-control" MaxLength="2" />
     </div>
     <div class="form-group col-sm-4">
         <label for="<%=txtZipCode.ClientID %>">Zip Code</label>
         <asp:TextBox runat="server" ID="txtZipCode" CssClass="form-control" MaxLength="5" />
     </div>
+
+    <div class="clearfix"></div>
 
     <div class="col-sm-12">
         <asp:LinkButton runat="server" ID="lnkSaveAddress" CausesValidation="true" OnClick="lnkSaveAddress_Click">

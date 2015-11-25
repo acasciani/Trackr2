@@ -148,6 +148,51 @@ namespace Trackr.Source.Wizards {
         protected global::System.Web.UI.WebControls.Panel pnlAddGuardian;
         
         /// <summary>
+        /// lnkGuardianGeneral control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton lnkGuardianGeneral;
+        
+        /// <summary>
+        /// lnkGuardianAddress control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton lnkGuardianAddress;
+        
+        /// <summary>
+        /// lnkGuardianEmails control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton lnkGuardianEmails;
+        
+        /// <summary>
+        /// lnkGuardianPhones control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton lnkGuardianPhones;
+        
+        /// <summary>
+        /// mvGuardianTabs control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.MultiView mvGuardianTabs;
+        
+        /// <summary>
         /// txtGuardianFirstName control.
         /// </summary>
         /// <remarks>
@@ -175,6 +220,15 @@ namespace Trackr.Source.Wizards {
         protected global::System.Web.UI.WebControls.TextBox txtGuardianLastName;
         
         /// <summary>
+        /// lnkSaveGuardian control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton lnkSaveGuardian;
+        
+        /// <summary>
         /// AddressBook control.
         /// </summary>
         /// <remarks>
@@ -184,13 +238,13 @@ namespace Trackr.Source.Wizards {
         protected global::Trackr.Source.Controls.AddressBook AddressBook;
         
         /// <summary>
-        /// lnkSaveGuardian control.
+        /// lnkAddEditGuardianClose control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton lnkSaveGuardian;
+        protected global::System.Web.UI.WebControls.LinkButton lnkAddEditGuardianClose;
         
         /// <summary>
         /// Step3_Picture control.

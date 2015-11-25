@@ -413,11 +413,14 @@
       <orm:class name="Address" uniqueId="56524b10-542a-429d-96b9-575fe165d13c">
         <orm:table name="Addresses" />
         <orm:identity>
+          <orm:key-generator name="autoinc">
+            <orm:key-generator-member property-name="AddressID" />
+          </orm:key-generator>
           <orm:single-field field-name="_addressID" />
         </orm:identity>
         <orm:concurrency strategy="changed" />
         <orm:field name="_addressID" property="AddressID" behavior="readwrite" uniqueId="da310edc-a473-4040-bcb4-8050366a1ed6" type="System.Int32">
-          <orm:column name="AddressID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" ado-type="Int32" />
+          <orm:column name="AddressID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
         </orm:field>
         <orm:field name="_street1" property="Street1" behavior="readwrite" uniqueId="69c568d5-2d4c-4499-8ec1-51f3e7d2819a" type="System.String">
           <orm:column name="Street1" sql-type="nvarchar" nullable="true" length="30" scale="0" ado-type="UnicodeStringVariableLength" />
@@ -583,7 +586,7 @@
         </orm:constraint>
       </orm:table>
       <orm:table name="Addresses">
-        <orm:column name="AddressID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" ado-type="Int32" />
+        <orm:column name="AddressID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
         <orm:column name="Street1" sql-type="nvarchar" nullable="true" length="30" scale="0" ado-type="UnicodeStringVariableLength" />
         <orm:column name="Street2" sql-type="nvarchar" nullable="true" length="30" scale="0" ado-type="UnicodeStringVariableLength" />
         <orm:column name="City" sql-type="nvarchar" nullable="true" length="20" scale="0" ado-type="UnicodeStringVariableLength" />
@@ -994,7 +997,7 @@
         </classHasNavigationalProperties>
       </navigationalProperties>
     </DomainClass>
-    <DomainClass Id="56524b10-542a-429d-96b9-575fe165d13c" name="Address" namespace="TrackrModels" showPropertiesCompartment="true" concurrencyMode="Changed" showNavigationCompartment="true" showImplementationCompartment="true">
+    <DomainClass Id="56524b10-542a-429d-96b9-575fe165d13c" name="Address" namespace="TrackrModels" showPropertiesCompartment="true" identityMechanism="DatabaseServerCalculated" concurrencyMode="Changed" showNavigationCompartment="true" showImplementationCompartment="true" identityMechanismMember="AddressID">
       <Property Id="da310edc-a473-4040-bcb4-8050366a1ed6" name="AddressID" type="Int32" label="AddressID : Int32" kind="Persistent" identity="true" fieldName="_addressID" />
       <Property Id="6afd79a3-5ef7-49b7-8a48-41082a150b97" name="City" label="City : String" kind="Persistent" fieldName="_city" />
       <Property Id="8d027098-9ca2-4935-8907-30650ebda2ce" name="PersonID" type="Int32" label="PersonID : Int32" kind="Persistent" fieldName="_personID" />

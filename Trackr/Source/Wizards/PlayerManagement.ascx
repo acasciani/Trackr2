@@ -105,7 +105,7 @@
                 </Columns>
             </asp:GridView>
 
-            <div class="row">
+            <div class="row margin-bottom-5-px">
                 <div class="col-sm-12">
                     <asp:LinkButton runat="server" ID="lnkAddGuardian" OnClick="lnkAddGuardian_Click" CausesValidation="false">
                         <i class="glyphicon glyphicon-plus-sign"></i> Add Guardian
@@ -115,38 +115,63 @@
 
             <asp:Panel runat="server" ID="pnlAddGuardian" Visible="false">
                 <div class="well">
-                    <div class="form-group row">
-                        <label class="col-sm-12 control-label" for="<%=txtGuardianFirstName.ClientID %>">First name</label>
-                        <div class="col-sm-12">
-                            <asp:TextBox runat="server" ID="txtGuardianFirstName" CssClass="form-control" MaxLength="30" />
-                            <asp:RequiredFieldValidator runat="server" ControlToValidate="txtGuardianFirstName" CssClass="text-danger" ErrorMessage="The guardian's first name is required." Display="Dynamic" />
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs">
+                        <li class="<%= mvGuardianTabs.ActiveViewIndex == 0 ? "active" : "" %>"><asp:LinkButton runat="server" ID="lnkGuardianGeneral" Text="General" OnClick="lnkGuardianTab_Click" CommandArgument="0" CausesValidation="false" /></li>
+                        <li class="<%= mvGuardianTabs.ActiveViewIndex == 1 ? "active" : gvGuardians.EditIndex == -1 ? "disabled" : "" %>"><asp:LinkButton runat="server" ID="lnkGuardianAddress" Text="Address" OnClick="lnkGuardianTab_Click" CommandArgument="1" CausesValidation="false" /></li>
+                        <li class="<%= mvGuardianTabs.ActiveViewIndex == 2 ? "active" : gvGuardians.EditIndex == -1 ? "disabled" : "" %>"><asp:LinkButton runat="server" ID="lnkGuardianEmails" Text="Emails" OnClick="lnkGuardianTab_Click" CommandArgument="2" CausesValidation="false" /></li>
+                        <li class="<%= mvGuardianTabs.ActiveViewIndex == 3 ? "active" : gvGuardians.EditIndex == -1 ? "disabled" : "" %>"><asp:LinkButton runat="server" ID="lnkGuardianPhones" Text="Phones" OnClick="lnkGuardianTab_Click" CommandArgument="3" CausesValidation="false" /></li>
+                    </ul>
+
+                    <!-- Tab panes -->
+                    <div class="tab-content margin-bottom-5-px">
+                        <div class="tab-pane active">
+                            <asp:MultiView runat="server" ID="mvGuardianTabs" ActiveViewIndex="0">
+                                <asp:View runat="server">
+                                    <div class="form-group row">
+                                        <label class="col-sm-12 control-label" for="<%=txtGuardianFirstName.ClientID %>">First name</label>
+                                        <div class="col-sm-12">
+                                            <asp:TextBox runat="server" ID="txtGuardianFirstName" CssClass="form-control" MaxLength="30" />
+                                            <asp:RequiredFieldValidator runat="server" ControlToValidate="txtGuardianFirstName" CssClass="text-danger" ErrorMessage="The guardian's first name is required." Display="Dynamic" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-12 control-label" for="<%=txtGuardianMiddleInitial.ClientID %>">Middle initial</label>
+                                        <div class="col-sm-12">
+                                            <asp:TextBox runat="server" ID="txtGuardianMiddleInitial" CssClass="form-control" MaxLength="1" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-12 control-label" for="<%=txtGuardianLastName.ClientID %>">Last name</label>
+                                        <div class="col-sm-12">
+                                            <asp:TextBox runat="server" ID="txtGuardianLastName" CssClass="form-control" MaxLength="30" />
+                                            <asp:RequiredFieldValidator runat="server" ControlToValidate="txtGuardianLastName" CssClass="text-danger" ErrorMessage="The guardian's last name is required." Display="Dynamic" />
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <asp:LinkButton runat="server" ID="lnkSaveGuardian" CausesValidation="true" OnClick="lnkSaveGuardian_Click"><span class="glyphicon glyphicon-save"></span> Save General Information</asp:LinkButton>
+                                        </div>
+                                    </div>
+                                </asp:View>
+
+                                <asp:View runat="server">
+                                    <ui:AddressBook runat="server" ID="AddressBook" />
+                                </asp:View>
+
+                                <asp:View runat="server">
+                                    Emails
+                                </asp:View>
+
+                                <asp:View runat="server">
+                                    Phones
+                                </asp:View>
+                            </asp:MultiView>
                         </div>
                     </div>
-                    <div class="form-group row">
-                        <label class="col-sm-12 control-label" for="<%=txtGuardianMiddleInitial.ClientID %>">Middle initial</label>
-                        <div class="col-sm-12">
-                            <asp:TextBox runat="server" ID="txtGuardianMiddleInitial" CssClass="form-control" MaxLength="1" />
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-sm-12 control-label" for="<%=txtGuardianLastName.ClientID %>">Last name</label>
-                        <div class="col-sm-12">
-                            <asp:TextBox runat="server" ID="txtGuardianLastName" CssClass="form-control" MaxLength="30" />
-                            <asp:RequiredFieldValidator runat="server" ControlToValidate="txtGuardianLastName" CssClass="text-danger" ErrorMessage="The guardian's last name is required." Display="Dynamic" />
-                        </div>
-                    </div>
-
-                    <hr />
-
-                    <ui:AddressBook runat="server" ID="AddressBook" />
-
-                    <hr />
-
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <asp:LinkButton runat="server" ID="lnkSaveGuardian" CausesValidation="true" OnClick="lnkSaveGuardian_Click"><i class="glyphicon glyphicon-save"></i> Save Guardian</asp:LinkButton>
-                        </div>
-                    </div>
+                    
+                    <asp:LinkButton runat="server" ID="lnkAddEditGuardianClose" CausesValidation="false" OnClick="lnkAddEditGuardianClose_Click" Text="Close" />
                 </div>
             </asp:Panel>
         </asp:WizardStep>

@@ -586,6 +586,7 @@ namespace Trackr.Source.Wizards
             txtGuardianMiddleInitial.Text = null;
             txtGuardianLastName.Text = null;
             pnlAddGuardian.Visible = false;
+            UpdateGuardianTabs();
         }
 
         private void SaveGuardian(int? guardianID)
@@ -611,19 +612,12 @@ namespace Trackr.Source.Wizards
                     guardian.PlayerID = PrimaryKey.Value;
                     Guardian newGuardian = gc.AddNew(guardian);
                     AlertBox.SetStatus("Successfully saved new guardian.");
-
-                    Populate_AddressBook(newGuardian.PersonID);
                 }
                 else
                 {
                     gc.Update(guardian);
                     AlertBox.SetStatus("Successfully saved existing guardian.");
-
-                    pnlAddGuardian.Visible = false;
-                    gvGuardians.EditIndex = -1;
                 }
-
-                gvGuardians.DataBind();
             }
         }
 
@@ -642,30 +636,31 @@ namespace Trackr.Source.Wizards
                 txtGuardianMiddleInitial.Text = guardian.Person.MInitial.HasValue ? guardian.Person.MInitial.Value.ToString() : "";
                 txtGuardianLastName.Text = guardian.Person.LName;
 
-                // populate address book
-                Populate_AddressBook(guardian.PersonID);
-
                 pnlAddGuardian.Visible = true;
             }
         }
 
         private void Populate_AddressBook(int personID)
         {
+            AddressBook.Reset();
             AddressBook.PersonID = personID;
             AddressBook.DataBind();
         }
 
         protected void gvGuardians_RowEditing(object sender, GridViewEditEventArgs e)
         {
-            Populate_GuardianEdit(Guardians[e.NewEditIndex].GuardianID);
+            int guardianID = (int)gvGuardians.DataKeys[e.NewEditIndex].Value;
+            Populate_GuardianEdit(guardianID);
             gvGuardians.EditIndex = e.NewEditIndex;
             gvGuardians.DataBind();
+            UpdateGuardianTabs();
         }
 
         protected void gvGuardians_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
         {
             gvGuardians.EditIndex = -1;
             gvGuardians.DataBind();
+            UpdateGuardianTabs();
         }
 
         public void gvGuardians_DeleteItem(int? GuardianID)
@@ -691,6 +686,7 @@ namespace Trackr.Source.Wizards
             pnlAddGuardian.Visible = true;
             gvGuardians.EditIndex = -1;
             gvGuardians.DataBind();
+            UpdateGuardianTabs();
         }
 
         protected void lnkSaveGuardian_Click(object sender, EventArgs e)
@@ -699,9 +695,49 @@ namespace Trackr.Source.Wizards
             {
                 return;
             }
-
-            int? guardianID = gvGuardians.EditIndex != -1 ? Guardians[gvGuardians.EditIndex].GuardianID : (int?)null;
+            
+            int? guardianID = gvGuardians.EditIndex != -1 ? (int)gvGuardians.DataKeys[gvGuardians.EditIndex].Value : (int?)null;
             SaveGuardian(guardianID);
+            gvGuardians.DataBind();
+            UpdateGuardianTabs();
+        }
+
+        protected void lnkGuardianTab_Click(object sender, EventArgs e)
+        {
+            LinkButton btn = (LinkButton)sender;
+
+            int selectedTabIndex;
+            if (int.TryParse(btn.CommandArgument, out selectedTabIndex))
+            {
+                mvGuardianTabs.ActiveViewIndex = selectedTabIndex;
+                UpdateGuardianTabs();
+                AddressBook.Reset();
+
+                if (selectedTabIndex == 1)
+                {
+                    // populate address book
+                    int personID = Guardians.First(i => i.GuardianID == (int)gvGuardians.DataKeys[gvGuardians.EditIndex].Value).PersonID;
+                    Populate_AddressBook(personID);
+                }
+            }
+        }
+
+        private void UpdateGuardianTabs()
+        {
+            lnkGuardianGeneral.Enabled = mvGuardianTabs.ActiveViewIndex != 0;
+            lnkGuardianAddress.Enabled = gvGuardians.EditIndex > -1 && mvGuardianTabs.ActiveViewIndex != 1;
+            lnkGuardianEmails.Enabled = gvGuardians.EditIndex > -1 && mvGuardianTabs.ActiveViewIndex != 2;
+            lnkGuardianPhones.Enabled = gvGuardians.EditIndex > -1 && mvGuardianTabs.ActiveViewIndex != 3;
+        }
+
+        protected void lnkAddEditGuardianClose_Click(object sender, EventArgs e)
+        {
+            AddressBook.Reset();
+            mvGuardianTabs.ActiveViewIndex = 0;
+            pnlAddGuardian.Visible = false;
+            gvGuardians.EditIndex = -1;
+            gvGuardians.DataBind();
+            UpdateGuardianTabs();
         }
         #endregion
     }
