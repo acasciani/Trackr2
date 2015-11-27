@@ -48,6 +48,12 @@ namespace Trackr.Source.Controls
             PersonID = null;
         }
 
+        public void HideForm()
+        {
+            ClearForm();
+            divEdit.Visible = false;
+        }
+
         protected void lnkSavePhoneNumber_Click(object sender, EventArgs e)
         {
             if (!Page.IsValid)

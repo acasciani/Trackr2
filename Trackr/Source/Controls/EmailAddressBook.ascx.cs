@@ -47,6 +47,12 @@ namespace Trackr.Source.Controls
             PersonID = null;
         }
 
+        public void HideForm()
+        {
+            ClearForm();
+            divEdit.Visible = false;
+        }
+
         protected void lnkSaveEmailAddress_Click(object sender, EventArgs e)
         {
             if (!PersonID.HasValue)

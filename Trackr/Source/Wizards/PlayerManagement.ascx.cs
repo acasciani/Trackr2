@@ -76,10 +76,12 @@ namespace Trackr.Source.Wizards
             if (IsNew)
             {
                 Populate_Create();
+                UpdatePlayerTabs();
             }
             else
             {
                 Populate_Edit();
+                UpdatePlayerTabs();
             }
 
             // update dropdownlists
@@ -113,6 +115,19 @@ namespace Trackr.Source.Wizards
                 PlayerPass playerPass = player.PlayerPasses.Where(i => DateTime.Today <= i.Expires).FirstOrDefault();
 
                 divPreview.Visible = false;
+
+                // populate player's contact books
+                AddressBook_Player.Reset();
+                AddressBook_Player.PersonID = player.PersonID;
+                AddressBook_Player.DataBind();
+
+                EmailAddressBook_Player.Reset();
+                EmailAddressBook_Player.PersonID = player.PersonID;
+                EmailAddressBook_Player.DataBind();
+
+                PhoneNumberBook_Player.Reset();
+                PhoneNumberBook_Player.PersonID = player.PersonID;
+                PhoneNumberBook_Player.DataBind();
             }
         }
 
@@ -150,6 +165,46 @@ namespace Trackr.Source.Wizards
                     AlertBox.SetStatus("Successfully saved player information.");
                 }
             }
+        }
+
+        protected void lnkPlayerTab_Click(object sender, EventArgs e)
+        {
+            LinkButton btn = (LinkButton)sender;
+
+            int selectedTabIndex;
+            if (int.TryParse(btn.CommandArgument, out selectedTabIndex))
+            {
+                mvPlayerInfoTabs.ActiveViewIndex = selectedTabIndex;
+                UpdatePlayerTabs();
+            }
+        }
+
+        private void UpdatePlayerTabs()
+        {
+            lnkPlayerGeneral.Enabled = mvPlayerInfoTabs.ActiveViewIndex != 0;
+            lnkPlayerAddress.Enabled = PrimaryKey.HasValue && mvPlayerInfoTabs.ActiveViewIndex != 1;
+            lnkPlayerEmails.Enabled = PrimaryKey.HasValue && mvPlayerInfoTabs.ActiveViewIndex != 2;
+            lnkPlayerPhones.Enabled = PrimaryKey.HasValue && mvPlayerInfoTabs.ActiveViewIndex != 3;
+        }
+
+        protected void Step1_Info_Activate(object sender, EventArgs e)
+        {
+            AddressBook_Player.HideForm();
+            EmailAddressBook_Player.HideForm();
+            PhoneNumberBook_Player.HideForm();
+            mvPlayerInfoTabs.ActiveViewIndex = 0;
+            UpdatePlayerTabs();
+        }
+
+        protected void lnkSavePlayer_Click(object sender, EventArgs e)
+        {
+            if (!Page.IsValid)
+            {
+                return;
+            }
+
+            Save_Step1();
+            UpdatePlayerTabs();
         }
 
         protected void PlayerWizard_NextButtonClick(object sender, WizardNavigationEventArgs e)

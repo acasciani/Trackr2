@@ -45,7 +45,7 @@
             <asp:PlaceHolder runat="server" ID="sideBarPlaceholder"></asp:PlaceHolder>
         </div>
 
-        <div>
+        <div class="margin-bottom-20-px">
             <asp:PlaceHolder runat="server" ID="wizardStepPlaceholder"></asp:PlaceHolder>
         </div>
 
@@ -56,35 +56,71 @@
     
 
     <WizardSteps>
-        <asp:WizardStep runat="server" ID="Step1_Info" StepType="Start" Title="Player Information">
-            <div class="form-horizontal">
-                <div class="form-group">
-                    <label for="<%=txtFirstName.ClientID %>" class="col-sm-4 control-label">First name</label>
-                    <div class="col-sm-8">
-                        <asp:TextBox runat="server" ID="txtFirstName" CssClass="form-control" MaxLength="30" />
-                        <asp:RequiredFieldValidator Display="Dynamic" runat="server" ID="validatorFirstNameRequired" ControlToValidate="txtFirstName" CssClass="text-danger" ErrorMessage="A first name is required." />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="<%=txtMiddleInitial.ClientID %>" class="col-sm-4 control-label">Middle initial</label>
-                    <div class="col-sm-8">
-                        <asp:TextBox runat="server" ID="txtMiddleInitial" MaxLength="1" CssClass="form-control" />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="<%=txtLastName.ClientID %>" class="col-sm-4 control-label">Last name</label>
-                    <div class="col-sm-8">
-                        <asp:TextBox runat="server" ID="txtLastName" CssClass="form-control" MaxLength="30" />
-                        <asp:RequiredFieldValidator Display="Dynamic" runat="server" ID="validatorLastNameRequired" ControlToValidate="txtLastName" CssClass="text-danger" ErrorMessage="A last name is required." />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="<%=txtDateOfBirth.ClientID %>" class="col-sm-4 control-label">Date of birth</label>
-                    <div class="col-sm-8">
-                        <asp:TextBox runat="server" ID="txtDateOfBirth" CssClass="form-control" MaxLength="30" TextMode="Date" />
-                        <asp:CustomValidator Display="Dynamic" runat="server" ID="validatorDOBParses" ControlToValidate="txtDateOfBirth" CssClass="text-danger" ErrorMessage="The date of birth must be entered in the format: MM/DD/YYYY and the date of birth must be greater than or equal to January 1, 1900 and less than or equal to January 1, 2200." OnServerValidate="validatorDateTimeParses_ServerValidate" />
-                        <asp:RequiredFieldValidator Display="Dynamic" runat="server" ID="validatorDOBRequired" ControlToValidate="txtDateOfBirth" CssClass="text-danger" ErrorMessage="Player's date of birth is required." />
-                    </div>
+        <asp:WizardStep runat="server" ID="Step1_Info" StepType="Start" Title="Player Information" OnActivate="Step1_Info_Activate">
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs">
+                <li class="<%= mvPlayerInfoTabs.ActiveViewIndex == 0 ? "active" : "" %>"><asp:LinkButton runat="server" ID="lnkPlayerGeneral" Text="General" OnClick="lnkPlayerTab_Click" CommandArgument="0" CausesValidation="false" /></li>
+                <li class="<%= mvPlayerInfoTabs.ActiveViewIndex == 1 ? "active" : !lnkPlayerAddress.Enabled ? "disabled" : "" %>"><asp:LinkButton runat="server" ID="lnkPlayerAddress" Text="Address" OnClick="lnkPlayerTab_Click" CommandArgument="1" CausesValidation="false" /></li>
+                <li class="<%= mvPlayerInfoTabs.ActiveViewIndex == 2 ? "active" : !lnkPlayerEmails.Enabled ? "disabled" : "" %>"><asp:LinkButton runat="server" ID="lnkPlayerEmails" Text="Emails" OnClick="lnkPlayerTab_Click" CommandArgument="2" CausesValidation="false" /></li>
+                <li class="<%= mvPlayerInfoTabs.ActiveViewIndex == 3 ? "active" : !lnkPlayerPhones.Enabled ? "disabled" : "" %>"><asp:LinkButton runat="server" ID="lnkPlayerPhones" Text="Phones" OnClick="lnkPlayerTab_Click" CommandArgument="3" CausesValidation="false" /></li>
+            </ul>
+
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div class="tab-pane active">
+                    <asp:MultiView runat="server" ID="mvPlayerInfoTabs" ActiveViewIndex="0">
+                        <asp:View runat="server">
+                            <div class="row form-group">
+                                <label for="<%=txtFirstName.ClientID %>" class="col-sm-12 control-label">First name</label>
+                                <div class="col-sm-12">
+                                    <asp:TextBox runat="server" ID="txtFirstName" CssClass="form-control" MaxLength="30" />
+                                    <asp:RequiredFieldValidator Display="Dynamic" runat="server" ID="validatorFirstNameRequired" ControlToValidate="txtFirstName" CssClass="text-danger" ErrorMessage="A first name is required." />
+                                </div>
+                            </div>
+
+                            <div class="row form-group">
+                                <label for="<%=txtMiddleInitial.ClientID %>" class="col-sm-12 control-label">Middle initial</label>
+                                <div class="col-sm-12">
+                                    <asp:TextBox runat="server" ID="txtMiddleInitial" MaxLength="1" CssClass="form-control" />
+                                </div>
+                            </div>
+
+                            <div class="row form-group">
+                                <label for="<%=txtLastName.ClientID %>" class="control-label col-sm-12">Last name</label>
+                                <div class="col-sm-12">
+                                    <asp:TextBox runat="server" ID="txtLastName" CssClass="form-control" MaxLength="30" />
+                                    <asp:RequiredFieldValidator Display="Dynamic" runat="server" ID="validatorLastNameRequired" ControlToValidate="txtLastName" CssClass="text-danger" ErrorMessage="A last name is required." />
+                                </div>
+                            </div>
+
+                            <div class="row form-group">
+                                <label for="<%=txtDateOfBirth.ClientID %>" class="col-sm-12 control-label">Date of birth</label>
+                                <div class="col-sm-12">
+                                    <asp:TextBox runat="server" ID="txtDateOfBirth" CssClass="form-control" MaxLength="30" TextMode="Date" />
+                                    <asp:CustomValidator Display="Dynamic" runat="server" ID="validatorDOBParses" ControlToValidate="txtDateOfBirth" CssClass="text-danger" ErrorMessage="The date of birth must be entered in the format: MM/DD/YYYY and the date of birth must be greater than or equal to January 1, 1900 and less than or equal to January 1, 2200." OnServerValidate="validatorDateTimeParses_ServerValidate" />
+                                    <asp:RequiredFieldValidator Display="Dynamic" runat="server" ID="validatorDOBRequired" ControlToValidate="txtDateOfBirth" CssClass="text-danger" ErrorMessage="Player's date of birth is required." />
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <asp:LinkButton runat="server" ID="lnkSavePlayer" CausesValidation="true" OnClick="lnkSavePlayer_Click"><span class="glyphicon glyphicon-save"></span> Save General Information</asp:LinkButton>
+                                </div>
+                            </div>
+                        </asp:View>
+
+                        <asp:View runat="server">
+                            <ui:AddressBook runat="server" ID="AddressBook_Player" />
+                        </asp:View>
+
+                        <asp:View runat="server">
+                            <ui:EmailAddressBook runat="server" ID="EmailAddressBook_Player" />
+                        </asp:View>
+
+                        <asp:View runat="server">
+                            <ui:PhoneNumberBook runat="server" ID="PhoneNumberBook_Player" />
+                        </asp:View>
+                    </asp:MultiView>
                 </div>
             </div>
         </asp:WizardStep>

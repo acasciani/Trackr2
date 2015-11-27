@@ -50,6 +50,12 @@ namespace Trackr.Source.Controls
             PersonID = null;
         }
 
+        public void HideForm()
+        {
+            ClearForm();
+            divEdit.Visible = false;
+        }
+
         protected void lnkSaveAddress_Click(object sender, EventArgs e)
         {
             if (!PersonID.HasValue)

@@ -40,6 +40,51 @@ namespace Trackr.Source.Wizards {
         protected global::System.Web.UI.WebControls.WizardStep Step1_Info;
         
         /// <summary>
+        /// lnkPlayerGeneral control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton lnkPlayerGeneral;
+        
+        /// <summary>
+        /// lnkPlayerAddress control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton lnkPlayerAddress;
+        
+        /// <summary>
+        /// lnkPlayerEmails control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton lnkPlayerEmails;
+        
+        /// <summary>
+        /// lnkPlayerPhones control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton lnkPlayerPhones;
+        
+        /// <summary>
+        /// mvPlayerInfoTabs control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.MultiView mvPlayerInfoTabs;
+        
+        /// <summary>
         /// txtFirstName control.
         /// </summary>
         /// <remarks>
@@ -110,6 +155,42 @@ namespace Trackr.Source.Wizards {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator validatorDOBRequired;
+        
+        /// <summary>
+        /// lnkSavePlayer control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton lnkSavePlayer;
+        
+        /// <summary>
+        /// AddressBook_Player control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Trackr.Source.Controls.AddressBook AddressBook_Player;
+        
+        /// <summary>
+        /// EmailAddressBook_Player control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Trackr.Source.Controls.EmailAddressBook EmailAddressBook_Player;
+        
+        /// <summary>
+        /// PhoneNumberBook_Player control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Trackr.Source.Controls.PhoneNumberBook PhoneNumberBook_Player;
         
         /// <summary>
         /// Step2_Guardian control.
