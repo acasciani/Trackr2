@@ -585,6 +585,10 @@ namespace Trackr.Source.Wizards
             txtGuardianFirstName.Text = null;
             txtGuardianMiddleInitial.Text = null;
             txtGuardianLastName.Text = null;
+            AddressBook.Reset();
+            EmailBook.Reset();
+            PhoneNumberBook.Reset();
+            mvGuardianTabs.ActiveViewIndex = 0;
             pnlAddGuardian.Visible = false;
             UpdateGuardianTabs();
         }
@@ -709,11 +713,19 @@ namespace Trackr.Source.Wizards
             {
                 return;
             }
-            
+
             int? guardianID = gvGuardians.EditIndex != -1 ? (int)gvGuardians.DataKeys[gvGuardians.EditIndex].Value : (int?)null;
             SaveGuardian(guardianID);
             gvGuardians.DataBind();
-            UpdateGuardianTabs();
+
+            if (!guardianID.HasValue)
+            {
+                ClearGuardianForm();
+            }
+            else
+            {
+                UpdateGuardianTabs();
+            }
         }
 
         protected void lnkGuardianTab_Click(object sender, EventArgs e)

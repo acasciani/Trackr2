@@ -34,6 +34,7 @@
         <label for="<%=txtPhoneNumber.ClientID %>">Phone Number</label>
         <asp:TextBox runat="server" ID="txtPhoneNumber" CssClass="form-control" MaxLength="14" />
         <asp:RequiredFieldValidator runat="server" ID="valRequiredPhoneNumber" ControlToValidate="txtPhoneNumber" CssClass="text-danger" Display="Dynamic" ErrorMessage="A phone number is required." />
+        <asp:CustomValidator runat="server" ID="valFormatPhoneNumber" ControlToValidate="txtPhoneNumber" CssClass="text-danger" Display="Dynamic" ErrorMessage="The phone number should be in the format (###) ###-#### or ###-###-####" OnServerValidate="valFormatPhoneNumber_ServerValidate" />
     </div>
     
     <div class="form-group col-sm-12">
