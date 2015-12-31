@@ -4,10 +4,11 @@
 
     
     <div class="jumbotron">
-        <h1>Bandits</h1>
+        <h1>t</h1>
         <p class="lead">Welcome.</p>
         <p><a href="http://www.asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
     </div>
+
 
 
 </asp:Content>

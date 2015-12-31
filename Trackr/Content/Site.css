@@ -1,9 +1,4 @@
-﻿/* Move down content because we have a fixed navbar that is 50px tall */
-body {
-    padding-top: 50px;
-    padding-bottom: 20px;
-}
-
+﻿
 
 .text-right{
     text-align:right;
@@ -45,4 +40,68 @@ body {
 
 .margin-bottom-5-px {
     margin-bottom: 5px;
+}
+
+a .glyphicon {
+    margin-right:5px;
+}
+
+
+
+body, #outer-wrap, #inner-wrap {
+    height: 100%;
+}
+
+#inner-wrap {
+    min-height: 100vh;
+}
+
+.navbar-footer {
+    background-color: #f8f8f8;
+    border-color: #e7e7e7;
+    border: 1px solid transparent;
+}
+
+.padding-15 {
+    padding: 15px;
+}
+
+.navbar {
+    border-radius: 0px !important;
+}
+
+
+
+    .footer > footer {
+        padding:15px;
+        background-color: #333333;
+        color: #ccc;
+    }
+
+    .footer > footer a {
+        color: #ccc;
+        text-decoration: underline;
+    }
+    .footer > footer a:hover {
+        color: #ccc;
+        text-decoration: none;
+    }
+
+
+
+
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+  position: relative;
+  min-height: 100%;
+}
+#main, .main {
+  margin-bottom: 75px;
+}
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  left:0;
 }

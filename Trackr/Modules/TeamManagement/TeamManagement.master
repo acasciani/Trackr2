@@ -1,0 +1,7 @@
+﻿<%@ Master Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="TeamManagement.master.cs" Inherits="Trackr.Modules.TeamManagement.TeamManagement" %>
+
+<asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
+
+    <asp:ContentPlaceHolder ID="NestedContent" runat="server"></asp:ContentPlaceHolder>
+
+</asp:Content>

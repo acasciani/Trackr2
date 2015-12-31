@@ -190,7 +190,8 @@
     <Content Include="Account\Register.aspx" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
-    <Content Include="Content\drawer.css" />
+    <Content Include="Content\menu\left-full.css" />
+    <Content Include="Content\menu\left.css" />
     <Content Include="Content\Site.css" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -214,6 +215,8 @@
     <Content Include="Scripts\drawer.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
+    <Content Include="Scripts\menu\left-full.js" />
+    <Content Include="Scripts\menu\left.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
@@ -245,6 +248,7 @@
     <Content Include="Source\Controls\AddressBook.ascx" />
     <Content Include="Source\Controls\AlertBox.ascx" />
     <Content Include="Source\Controls\EmailAddressBook.ascx" />
+    <Content Include="Source\Controls\LeftNavigation.ascx" />
     <Content Include="Source\Controls\PhoneNumberBook.ascx" />
     <Content Include="Source\Controls\ProgramTeamPlayerPicker.ascx" />
     <Content Include="Source\Wizards\PlayerManagement.ascx" />
@@ -395,6 +399,13 @@
     </Compile>
     <Compile Include="Source\Controls\EmailAddressBook.ascx.designer.cs">
       <DependentUpon>EmailAddressBook.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Controls\LeftNavigation.ascx.cs">
+      <DependentUpon>LeftNavigation.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Source\Controls\LeftNavigation.ascx.designer.cs">
+      <DependentUpon>LeftNavigation.ascx</DependentUpon>
     </Compile>
     <Compile Include="Source\Controls\PhoneNumberBook.ascx.cs">
       <DependentUpon>PhoneNumberBook.ascx</DependentUpon>
