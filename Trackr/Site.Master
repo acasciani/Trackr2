@@ -1,5 +1,4 @@
 ﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="Trackr.SiteMaster" %>
-<%@ Register Src="~/ViewSwitcher.ascx" TagPrefix="friendlyUrls" TagName="ViewSwitcher" %>
 
 <!DOCTYPE html>
 
@@ -107,10 +106,7 @@
                         <div class="footer">
                     <footer>
                         <div class="row">
-                            <div class="col-xs-6">Gananda Bandits &copy; 2007-15</div>
-                            <div class="col-xs-6 text-right">
-                                <friendlyUrls:ViewSwitcher runat="server" />
-                            </div>
+                            <div class="col-xs-12">Gananda Bandits &copy; 2007-15</div>
                         </div>
                     </footer>
                 </div>

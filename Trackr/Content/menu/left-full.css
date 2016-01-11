@@ -108,6 +108,7 @@
   #nav .links li:last-child {
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   }
+
   #nav li.is-active:after {
     z-index: 50;
     display: block;

@@ -7,7 +7,7 @@ using System.Web.UI.WebControls;
 
 namespace Trackr.Modules.PlayerManagement
 {
-    public partial class PlayerManagement : System.Web.UI.MasterPage
+    public partial class PlayerManagement : MasterPage
     {
         protected void Page_Load(object sender, EventArgs e)
         {

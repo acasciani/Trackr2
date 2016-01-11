@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using TrackrModels;
 using Trackr.Utils;
+using Microsoft.AspNet.FriendlyUrls.Resolvers;
 
 namespace Trackr
 {
@@ -37,6 +38,14 @@ namespace Trackr
                 {
                     Response.Redirect("~/Default.aspx", true);
                 }
+            }
+        }
+
+        protected void Page_PreInit(object sender, System.EventArgs e)
+        {
+            if (WebFormsFriendlyUrlResolver.IsMobileView(new HttpContextWrapper(Context)))
+            {
+                MasterPageFile = "~/Site.Mobile.Master";
             }
         }
     }

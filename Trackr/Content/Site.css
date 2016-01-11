@@ -105,3 +105,40 @@ html {
   width: 100%;
   left:0;
 }
+
+  #nav .links li {
+    position: relative;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  #nav .links li:last-child {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .sub.links li {
+      border-top: none !important;
+      border-bottom: none !important;
+  }
+
+  .sub.links li a {
+    padding-left: 3.14286em !important;
+  }
+    .sub.links li:first-child a {
+    padding-left: 2.14286em !important;
+  }
+
+
+    .sub.links li:not(:first-child){
+        display: none !important;
+    }
+
+    .sub.links.display li {
+    display: block !important;
+  }
+
+    .sub.links li:first-child {
+        cursor: pointer;
+    }
+
+    .sub.links .glyphicon {
+        padding-right:5px;
+    }

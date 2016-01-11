@@ -14,6 +14,13 @@ namespace Trackr.Source.Controls
         protected void Page_Load(object sender, EventArgs e)
         {
 
+
+
+        }
+
+        public bool IsCurrentModule(string moduleName)
+        {
+            return Request.Url.LocalPath.ToUpper().StartsWith("/MODULES/" + moduleName.ToUpper());
         }
     }
 }
