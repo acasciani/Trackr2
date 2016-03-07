@@ -15,6 +15,11 @@ namespace Trackr
 
     }
 
+    public partial class AttendanceRepository : OpenAccessBaseRepository<TrackrModels.Attendance, TrackrModels.ClubManagement>
+    {
+
+    }
+
 	public partial class ClubRepository : OpenAccessBaseRepository<TrackrModels.Club, TrackrModels.ClubManagement>
     {
 	
@@ -63,6 +68,11 @@ namespace Trackr
 	public partial class TeamRepository : OpenAccessBaseRepository<TrackrModels.Team, TrackrModels.ClubManagement>
     {
 	
+    }
+
+    public partial class TeamScheduleRepository : OpenAccessBaseRepository<TrackrModels.TeamSchedule, TrackrModels.ClubManagement>
+    {
+
     }
 
 	public partial class TransactionRepository : OpenAccessBaseRepository<TrackrModels.Transaction, TrackrModels.ClubManagement>

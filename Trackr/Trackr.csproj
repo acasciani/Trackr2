@@ -186,12 +186,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\Models\Attendances.cs" />
+    <Compile Include="Controllers\Models\BaseModel.cs" />
+    <Compile Include="Controllers\Partials\AttendancesController.Partial.cs" />
+    <Compile Include="Controllers\Security\Authenticate.cs" />
+    <Compile Include="Controllers\TeamSchedulesController.cs" />
     <Content Include="Account\Login.aspx" />
     <Content Include="Account\Register.aspx" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\images\arrow.png" />
+    <Content Include="Content\images\highlight.png" />
     <Content Include="Content\menu\left-full.css" />
-    <Content Include="Content\menu\left.css" />
     <Content Include="Content\Site.css" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -206,6 +212,7 @@
     <Content Include="Account\Web.config" />
     <Content Include="Modules\PlayerManagement\PlayerManagement.master" />
     <Content Include="Content\Web.config" />
+    <Compile Include="Controllers\AttendancesController.cs" />
     <Compile Include="Controllers\AddressesController.cs" />
     <Compile Include="Controllers\Scoping\TeamsController.Partial.cs" />
     <None Include="Properties\PublishProfiles\Stage.pubxml" />
@@ -216,7 +223,6 @@
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <Content Include="Scripts\menu\left-full.js" />
-    <Content Include="Scripts\menu\left.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
@@ -247,6 +253,7 @@
     <Content Include="Site.Master" />
     <Content Include="Source\Controls\AddressBook.ascx" />
     <Content Include="Source\Controls\AlertBox.ascx" />
+    <Content Include="Source\Controls\AttendanceTrackingWidget.ascx" />
     <Content Include="Source\Controls\EmailAddressBook.ascx" />
     <Content Include="Source\Controls\LeftNavigation.ascx" />
     <Content Include="Source\Controls\PhoneNumberBook.ascx" />
@@ -383,6 +390,13 @@
     </Compile>
     <Compile Include="Source\Controls\AlertBox.ascx.designer.cs">
       <DependentUpon>AlertBox.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Controls\AttendanceTrackingWidget.ascx.cs">
+      <DependentUpon>AttendanceTrackingWidget.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Source\Controls\AttendanceTrackingWidget.ascx.designer.cs">
+      <DependentUpon>AttendanceTrackingWidget.ascx</DependentUpon>
     </Compile>
     <Compile Include="Source\Controls\EmailAddressBook.ascx.cs">
       <DependentUpon>EmailAddressBook.ascx</DependentUpon>

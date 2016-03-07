@@ -162,6 +162,22 @@ namespace TrackrModels
 			}
 		}
 		
+		public IQueryable<TeamSchedule> TeamSchedules 
+		{
+			get
+			{
+				return this.GetAll<TeamSchedule>();
+			}
+		}
+		
+		public IQueryable<Attendance> Attendances 
+		{
+			get
+			{
+				return this.GetAll<Attendance>();
+			}
+		}
+		
 		public static BackendConfiguration GetBackendConfiguration()
 		{
 			BackendConfiguration backend = new BackendConfiguration();
@@ -237,6 +253,14 @@ namespace TrackrModels
 			get;
 		}
 		IQueryable<EmailAddress> EmailAddresses
+		{
+			get;
+		}
+		IQueryable<TeamSchedule> TeamSchedules
+		{
+			get;
+		}
+		IQueryable<Attendance> Attendances
 		{
 			get;
 		}

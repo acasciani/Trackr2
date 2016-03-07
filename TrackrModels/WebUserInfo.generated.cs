@@ -95,6 +95,51 @@ namespace TrackrModels
 			}
 		}
 		
+		private IList<TeamSchedule> _teamSchedules = new List<TeamSchedule>();
+		public virtual IList<TeamSchedule> TeamSchedules
+		{
+			get
+			{
+				return this._teamSchedules;
+			}
+		}
+		
+		private IList<TeamSchedule> _teamSchedules1 = new List<TeamSchedule>();
+		public virtual IList<TeamSchedule> TeamSchedules1
+		{
+			get
+			{
+				return this._teamSchedules1;
+			}
+		}
+		
+		private IList<TeamSchedule> _teamSchedules2 = new List<TeamSchedule>();
+		public virtual IList<TeamSchedule> TeamSchedules2
+		{
+			get
+			{
+				return this._teamSchedules2;
+			}
+		}
+		
+		private IList<Attendance> _attendances = new List<Attendance>();
+		public virtual IList<Attendance> Attendances
+		{
+			get
+			{
+				return this._attendances;
+			}
+		}
+		
+		private IList<Attendance> _attendances1 = new List<Attendance>();
+		public virtual IList<Attendance> Attendances1
+		{
+			get
+			{
+				return this._attendances1;
+			}
+		}
+		
 		#region ISerializable Implementation
 		
 		public WebUserInfo()

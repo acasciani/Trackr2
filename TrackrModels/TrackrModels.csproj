@@ -75,6 +75,9 @@
     <Compile Include="Address.generated.cs">
       <DependentUpon>ClubManagement.rlinq</DependentUpon>
     </Compile>
+    <Compile Include="Attendance.generated.cs">
+      <DependentUpon>ClubManagement.rlinq</DependentUpon>
+    </Compile>
     <Compile Include="Club.generated.cs">
       <DependentUpon>ClubManagement.rlinq</DependentUpon>
     </Compile>
@@ -121,6 +124,9 @@
       <DependentUpon>ClubManagement.rlinq</DependentUpon>
     </Compile>
     <Compile Include="TeamPlayer.generated.cs">
+      <DependentUpon>ClubManagement.rlinq</DependentUpon>
+    </Compile>
+    <Compile Include="TeamSchedule.generated.cs">
       <DependentUpon>ClubManagement.rlinq</DependentUpon>
     </Compile>
     <Compile Include="Transaction.generated.cs">

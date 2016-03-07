@@ -100,6 +100,15 @@ namespace TrackrModels
 			}
 		}
 		
+		private IList<Attendance> _attendances = new List<Attendance>();
+		public virtual IList<Attendance> Attendances
+		{
+			get
+			{
+				return this._attendances;
+			}
+		}
+		
 		#region ISerializable Implementation
 		
 		public Player()

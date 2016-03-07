@@ -138,6 +138,15 @@ namespace TrackrModels
 			}
 		}
 		
+		private IList<TeamSchedule> _teamSchedules = new List<TeamSchedule>();
+		public virtual IList<TeamSchedule> TeamSchedules
+		{
+			get
+			{
+				return this._teamSchedules;
+			}
+		}
+		
 		#region ISerializable Implementation
 		
 		public Team()

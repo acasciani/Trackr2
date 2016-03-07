@@ -13,12 +13,14 @@ namespace Trackr
     public abstract partial class OpenAccessBaseApiController<TEntity, TContext> : ApiController
         where TContext : OpenAccessContext, new()
     {
+        [NonAction]
         public virtual TEntity AddNew(TEntity entity)
         {
             TEntity newEntity = repository.AddNew(entity);
             return newEntity;
         }
 
+        [NonAction]
         public virtual void Update(TEntity entity)
         {
             repository.Update(entity);
