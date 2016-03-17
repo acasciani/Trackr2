@@ -167,7 +167,7 @@ namespace TrackrProviders.Security
 
             if (user == null)
             {
-                DateTime creationDate = DateTime.Now;
+                DateTime creationDate = DateTime.Now.ToUniversalTime();
 
                 if (providerUserKey != null)
                 {
@@ -414,7 +414,7 @@ namespace TrackrProviders.Security
         public override int GetNumberOfUsersOnline()
         {
             TimeSpan onlineSpan = new TimeSpan(0, Membership.UserIsOnlineTimeWindow, 0);
-            DateTime compareTime = DateTime.Now.Subtract(onlineSpan);
+            DateTime compareTime = DateTime.Now.ToUniversalTime().Subtract(onlineSpan);
 
             using (WebUsersController swuc = new WebUsersController())
             {

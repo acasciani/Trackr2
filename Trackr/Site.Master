@@ -16,6 +16,10 @@
 
     <link rel="stylesheet" href="Content/menu/left-full.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.css" />
+    <link rel="stylesheet" href="Content/Calendar.css" />
+    <script type="text/javascript">
+
+    </script>
 </head>
 <body>
     <form runat="server">
@@ -37,6 +41,9 @@
                 <asp:ScriptReference Name="Focus.js" Assembly="System.Web" Path="~/Scripts/WebForms/Focus.js" />
                 <asp:ScriptReference Name="WebFormsBundle" />
                 <asp:ScriptReference Path="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js" />
+                <asp:ScriptReference Path="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.12.0/moment.min.js" />
+                <asp:ScriptReference Path="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js" />
+                <asp:ScriptReference Path="~/Scripts/clndr.min.js" />
                 <%--Site Scripts--%>
             </Scripts>
         </asp:ScriptManager>
@@ -45,7 +52,7 @@
 
 
 
-                <div class="sidebar">
+                <div class="sidebar" runat="server" visible="false">
                     <nav id="nav" role="navigation">
                         <nav:LeftNavigation runat="server" ID="navLeftNavigation" />
                     </nav>
@@ -55,7 +62,7 @@
 
 
         <div class="main">
-                <header id="top" role="banner">
+                <header id="top" role="banner" runat="server" visible="false">
                     <nav class="navbar navbar-default">
                         <div class="container-fluid">
                             <!-- Brand and toggle get grouped for better mobile display -->

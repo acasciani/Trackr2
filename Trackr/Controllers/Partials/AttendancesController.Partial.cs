@@ -16,10 +16,9 @@ namespace Trackr
     {
         [HttpPost]
         [ActionName("CreateTokenTemp")]
-        public bool CreateTokenTemp()
+        public Guid CreateTokenTemp()
         {
-            Authenticate.RegenerateToken(int.Parse(HttpContext.Current.User.Identity.Name));
-            return true;
+            return Authenticate.RegenerateToken(int.Parse(HttpContext.Current.User.Identity.Name));
         }
 
         [HttpPost]
@@ -47,7 +46,7 @@ namespace Trackr
 
                     ac.AddNew(new Attendance()
                     {
-                        CreateDate = DateTime.Now,
+                        CreateDate = DateTime.Now.ToUniversalTime(),
                         CreateUserID = userID,
                         IsActive = true,
                         PlayerID = item.PlayerID,

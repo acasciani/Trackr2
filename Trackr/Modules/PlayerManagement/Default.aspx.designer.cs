@@ -20,14 +20,5 @@ namespace Trackr.Modules.PlayerManagement {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView gvAllPlayers;
-        
-        /// <summary>
-        /// widgetAttendanceTracking control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::Trackr.Source.Controls.AttendanceTrackingWidget widgetAttendanceTracking;
     }
 }

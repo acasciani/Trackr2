@@ -37,7 +37,7 @@ namespace Trackr.Modules.PlayerManagement
             {
                 var allInfo = pc.Get().Select(i => new PlayerResult
                 {
-                    Age = i.Person.DateOfBirth.HasValue ? DateTime.Today.Year - i.Person.DateOfBirth.Value.Year : (int?)null,
+                    Age = i.Person.DateOfBirth.HasValue ? DateTime.Today.ToUniversalTime().Year - i.Person.DateOfBirth.Value.Year : (int?)null,
                     BirthDate = i.Person.DateOfBirth.HasValue ? i.Person.DateOfBirth.Value : (DateTime?)null,
                     FirstName = i.Person.FName,
                     LastName = i.Person.LName,

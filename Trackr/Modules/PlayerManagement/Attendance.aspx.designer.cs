@@ -7,18 +7,27 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Trackr.Source.Controls {
+namespace Trackr.Modules.PlayerManagement {
     
     
-    public partial class AttendanceTrackingWidget {
+    public partial class Attendance {
         
         /// <summary>
-        /// rptPlayer control.
+        /// updatePanel control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater rptPlayer;
+        protected global::System.Web.UI.UpdatePanel updatePanel;
+        
+        /// <summary>
+        /// widgetAttendanceTracking control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Trackr.Source.Controls.AttendanceTrackingWidget widgetAttendanceTracking;
     }
 }

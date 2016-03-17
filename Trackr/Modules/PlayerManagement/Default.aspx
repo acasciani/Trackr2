@@ -23,7 +23,5 @@
         </div>
     </div>
 
-    <div>
-<widget:AttendanceTracking runat="server" ID="widgetAttendanceTracking" />
-    </div>
+
 </asp:Content>

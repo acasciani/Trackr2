@@ -112,7 +112,7 @@ namespace Trackr.Source.Wizards
                 txtDateOfBirth.Text = player.Person.DateOfBirth.HasValue ? player.Person.DateOfBirth.Value.ToString("yyyy-MM-dd") : "";
 
                 // Load player pass info, note there should only be one there should be a constraint on the player id and expiration date
-                PlayerPass playerPass = player.PlayerPasses.Where(i => DateTime.Today <= i.Expires).FirstOrDefault();
+                PlayerPass playerPass = player.PlayerPasses.Where(i => DateTime.Today.ToUniversalTime() <= i.Expires).FirstOrDefault();
 
                 divPreview.Visible = false;
 
@@ -262,7 +262,7 @@ namespace Trackr.Source.Wizards
                     Season = string.Format("{0:yyyy} - {1:yy}", i.Team.StartYear, i.Team.EndYear),
                     IsSecondary = i.IsSecondary,
                     StartYear = i.Team.StartYear,
-                    IsRemovable = DateTime.Now < i.Team.EndYear,
+                    IsRemovable = DateTime.Now.ToUniversalTime() < i.Team.EndYear.ToUniversalTime(),
                     PlayerPassNumber = i.PlayerPassID.HasValue && !string.IsNullOrWhiteSpace(i.PlayerPass.PassNumber) ? i.PlayerPass.PassNumber : "",
                     TeamPlayerID = i.TeamPlayerID
                 }).OrderByDescending(i => i.StartYear).ThenBy(i => i.ProgramName).ThenBy(i => i.TeamName).AsQueryable();
@@ -470,7 +470,7 @@ namespace Trackr.Source.Wizards
                     Expiration = i.Expires,
                     PassNumber = i.PassNumber,
                     PlayerPassID = i.PlayerPassID,
-                    Editable = DateTime.Today < i.Expires,
+                    Editable = DateTime.Today.ToUniversalTime() < i.Expires,
                 }).AsQueryable();
             }
         }

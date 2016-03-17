@@ -189,18 +189,21 @@
     <Compile Include="Controllers\Models\Attendances.cs" />
     <Compile Include="Controllers\Models\BaseModel.cs" />
     <Compile Include="Controllers\Partials\AttendancesController.Partial.cs" />
+    <Compile Include="Controllers\Partials\TeamSchedulesController.Partial.cs" />
     <Compile Include="Controllers\Security\Authenticate.cs" />
     <Compile Include="Controllers\TeamSchedulesController.cs" />
     <Content Include="Account\Login.aspx" />
     <Content Include="Account\Register.aspx" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Calendar.css" />
     <Content Include="Content\images\arrow.png" />
     <Content Include="Content\images\highlight.png" />
     <Content Include="Content\menu\left-full.css" />
     <Content Include="Content\Site.css" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
+    <Content Include="Modules\PlayerManagement\Attendance.aspx" />
     <Content Include="Modules\PlayerManagement\Default.aspx" />
     <Content Include="Modules\PlayerManagement\Manage.aspx" />
     <Content Include="Modules\UserManagement\Default.aspx" />
@@ -217,8 +220,10 @@
     <Compile Include="Controllers\Scoping\TeamsController.Partial.cs" />
     <None Include="Properties\PublishProfiles\Stage.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\AttendanceTracking.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\clndr.min.js" />
     <Content Include="Scripts\drawer.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -298,6 +303,13 @@
     <Compile Include="Controllers\Scoping\ProgramsController.Partial.cs" />
     <Compile Include="Controllers\GuardiansController.cs" />
     <Compile Include="Controllers\EmailAddressesController.cs" />
+    <Compile Include="Modules\PlayerManagement\Attendance.aspx.cs">
+      <DependentUpon>Attendance.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\PlayerManagement\Attendance.aspx.designer.cs">
+      <DependentUpon>Attendance.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Modules\PlayerManagement\Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
