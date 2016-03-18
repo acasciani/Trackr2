@@ -20,10 +20,8 @@ namespace Trackr.Source.Controls
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            ScriptManager.RegisterClientScriptInclude(Page, Page.GetType(), "AttendanceTracking", "/Scripts/AttendanceTracking.js");
 
-//            ScriptManager.RegisterClientScriptBlock(Page, this.GetType(), "test", "$('.attendance-ticker').click(function(){MarkPresent();});", true);
-
+            
             using (TeamSchedulesController tsc = new TeamSchedulesController())
             {
                 FetchStrategy fetch = new FetchStrategy() { MaxFetchDepth = 5 };
@@ -32,21 +30,38 @@ namespace Trackr.Source.Controls
                 fetch.LoadWith<TeamPlayer>(i => i.Player);
                 fetch.LoadWith<Player>(i => i.Person);
                 
-                TeamSchedule schedule = tsc.GetWhere(i => i.TeamScheduleID == TeamScheduleID, fetch).First();
+                TeamSchedule schedule = tsc.GetWhere(i => i.TeamScheduleID == TeamScheduleID, fetch).FirstOrDefault();
 
-                EventName = schedule.EventName;
-                TeamName = schedule.Team.TeamName;
-                Starts = schedule.StartDate;
-                Ends = schedule.EndDate;
+                if (schedule != null)
+                {
+                    EventName = schedule.EventName;
+                    TeamName = schedule.Team.TeamName;
+                    Starts = schedule.StartDate;
+                    Ends = schedule.EndDate;
 
-                rptPlayer.DataSource = schedule.Team.TeamPlayers;
-                rptPlayer.DataBind();
+                    rptPlayer.DataSource = schedule.Team.TeamPlayers;
+                    rptPlayer.DataBind();
+                }
             }
         }
 
-        protected void lnk_Click(object sender, EventArgs e)
+        protected void btnPlayer_Click(object sender, EventArgs e)
         {
-            (sender as LinkButton).Visible = false;
+            using (AttendancesController ac = new AttendancesController())
+            {
+                ClickablePanel panel = (ClickablePanel)sender;
+
+                ac.AddNew(new Attendance()
+                {
+                    CreateDate = DateTime.Now.ToUniversalTime(),
+                    CreateUserID = CurrentUser.UserID,
+                    IsActive = true,
+                    PlayerID = panel.PlayerID,
+                    TeamScheduleID = TeamScheduleID
+                });
+
+                panel.CssClass += " success";
+            }
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿<%@ Page Title="Manage Attendance" Language="C#" MasterPageFile="~/Modules/PlayerManagement/PlayerManagement.master" AutoEventWireup="true" CodeBehind="Attendance.aspx.cs" Inherits="Trackr.Modules.PlayerManagement.Attendance" %>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="NestedContent" runat="server">
+    <link rel="stylesheet" href="/Content/Calendar.css" />
 
     <div class="row">
         <div class="col-sm-12">

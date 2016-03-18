@@ -16,10 +16,6 @@
 
     <link rel="stylesheet" href="Content/menu/left-full.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.css" />
-    <link rel="stylesheet" href="Content/Calendar.css" />
-    <script type="text/javascript">
-
-    </script>
 </head>
 <body>
     <form runat="server">
@@ -52,7 +48,7 @@
 
 
 
-                <div class="sidebar" runat="server" visible="false">
+                <div class="sidebar">
                     <nav id="nav" role="navigation">
                         <nav:LeftNavigation runat="server" ID="navLeftNavigation" />
                     </nav>
@@ -62,7 +58,7 @@
 
 
         <div class="main">
-                <header id="top" role="banner" runat="server" visible="false">
+                <header id="top" role="banner">
                     <nav class="navbar navbar-default">
                         <div class="container-fluid">
                             <!-- Brand and toggle get grouped for better mobile display -->

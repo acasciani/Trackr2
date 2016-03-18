@@ -6,6 +6,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using TrackrModels;
 using Trackr.Utils;
+using Telerik.OpenAccess.FetchOptimization;
 
 namespace Trackr.Source.Controls
 {
@@ -22,7 +23,7 @@ namespace Trackr.Source.Controls
         public string Permission { get; set; }
         public Func<Program, bool> ProgramWhereClause { get; set; }
         public Func<Team, bool> TeamWhereClause { get; set; }
-        public Func<Player, bool> PlayerWhereClause { get; set; }
+        public Func<TeamPlayer, bool> PlayerWhereClause { get; set; }
         public bool EnableTeamSelect { get; set; }
         public bool EnablePlayerSelect { get; set; }
         public RequiredSelection RequiredSelectOf { get; set; }
@@ -41,6 +42,10 @@ namespace Trackr.Source.Controls
             get { return ViewState["SelectedPlayerID"] as int?; }
             set { ViewState["SelectedPlayerID"] = value; }
         }
+
+        public EventHandler ProgramSelected { get; set; }
+        public EventHandler TeamSelected { get; set; }
+        public EventHandler PlayerSelected { get; set; }
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -128,7 +133,27 @@ namespace Trackr.Source.Controls
 
         private void BindPlayers()
         {
+            using (TeamPlayersController tpc = new TeamPlayersController())
+            {
+                FetchStrategy fetch = new FetchStrategy();
+                fetch.LoadWith<TeamPlayer>(i => i.Player);
+                fetch.LoadWith<Player>(i => i.Person);
 
+                var players = tpc.GetScopedEntities(CurrentUser.UserID, Permission, fetch).Where(i => i.TeamID == SelectedTeamID.Value)
+                    .Where(i => PlayerWhereClause == null ? true : PlayerWhereClause(i))
+                    .Select(i => new
+                    {
+                        Label = i.Player.Person.FName + " " + i.Player.Person.LName,
+                        Value = i.PlayerID
+                    })
+                    .OrderBy(i => i.Label).ToList();
+
+                ddlPlayer.Reset(true);
+                ddlPlayer.DataSource = players;
+                ddlPlayer.DataTextField = "Label";
+                ddlPlayer.DataValueField = "Value";
+                ddlPlayer.DataBind();
+            }
         }
 
         protected void ddlProgram_SelectedIndexChanged(object sender, EventArgs e)
@@ -146,6 +171,16 @@ namespace Trackr.Source.Controls
             else
             {
                 SelectedProgramID = null;
+                SelectedTeamID = null;
+                SelectedPlayerID = null;
+
+                ddlTeam.Reset(true);
+                ddlPlayer.Reset(true);
+            }
+
+            if (ProgramSelected != null)
+            {
+                ProgramSelected(this, e);
             }
         }
 
@@ -164,6 +199,14 @@ namespace Trackr.Source.Controls
             else
             {
                 SelectedTeamID = null;
+                SelectedPlayerID = null;
+
+                ddlPlayer.Reset(true);
+            }
+
+            if (TeamSelected != null)
+            {
+                TeamSelected(this, e);
             }
         }
 
@@ -177,6 +220,11 @@ namespace Trackr.Source.Controls
             else
             {
                 SelectedPlayerID = null;
+            }
+
+            if (PlayerSelected != null)
+            {
+                PlayerSelected(this, e);
             }
         }
 

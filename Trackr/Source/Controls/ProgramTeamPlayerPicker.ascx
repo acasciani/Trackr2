@@ -2,7 +2,7 @@
 
 
 <div class="row">
-    <div class="<%= divPlayer.Visible ? "form-group col-sm-6 col-md-4" : divTeam.Visible ? "form-group col-sm-6" : "form-group" %>">
+    <div class="<%= divPlayer.Visible ? "form-group col-sm-6 col-md-4" : divTeam.Visible ? "form-group col-sm-6" : "form-group col-sm-12" %>">
         <label for="<%=ddlProgram.ClientID %>">Program</label>
         <asp:DropDownList runat="server" ID="ddlProgram" CssClass="form-control" AutoPostBack="true" OnSelectedIndexChanged="ddlProgram_SelectedIndexChanged" AppendDataBoundItems="true">
             <asp:ListItem Text="-- Select Program --" />

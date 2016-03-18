@@ -14,7 +14,7 @@ namespace Trackr.Modules.PlayerManagement
             if (IsPostBack)
             {
                 int teamScheduleID;
-                if (int.TryParse(Request.Params.Get("__EVENTARGUMENT"), out teamScheduleID))
+                if (Page.FindControl(Request.Params.Get("__EVENTTARGET")) == updatePanel && int.TryParse(Request.Params.Get("__EVENTARGUMENT"), out teamScheduleID))
                 {
                     widgetAttendanceTracking.Visible = true;
                     widgetAttendanceTracking.TeamScheduleID = teamScheduleID;

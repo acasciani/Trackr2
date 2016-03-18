@@ -190,6 +190,7 @@
     <Compile Include="Controllers\Models\BaseModel.cs" />
     <Compile Include="Controllers\Partials\AttendancesController.Partial.cs" />
     <Compile Include="Controllers\Partials\TeamSchedulesController.Partial.cs" />
+    <Compile Include="Controllers\Scoping\TeamPlayersController.Partial.cs" />
     <Compile Include="Controllers\Security\Authenticate.cs" />
     <Compile Include="Controllers\TeamSchedulesController.cs" />
     <Content Include="Account\Login.aspx" />
@@ -220,7 +221,6 @@
     <Compile Include="Controllers\Scoping\TeamsController.Partial.cs" />
     <None Include="Properties\PublishProfiles\Stage.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
-    <Content Include="Scripts\AttendanceTracking.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\clndr.min.js" />
@@ -410,6 +410,7 @@
     <Compile Include="Source\Controls\AttendanceTrackingWidget.ascx.designer.cs">
       <DependentUpon>AttendanceTrackingWidget.ascx</DependentUpon>
     </Compile>
+    <Compile Include="Source\Controls\ClickablePanel.cs" />
     <Compile Include="Source\Controls\EmailAddressBook.ascx.cs">
       <DependentUpon>EmailAddressBook.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

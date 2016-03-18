@@ -13,6 +13,24 @@ namespace Trackr.Modules.PlayerManagement {
     public partial class Default {
         
         /// <summary>
+        /// ptpPicker control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Trackr.Source.Controls.ProgramTeamPlayerPicker ptpPicker;
+        
+        /// <summary>
+        /// lnkFilter control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton lnkFilter;
+        
+        /// <summary>
         /// gvAllPlayers control.
         /// </summary>
         /// <remarks>

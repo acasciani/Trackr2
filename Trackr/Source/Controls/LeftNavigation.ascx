@@ -23,29 +23,18 @@
 <ul class="links">
     <li>
         <ul class="sub links <%= IsCurrentModule("PlayerManagement") ? "display lock" : "" %>">
-            <li class="is-active"><a class="module">Player Management</a></li>
-            <li><a href="/Modules/PlayerManagement">View Players</a></li>
-            <li><a href="/Modules/PlayerManagement/Manage">Add New Player</a></li>
+            <li><a class="module">Player Management</a></li>
+            <li class="<%= IsCurrentModule("PlayerManagement/Attendance") ? "is-active" : "" %>"><a href="/Modules/PlayerManagement/Attendance">Track Attendance</a></li>
+            <li class="<%= IsCurrentModule("PlayerManagement/Default") ? "is-active" : "" %>"><a href="/Modules/PlayerManagement">View Players</a></li>
+            <li class="<%= IsCurrentModule("PlayerManagement/Manage") ? "is-active" : "" %>"><a href="/Modules/PlayerManagement/Manage">Add New Player</a></li>
         </ul>
     </li>
 
     <li>
-        <ul class="sub links">
+        <ul class="sub links <%= IsCurrentModule("UserManagement") ? "display lock" : "" %>">
             <li><a class="module">User Management</a></li>
-            <li><a href="#">Chapter 32</a></li>
-            <li><a href="#">Chapter 33</a></li>
-            <li><a href="#">Chapter 34</a></li>
-            <li><a href="#">Chapter 35</a></li>
-        </ul>
-    </li>
-
-    <li>
-        <ul class="sub links">
-            <li class=""><a class="module">Chapter 4</a></li>
-            <li><a href="#">Chapter 32</a></li>
-            <li><a href="#">Chapter 33</a></li>
-            <li><a href="#">Chapter 34</a></li>
-            <li><a href="#">Chapter 35</a></li>
+            <li class="<%= IsCurrentModule("UserManagement/Default") ? "is-active" : "" %>"><a href="/Modules/UserManagement">View Users</a></li>
+            <li class="<%= IsCurrentModule("UserManagement/Manage") ? "is-active" : "" %>"><a href="/Modules/UserManagement/Manage">Add New User</a></li>
         </ul>
     </li>
 
