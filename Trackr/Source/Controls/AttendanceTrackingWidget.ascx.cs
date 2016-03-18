@@ -11,7 +11,19 @@ namespace Trackr.Source.Controls
 {
     public partial class AttendanceTrackingWidget : UserControl
     {
-        public int TeamScheduleID { get; set; }
+        private class PlayerAttendance
+        {
+            public string FirstName { get; set; }
+            public string LastName { get; set; }
+            public bool Present { get; set; }
+            public int PlayerID { get; set; }
+        }
+
+        public int? TeamScheduleID
+        {
+            get { return ViewState["TeamScheduleID"] as int?; }
+            set { ViewState["TeamScheduleID"] = value; }
+        }
 
         public string EventName { get; set; }
         public string TeamName { get; set; }
@@ -20,8 +32,11 @@ namespace Trackr.Source.Controls
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (!TeamScheduleID.HasValue)
+            {
+                return;
+            }
 
-            
             using (TeamSchedulesController tsc = new TeamSchedulesController())
             {
                 FetchStrategy fetch = new FetchStrategy() { MaxFetchDepth = 5 };
@@ -29,19 +44,27 @@ namespace Trackr.Source.Controls
                 fetch.LoadWith<Team>(i => i.TeamPlayers);
                 fetch.LoadWith<TeamPlayer>(i => i.Player);
                 fetch.LoadWith<Player>(i => i.Person);
-                
-                TeamSchedule schedule = tsc.GetWhere(i => i.TeamScheduleID == TeamScheduleID, fetch).FirstOrDefault();
+                fetch.LoadWith<TeamSchedule>(i => i.Attendances);
 
-                if (schedule != null)
+                TeamSchedule schedule = tsc.GetWhere(i => i.TeamScheduleID == TeamScheduleID.Value, fetch).First();
+
+                EventName = schedule.EventName;
+                TeamName = schedule.Team.TeamName;
+                Starts = schedule.StartDate;
+                Ends = schedule.EndDate;
+
+                var knownAttendances = schedule.Attendances.ToList();
+
+                var data = schedule.Team.TeamPlayers.Select(i => new PlayerAttendance()
                 {
-                    EventName = schedule.EventName;
-                    TeamName = schedule.Team.TeamName;
-                    Starts = schedule.StartDate;
-                    Ends = schedule.EndDate;
+                    FirstName = i.Player.Person.FName,
+                    LastName = i.Player.Person.LName,
+                    Present = knownAttendances.Where(j => j.PlayerID == i.PlayerID).Count() > 0,
+                    PlayerID = i.Player.PlayerID
+                });
 
-                    rptPlayer.DataSource = schedule.Team.TeamPlayers;
-                    rptPlayer.DataBind();
-                }
+                rptPlayer.DataSource = data;
+                rptPlayer.DataBind();
             }
         }
 
@@ -57,7 +80,7 @@ namespace Trackr.Source.Controls
                     CreateUserID = CurrentUser.UserID,
                     IsActive = true,
                     PlayerID = panel.PlayerID,
-                    TeamScheduleID = TeamScheduleID
+                    TeamScheduleID = TeamScheduleID.Value
                 });
 
                 panel.CssClass += " success";

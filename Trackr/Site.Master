@@ -48,7 +48,7 @@
 
 
 
-                <div class="sidebar">
+                <div class="sidebar" runat="server" visible="false">
                     <nav id="nav" role="navigation">
                         <nav:LeftNavigation runat="server" ID="navLeftNavigation" />
                     </nav>
@@ -58,7 +58,7 @@
 
 
         <div class="main">
-                <header id="top" role="banner">
+                <header id="top" role="banner" runat="server" visible="false">
                     <nav class="navbar navbar-default">
                         <div class="container-fluid">
                             <!-- Brand and toggle get grouped for better mobile display -->
@@ -108,7 +108,7 @@
         </div>
 
 
-                        <div class="footer">
+                        <div class="footer" runat="server" visible="false">
                     <footer>
                         <div class="row">
                             <div class="col-xs-12">Gananda Bandits &copy; 2007-15</div>

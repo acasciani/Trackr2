@@ -55,7 +55,7 @@ p {
   text-align: right;
 }
 .cal1 {
-  margin: 30px auto;
+  /*margin: 30px auto;*/
   max-width: 600px;
   font-family: 'Droid Sans Mono';
   font-size: 14px;

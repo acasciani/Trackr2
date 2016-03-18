@@ -191,6 +191,7 @@
     <Compile Include="Controllers\Partials\AttendancesController.Partial.cs" />
     <Compile Include="Controllers\Partials\TeamSchedulesController.Partial.cs" />
     <Compile Include="Controllers\Scoping\TeamPlayersController.Partial.cs" />
+    <Compile Include="Controllers\Scoping\TeamSchedulesController.Partial.cs" />
     <Compile Include="Controllers\Security\Authenticate.cs" />
     <Compile Include="Controllers\TeamSchedulesController.cs" />
     <Content Include="Account\Login.aspx" />
@@ -204,7 +205,8 @@
     <Content Include="Content\Site.css" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
-    <Content Include="Modules\PlayerManagement\Attendance.aspx" />
+    <Content Include="Modules\Scheduler\ManageEvent.aspx" />
+    <Content Include="Modules\Scheduler\Default.aspx" />
     <Content Include="Modules\PlayerManagement\Default.aspx" />
     <Content Include="Modules\PlayerManagement\Manage.aspx" />
     <Content Include="Modules\UserManagement\Default.aspx" />
@@ -219,6 +221,7 @@
     <Compile Include="Controllers\AttendancesController.cs" />
     <Compile Include="Controllers\AddressesController.cs" />
     <Compile Include="Controllers\Scoping\TeamsController.Partial.cs" />
+    <Content Include="Modules\Scheduler\Scheduler.master" />
     <None Include="Properties\PublishProfiles\Stage.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -303,12 +306,19 @@
     <Compile Include="Controllers\Scoping\ProgramsController.Partial.cs" />
     <Compile Include="Controllers\GuardiansController.cs" />
     <Compile Include="Controllers\EmailAddressesController.cs" />
-    <Compile Include="Modules\PlayerManagement\Attendance.aspx.cs">
-      <DependentUpon>Attendance.aspx</DependentUpon>
+    <Compile Include="Modules\Scheduler\ManageEvent.aspx.cs">
+      <DependentUpon>ManageEvent.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Modules\PlayerManagement\Attendance.aspx.designer.cs">
-      <DependentUpon>Attendance.aspx</DependentUpon>
+    <Compile Include="Modules\Scheduler\ManageEvent.aspx.designer.cs">
+      <DependentUpon>ManageEvent.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Scheduler\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Scheduler\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\PlayerManagement\Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
@@ -330,6 +340,13 @@
     </Compile>
     <Compile Include="Modules\PlayerManagement\PlayerManagement.master.designer.cs">
       <DependentUpon>PlayerManagement.master</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Scheduler\Scheduler.master.cs">
+      <DependentUpon>Scheduler.master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Scheduler\Scheduler.master.designer.cs">
+      <DependentUpon>Scheduler.master</DependentUpon>
     </Compile>
     <Compile Include="Modules\UserManagement\Manage.aspx.cs">
       <DependentUpon>Manage.aspx</DependentUpon>

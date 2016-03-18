@@ -15,6 +15,12 @@ namespace Trackr.Source.Controls
             set { ViewState["PlayerID"] = value; }
         }
 
+        public bool IsDisabled
+        {
+            get { return ViewState["IsDisabled"] as bool? ?? false; }
+            set { ViewState["IsDisabled"] = value; }
+        }
+
         public event EventHandler Click;
 
         protected virtual void OnClick(EventArgs e)
@@ -32,7 +38,10 @@ namespace Trackr.Source.Controls
 
         protected override void Render(HtmlTextWriter writer)
         {
-            writer.AddAttribute("onclick", "javascript:" + Page.ClientScript.GetPostBackEventReference(this, (1).ToString()));
+            if (!IsDisabled)
+            {
+                writer.AddAttribute("onclick", "javascript:" + Page.ClientScript.GetPostBackEventReference(this, (1).ToString()));
+            }
             base.Render(writer);
         }
     }

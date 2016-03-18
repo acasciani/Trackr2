@@ -1,7 +1,15 @@
-﻿<%@ Page Title="Manage Attendance" Language="C#" MasterPageFile="~/Modules/PlayerManagement/PlayerManagement.master" AutoEventWireup="true" CodeBehind="Attendance.aspx.cs" Inherits="Trackr.Modules.PlayerManagement.Attendance" %>
+﻿<%@ Page Title="My Scheduler" Language="C#" MasterPageFile="~/Modules/Scheduler/Scheduler.master" AutoEventWireup="true" CodeBehind="Default.aspx.cs" Inherits="Trackr.Modules.Scheduler.Default" %>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="NestedContent" runat="server">
     <link rel="stylesheet" href="/Content/Calendar.css" />
+
+    <div class="row">
+        <div class="col-sm-12">
+            <a href="/Modules/Scheduler/ManageEvent">Add New Event</a>
+        </div>
+    </div>
+
+    <hr />
 
     <div class="row">
         <div class="col-sm-12">
@@ -115,6 +123,7 @@
         });
     </script>
 
+
     <div class="cal1">
         <script type="text/template" id="events-calendar">
             <div class='clndr-controls'>
@@ -163,15 +172,15 @@
         </div>
     </div>
 
-        <div class="row" style="margin-top:50px">
+    <div class="row" style="margin-top: 50px" runat="server" id="divWidgetContainer" visible="false">
         <div class="col-sm-12">
-    <asp:UpdatePanel runat="server" UpdateMode="Conditional" ID="updatePanel">
-        <ContentTemplate>
-        <widget:AttendanceTracking runat="server" ID="widgetAttendanceTracking" TeamScheduleID="2" Visible="false" />
-            </ContentTemplate>
-    </asp:UpdatePanel>
+            <asp:UpdatePanel runat="server" UpdateMode="Conditional" ID="updatePanel">
+                <ContentTemplate>
+                    <asp:HyperLink runat="server" ID="lnkManageEvent" NavigateUrl="/Modules/Scheduler/ManageEvent?id={0}">Edit Event</asp:HyperLink>
 
-
+                    <widget:AttendanceTracking runat="server" ID="widgetAttendanceTracking" />
+                </ContentTemplate>
+            </asp:UpdatePanel>
         </div>
     </div>
 </asp:Content>

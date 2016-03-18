@@ -7,27 +7,18 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Trackr.Modules.PlayerManagement {
+namespace Trackr.Modules.Scheduler {
     
     
-    public partial class Attendance {
+    public partial class Scheduler {
         
         /// <summary>
-        /// updatePanel control.
+        /// NestedContent control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.UpdatePanel updatePanel;
-        
-        /// <summary>
-        /// widgetAttendanceTracking control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::Trackr.Source.Controls.AttendanceTrackingWidget widgetAttendanceTracking;
+        protected global::System.Web.UI.WebControls.ContentPlaceHolder NestedContent;
     }
 }

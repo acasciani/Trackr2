@@ -5,9 +5,9 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-namespace Trackr.Modules.PlayerManagement
+namespace Trackr.Modules.Scheduler
 {
-    public partial class Attendance : Page
+    public partial class Default : Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -16,8 +16,9 @@ namespace Trackr.Modules.PlayerManagement
                 int teamScheduleID;
                 if (Page.FindControl(Request.Params.Get("__EVENTTARGET")) == updatePanel && int.TryParse(Request.Params.Get("__EVENTARGUMENT"), out teamScheduleID))
                 {
-                    widgetAttendanceTracking.Visible = true;
+                    divWidgetContainer.Visible = true;
                     widgetAttendanceTracking.TeamScheduleID = teamScheduleID;
+                    lnkManageEvent.NavigateUrl = string.Format(lnkManageEvent.NavigateUrl, teamScheduleID);
                 }
             }
         }
