@@ -22,9 +22,16 @@
 
 <ul class="links">
     <li>
+        <ul class="sub links <%= IsCurrentModule("Scheduler") ? "display lock" : "" %>">
+            <li><a class="module">Scheduler</a></li>
+            <li class="<%= IsCurrentModule("Scheduler/Default") ? "is-active" : "" %>"><a href="/Modules/Scheduler">View Calendar</a></li>
+            <li class="<%= IsCurrentModule("Scheduler/ManageEvent") ? "is-active" : "" %>"><a href="/Modules/Scheduler/ManageEvent">Add New Event</a></li>
+        </ul>
+    </li>
+
+    <li>
         <ul class="sub links <%= IsCurrentModule("PlayerManagement") ? "display lock" : "" %>">
             <li><a class="module">Player Management</a></li>
-            <li class="<%= IsCurrentModule("PlayerManagement/Attendance") ? "is-active" : "" %>"><a href="/Modules/PlayerManagement/Attendance">Track Attendance</a></li>
             <li class="<%= IsCurrentModule("PlayerManagement/Default") ? "is-active" : "" %>"><a href="/Modules/PlayerManagement">View Players</a></li>
             <li class="<%= IsCurrentModule("PlayerManagement/Manage") ? "is-active" : "" %>"><a href="/Modules/PlayerManagement/Manage">Add New Player</a></li>
         </ul>

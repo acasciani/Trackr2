@@ -11,6 +11,12 @@ namespace Trackr.Source.Controls
 {
     public partial class AttendanceTrackingWidget : UserControl
     {
+        public class TeamScheduleEvent : EventArgs
+        {
+            public string Message { get; set; }
+            public UI.AlertBoxType MessageType { get; set; }
+        }
+
         private class PlayerAttendance
         {
             public string FirstName { get; set; }
@@ -30,12 +36,16 @@ namespace Trackr.Source.Controls
         public DateTime Starts { get; set; }
         public DateTime Ends { get; set; }
 
+        public event EventHandler TeamScheduleDeleted;
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!TeamScheduleID.HasValue)
             {
                 return;
             }
+
+            lnkEdit.NavigateUrl = string.Format(lnkEdit.NavigateUrl, TeamScheduleID.Value);
 
             using (TeamSchedulesController tsc = new TeamSchedulesController())
             {
@@ -84,6 +94,55 @@ namespace Trackr.Source.Controls
                 });
 
                 panel.CssClass += " success";
+                panel.IsDisabled = true;
+            }
+        }
+
+        protected virtual void OnTeamScheduleDeleted(EventArgs e)
+        {
+            if (TeamScheduleDeleted != null)
+            {
+                TeamScheduleDeleted(this, e);
+            }
+        }
+
+        protected void lnkDelete_Click(object sender, EventArgs e)
+        {
+            if(!TeamScheduleID.HasValue){
+                return;
+            }
+
+            if (TeamScheduleDeleted == null)
+            {
+                throw new Exception("No event supplied when team schedule is deleted. Cannot delete");
+            }
+            else
+            {
+                try
+                {
+                    using (TeamSchedulesController tsc = new TeamSchedulesController())
+                    {
+                        TeamSchedule teamSchedule = tsc.Get(TeamScheduleID.Value);
+                        teamSchedule.IsActive = false;
+                        teamSchedule.DeleteDate = DateTime.Now.ToUniversalTime();
+                        teamSchedule.DeleteUserID = CurrentUser.UserID;
+                        tsc.Update(teamSchedule);
+
+                        OnTeamScheduleDeleted(new TeamScheduleEvent()
+                        {
+                            Message = "Successfully deleted the event.",
+                            MessageType = UI.AlertBoxType.Success
+                        });
+                    }
+                }
+                catch (Exception ex)
+                {
+                    OnTeamScheduleDeleted(new TeamScheduleEvent()
+                    {
+                        Message = "An error occurred while attempting to delete the event.",
+                        MessageType = UI.AlertBoxType.Error
+                    });
+                }
             }
         }
     }

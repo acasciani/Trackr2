@@ -13,13 +13,22 @@ namespace Trackr.Modules.Scheduler {
     public partial class Default {
         
         /// <summary>
-        /// divWidgetContainer control.
+        /// updatePanelAlert control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl divWidgetContainer;
+        protected global::System.Web.UI.UpdatePanel updatePanelAlert;
+        
+        /// <summary>
+        /// AlertBox control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Trackr.UI.AlertBox AlertBox;
         
         /// <summary>
         /// updatePanel control.
@@ -31,13 +40,13 @@ namespace Trackr.Modules.Scheduler {
         protected global::System.Web.UI.UpdatePanel updatePanel;
         
         /// <summary>
-        /// lnkManageEvent control.
+        /// divWidget control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.HyperLink lnkManageEvent;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl divWidget;
         
         /// <summary>
         /// widgetAttendanceTracking control.

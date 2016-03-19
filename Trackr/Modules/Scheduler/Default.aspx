@@ -3,6 +3,12 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="NestedContent" runat="server">
     <link rel="stylesheet" href="/Content/Calendar.css" />
 
+    <asp:UpdatePanel runat="server" ID="updatePanelAlert" UpdateMode="Always">
+        <ContentTemplate>
+            <ui:AlertBox runat="server" ID="AlertBox" />
+        </ContentTemplate>
+    </asp:UpdatePanel>
+
     <div class="row">
         <div class="col-sm-12">
             <a href="/Modules/Scheduler/ManageEvent">Add New Event</a>
@@ -61,7 +67,8 @@
                         title: events[i].EventName,
                         endDate: new Date(events[i].EndDate),
                         startDate: new Date(events[i].StartDate),
-                        teamScheduleID: events[i].TeamScheduleID
+                        teamScheduleID: events[i].TeamScheduleID,
+                        teamName: events[i].TeamName
                     });
                 }
 
@@ -78,7 +85,7 @@
                             $('.event-item').remove(); // Remove all previously added
 
                             for (var i = 0; i < target.events.length; i++) {
-                                var element = '<div class="event-item" data-team-schedule-id="' + target.events[i].teamScheduleID + '"><div class="event-item-name">' + target.events[i].title + '</div></div>';
+                                var element = '<div class="event-item" data-team-schedule-id="' + target.events[i].teamScheduleID + '"><div class="event-item-name"><strong>' + target.events[i].title + '</strong><br><em>' + target.events[i].teamName + '</em><br><em>' + $.format.date(target.events[i].startDate, 'MMM d h:mm a') + '</em></div></div>';
                                 $('.event-listing').append(element);
                             }
 
@@ -160,7 +167,13 @@
               <div class="event-listing-title">EVENTS THIS MONTH</div>
               
                 {% for(var i=0; i < eventsThisMonth.length; i++){ %}
-                    <div class="event-item" data-team-schedule-id="{{ eventsThisMonth[i].teamScheduleID }}"><div class="event-item-name">{{ eventsThisMonth[i].title }}</div></div>
+                    <div class="event-item" data-team-schedule-id="{{ eventsThisMonth[i].teamScheduleID }}">
+                        <div class="event-item-name">
+                            <strong>{{ eventsThisMonth[i].title }}</strong><br />
+                            <em>{{ eventsThisMonth[i].teamName }}</em><br />
+                            <em>{{ $.format.date(eventsThisMonth[i].startDate, 'MMM d h:mm a') }}</em>
+                        </div>
+                    </div>
                 {% } %}
                 
             </div>
@@ -171,16 +184,15 @@
 
         </div>
     </div>
-
-    <div class="row" style="margin-top: 50px" runat="server" id="divWidgetContainer" visible="false">
-        <div class="col-sm-12">
-            <asp:UpdatePanel runat="server" UpdateMode="Conditional" ID="updatePanel">
+                <asp:UpdatePanel runat="server" UpdateMode="Conditional" ID="updatePanel">
                 <ContentTemplate>
-                    <asp:HyperLink runat="server" ID="lnkManageEvent" NavigateUrl="/Modules/Scheduler/ManageEvent?id={0}">Edit Event</asp:HyperLink>
+    <div class="row" style="margin-top: 50px" runat="server" id="divWidget" visible="false">
+        <div class="col-sm-12">
 
-                    <widget:AttendanceTracking runat="server" ID="widgetAttendanceTracking" />
-                </ContentTemplate>
-            </asp:UpdatePanel>
+                    <widget:AttendanceTracking runat="server" ID="widgetAttendanceTracking" OnTeamScheduleDeleted="widgetAttendanceTracking_TeamScheduleDeleted" />
+
         </div>
     </div>
+                                    </ContentTemplate>
+            </asp:UpdatePanel>
 </asp:Content>

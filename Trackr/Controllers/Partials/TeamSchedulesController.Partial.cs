@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web;
 using System.Web.Http;
+using Telerik.OpenAccess.FetchOptimization;
 using Trackr.Controllers.Models;
 using Trackr.Controllers.Security;
 using Trackr.Utils;
@@ -20,6 +21,15 @@ namespace Trackr
             public string End { get; set; }
         }
 
+        public class GetOutput
+        {
+            public DateTime StartDate { get; set; }
+            public DateTime EndDate { get; set; }
+            public string EventName { get; set; }
+            public int TeamScheduleID { get; set; }
+            public string TeamName { get; set; }
+        }
+
         [HttpPost]
         [Route("api/TeamSchedules/GetForCurrentUser")]
         public HttpResponseMessage GetForCurrentUser(Input input)
@@ -33,25 +43,39 @@ namespace Trackr
                 using (TeamSchedulesController tsc = new TeamSchedulesController())
                 using (TeamsController tc = new TeamsController())
                 {
+                    FetchStrategy fetch = new FetchStrategy();
+                    fetch.LoadWith<TeamSchedule>(i => i.Team);
+                    fetch.LoadWith<Team>(i => i.Program);
+
                     List<int> scopedTeamIDs = tc.GetScopedIDs(int.Parse(HttpContext.Current.User.Identity.Name), "PlayerManagement.ViewPlayers");
+
+                    IQueryable<TeamSchedule> response = null;
 
                     if (start.HasValue && end.HasValue)
                     {
-                        return Request.CreateResponse(tsc.GetWhere(i => scopedTeamIDs.Contains(i.TeamID) && start <= i.StartDate && i.EndDate <= end));
+                        response = tsc.GetWhere(i => scopedTeamIDs.Contains(i.TeamID) && start <= i.StartDate && i.EndDate <= end, fetch);
                     }
                     else if (start.HasValue)
                     {
-                        return Request.CreateResponse(tsc.GetWhere(i => scopedTeamIDs.Contains(i.TeamID) && start <= i.StartDate));
+                        response = tsc.GetWhere(i => scopedTeamIDs.Contains(i.TeamID) && start <= i.StartDate, fetch);
                     }
                     else if (end.HasValue)
                     {
-                        return Request.CreateResponse(tsc.GetWhere(i => scopedTeamIDs.Contains(i.TeamID) && i.StartDate <= end));
+                        response = tsc.GetWhere(i => scopedTeamIDs.Contains(i.TeamID) && i.StartDate <= end, fetch);
                     }
                     else
                     {
-                        return Request.CreateResponse(tsc.GetWhere(i => scopedTeamIDs.Contains(i.TeamID)));
+                        response = tsc.GetWhere(i => scopedTeamIDs.Contains(i.TeamID), fetch);
                     }
-                    
+
+                    return Request.CreateResponse(response.Select(i => new GetOutput()
+                        {
+                            EndDate = i.EndDate,
+                            StartDate = i.StartDate,
+                            EventName = i.EventName,
+                            TeamName = i.Team.Program.ProgramName + " - " + i.Team.TeamName,
+                            TeamScheduleID = i.TeamScheduleID
+                        }));
                 }
             }
             catch (Exception ex)
