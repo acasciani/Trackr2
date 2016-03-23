@@ -49,12 +49,14 @@ namespace Trackr.Source.Controls
 
             using (TeamSchedulesController tsc = new TeamSchedulesController())
             {
-                FetchStrategy fetch = new FetchStrategy() { MaxFetchDepth = 5 };
+                FetchStrategy fetch = new FetchStrategy() { MaxFetchDepth = 6 };
                 fetch.LoadWith<TeamSchedule>(i => i.Team);
                 fetch.LoadWith<Team>(i => i.TeamPlayers);
                 fetch.LoadWith<TeamPlayer>(i => i.Player);
                 fetch.LoadWith<Player>(i => i.Person);
                 fetch.LoadWith<TeamSchedule>(i => i.Attendances);
+                fetch.LoadWith<TeamPlayer>(i => i.PlayerPass);
+                fetch.LoadWith<PlayerPass>(i => i.Player);
 
                 TeamSchedule schedule = tsc.GetWhere(i => i.TeamScheduleID == TeamScheduleID.Value, fetch).First();
 
@@ -67,10 +69,10 @@ namespace Trackr.Source.Controls
 
                 var data = schedule.Team.TeamPlayers.Select(i => new PlayerAttendance()
                 {
-                    FirstName = i.Player.Person.FName,
-                    LastName = i.Player.Person.LName,
+                    FirstName = i.PlayerID.HasValue ? i.Player.Person.FName : i.PlayerPass.Player.Person.FName,
+                    LastName = i.PlayerID.HasValue ? i.Player.Person.LName : i.PlayerPass.Player.Person.LName,
                     Present = knownAttendances.Where(j => j.PlayerID == i.PlayerID).Count() > 0,
-                    PlayerID = i.Player.PlayerID
+                    PlayerID = i.PlayerID.HasValue ? i.PlayerID.Value : i.PlayerPass.PlayerID
                 });
 
                 rptPlayer.DataSource = data;

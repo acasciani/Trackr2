@@ -19,6 +19,7 @@ namespace Trackr
         {
             public string Start { get; set; }
             public string End { get; set; }
+            public bool OnlyActive { get; set; }
         }
 
         public class GetOutput
@@ -28,6 +29,7 @@ namespace Trackr
             public string EventName { get; set; }
             public int TeamScheduleID { get; set; }
             public string TeamName { get; set; }
+            public bool Active { get; set; }
         }
 
         [HttpPost]
@@ -53,19 +55,19 @@ namespace Trackr
 
                     if (start.HasValue && end.HasValue)
                     {
-                        response = tsc.GetWhere(i => scopedTeamIDs.Contains(i.TeamID) && start <= i.StartDate && i.EndDate <= end, fetch);
+                        response = tsc.GetWhere(i => scopedTeamIDs.Contains(i.TeamID) && start <= i.StartDate && i.EndDate <= end && (input.OnlyActive ? i.IsActive : true == true), fetch);
                     }
                     else if (start.HasValue)
                     {
-                        response = tsc.GetWhere(i => scopedTeamIDs.Contains(i.TeamID) && start <= i.StartDate, fetch);
+                        response = tsc.GetWhere(i => scopedTeamIDs.Contains(i.TeamID) && start <= i.StartDate && (input.OnlyActive ? i.IsActive : true == true), fetch);
                     }
                     else if (end.HasValue)
                     {
-                        response = tsc.GetWhere(i => scopedTeamIDs.Contains(i.TeamID) && i.StartDate <= end, fetch);
+                        response = tsc.GetWhere(i => scopedTeamIDs.Contains(i.TeamID) && i.StartDate <= end && (input.OnlyActive ? i.IsActive : true == true), fetch);
                     }
                     else
                     {
-                        response = tsc.GetWhere(i => scopedTeamIDs.Contains(i.TeamID), fetch);
+                        response = tsc.GetWhere(i => scopedTeamIDs.Contains(i.TeamID) && (input.OnlyActive ? i.IsActive : true == true), fetch);
                     }
 
                     return Request.CreateResponse(response.Select(i => new GetOutput()
@@ -74,7 +76,8 @@ namespace Trackr
                             StartDate = i.StartDate,
                             EventName = i.EventName,
                             TeamName = i.Team.Program.ProgramName + " - " + i.Team.TeamName,
-                            TeamScheduleID = i.TeamScheduleID
+                            TeamScheduleID = i.TeamScheduleID,
+                            Active = i.IsActive
                         }));
                 }
             }

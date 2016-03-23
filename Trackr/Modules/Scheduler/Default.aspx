@@ -37,7 +37,7 @@
 
         $(document).ready(function () {
             function GetEvents(StartDate, EndDate, cb) {
-                $.post('/api/TeamSchedules/GetForCurrentUser', { Start: StartDate, End: EndDate })
+                $.post('/api/TeamSchedules/GetForCurrentUser', { Start: StartDate, End: EndDate, OnlyActive: true })
                     .done(function (data) {
                         console.log('received schedules');
                         cb(data);
@@ -106,7 +106,21 @@
                             var firstOfMonth = new Date(t.year(), t.month(), 1, 0, 0, 0, 0);
                             var lastOfMonth = new Date(t.year(), t.month() + 1, 0, 23, 59, 59, 0);
 
-                            GetEvents(firstOfMonth.toUTCString(), lastOfMonth.toUTCString(), Init);
+                            GetEvents(firstOfMonth.toUTCString(), lastOfMonth.toUTCString(), function (events) {
+                                var monthChangeEvents = [];
+                                for (var i = 0; i < events.length; i++) {
+                                    monthChangeEvents.push({
+                                        title: events[i].EventName,
+                                        endDate: new Date(events[i].EndDate),
+                                        startDate: new Date(events[i].StartDate),
+                                        teamScheduleID: events[i].TeamScheduleID,
+                                        teamName: events[i].TeamName
+                                    });
+                                }
+
+                                calendars.clndr1.setEvents(monthChangeEvents);
+                                AddClickEvent();
+                            });
                         }
                     },
                     multiDayEvents: {
