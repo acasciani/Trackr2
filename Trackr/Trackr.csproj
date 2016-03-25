@@ -190,6 +190,7 @@
     <Compile Include="Controllers\Models\BaseModel.cs" />
     <Compile Include="Controllers\Partials\AttendancesController.Partial.cs" />
     <Compile Include="Controllers\Partials\TeamSchedulesController.Partial.cs" />
+    <Compile Include="Controllers\Scoping\IScopableController.cs" />
     <Compile Include="Controllers\Scoping\TeamPlayersController.Partial.cs" />
     <Compile Include="Controllers\Scoping\TeamSchedulesController.Partial.cs" />
     <Compile Include="Controllers\Security\Authenticate.cs" />

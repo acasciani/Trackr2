@@ -20,7 +20,7 @@ namespace Trackr.Modules.UserManagement
             if (int.TryParse(Request.QueryString["id"], out userID))
             {
                 // edit
-                CheckAllowed<WebUsersController, TrackrModels.WebUser, int>(Permissions.UserManagement.EditUser, userID);
+                CheckAllowed<WebUsersController, int>(Permissions.UserManagement.EditUser, userID);
             }
             else
             {

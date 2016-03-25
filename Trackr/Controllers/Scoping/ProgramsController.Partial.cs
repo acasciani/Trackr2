@@ -7,106 +7,62 @@ using System.Web;
 using System.Web.Http;
 using Telerik.OpenAccess.FetchOptimization;
 using TrackrModels;
+using Telerik.OpenAccess;
+using System.Linq.Expressions;
 
 namespace Trackr
 {
-    public partial class ProgramsController : OpenAccessBaseApiController<TrackrModels.Program, TrackrModels.ClubManagement>, IScopable<Program, int>
+    public partial class ProgramsController : OpenAccessBaseApiController<TrackrModels.Program, TrackrModels.ClubManagement>, IScopableController<int>
     {
-        public List<Program> GetScopedEntities(int UserID, string permission, FetchStrategy fetchStrategy = null)
+        public class ProgramsScopeController : IScopable<Program, int>
         {
-            ScopeController sc = new ScopeController();
-            var assignments = sc.GetScopeAssignments(UserID, permission);
-
-            List<Program> programs = new List<Program>();
-            foreach (ScopeAssignment assignment in assignments)
+            public List<int> SelectIDListByScopeAssignment(ScopeAssignment scopeAssignment, Expression<Func<Program, bool>> preFilter)
             {
-                programs.AddRange(GetScopedEntities(assignment, fetchStrategy));
-            }
-
-            return programs;
-        }
-
-        public List<int> GetScopedIDs(int UserID, string permission)
-        {
-            ScopeController sc = new ScopeController();
-            var assignments = sc.GetScopeAssignments(UserID, permission);
-
-            List<int> ids = new List<int>();
-            foreach (ScopeAssignment assignment in assignments)
-            {
-                ids.AddRange(GetScopedIDs(assignment));
-            }
-
-            return ids;
-        }
-
-        public Program GetScopedEntity(int UserID, string permission, int entityID, FetchStrategy fetchStrategy = null)
-        {
-            ScopeController sc = new ScopeController();
-            var assignments = sc.GetScopeAssignments(UserID, permission);
-
-            foreach (ScopeAssignment assignment in assignments)
-            {
-                if (GetScopedIDs(assignment).Contains(entityID))
+                using (ClubManagement cm = new ClubManagement())
                 {
-                    if (fetchStrategy == null)
+                    List<int> IDs = new List<int>();
+
+                    switch (scopeAssignment.Scope.ScopeName)
                     {
-                        return Get(entityID);
+                        case "Club": // highest level
+                            IDs.AddRange(cm.Programs.Where(i => i.ClubID == scopeAssignment.ResourceID).Select(i => i.ProgramID));
+                            break;
+
+                        case "Program":
+                            IDs.AddRange(cm.Programs.Where(i => i.ProgramID == scopeAssignment.ResourceID).Select(i => i.ProgramID));
+                            break;
+
+                        case "Team":
+                            IDs.AddRange(cm.Teams.Where(i => i.TeamID == scopeAssignment.ResourceID).Select(i => i.ProgramID));
+                            break;
+
+                        default: break;
                     }
-                    else
-                    {
-                        return GetWhere(i => i.ProgramID == entityID, fetchStrategy).First();
-                    }
+
+                    return IDs;
                 }
             }
-
-            return null;
         }
 
         public bool IsUserScoped(int UserID, string permission, int entityID)
         {
-            ScopeController sc = new ScopeController();
-            var assignments = sc.GetScopeAssignments(UserID, permission);
-
-            foreach (ScopeAssignment assignment in assignments)
-            {
-                if (GetScopedIDs(assignment).Contains(entityID))
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return ScopeController<ProgramsScopeController, Program, int>.IsUserScoped(UserID, permission, entityID);
         }
 
-        private List<int> GetScopedIDs(ScopeAssignment scopeAssignment)
+        public IEnumerable<Program> GetScopedEntities(int UserID, string permission)
         {
-            List<int> programIDs = new List<int>();
-
-            switch (scopeAssignment.Scope.ScopeName)
-            {
-                case "Club": // highest level
-                    programIDs.AddRange(Get().Select(i => i.ProgramID));
-                    break;
-
-                default: break;
-            }
-
-            return programIDs;
+            return GetScopedEntities(UserID, permission, new FetchStrategy());
         }
 
-        private IQueryable<Program> GetScopedEntities(ScopeAssignment scopeAssignment, FetchStrategy fetchStrategy = null)
+        public IEnumerable<Program> GetScopedEntities(int UserID, string permission, FetchStrategy fetch)
         {
-            List<int> scopedIDs = GetScopedIDs(scopeAssignment);
+            List<int> programIDs = ScopeController<ProgramsScopeController, Program, int>.GetScopedIDList(UserID, permission, i => true == true);
+            return GetWhere(i => programIDs.Contains(i.ProgramID), fetch);
+        }
 
-            if (fetchStrategy == null)
-            {
-                return GetWhere(i => scopedIDs.Contains(i.ProgramID));
-            }
-            else
-            {
-                return GetWhere(i => scopedIDs.Contains(i.ProgramID), fetchStrategy);
-            }
+        public List<int> GetScopedIDs(int UserID, string permission)
+        {
+            return ScopeController<ProgramsScopeController, Program, int>.GetScopedIDList(UserID, permission, i => true == true);
         }
     }
 }

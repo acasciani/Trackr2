@@ -7,106 +7,64 @@ using System.Web;
 using System.Web.Http;
 using Telerik.OpenAccess.FetchOptimization;
 using TrackrModels;
+using Telerik.OpenAccess;
+using System.Linq.Expressions;
 
 namespace Trackr
 {
-    public partial class TeamsController : OpenAccessBaseApiController<TrackrModels.Team, TrackrModels.ClubManagement>, IScopable<Team, int>
+    public partial class TeamsController : OpenAccessBaseApiController<TrackrModels.Team, TrackrModels.ClubManagement>, IScopableController<int>
     {
-        public List<Team> GetScopedEntities(int UserID, string permission, FetchStrategy fetchStrategy = null)
+        private class TeamsScopeController : IScopable<Team, int>
         {
-            ScopeController sc = new ScopeController();
-            var assignments = sc.GetScopeAssignments(UserID, permission);
-
-            List<Team> teams = new List<Team>();
-            foreach (ScopeAssignment assignment in assignments)
+            public bool IsUserScoped(int UserID, string permission, int entityID)
             {
-                teams.AddRange(GetScopedEntities(assignment, fetchStrategy));
+                return ScopeController<TeamsScopeController, Team, int>.IsUserScoped(UserID, permission, entityID);
             }
 
-            return teams;
-        }
-
-        public List<int> GetScopedIDs(int UserID, string permission)
-        {
-            ScopeController sc = new ScopeController();
-            var assignments = sc.GetScopeAssignments(UserID, permission);
-
-            List<int> ids = new List<int>();
-            foreach (ScopeAssignment assignment in assignments)
+            public List<int> SelectIDListByScopeAssignment(ScopeAssignment scopeAssignment, Expression<Func<Team, bool>> preFilter)
             {
-                ids.AddRange(GetScopedIDs(assignment));
-            }
-
-            return ids;
-        }
-
-        public Team GetScopedEntity(int UserID, string permission, int entityID, FetchStrategy fetchStrategy = null)
-        {
-            ScopeController sc = new ScopeController();
-            var assignments = sc.GetScopeAssignments(UserID, permission);
-
-            foreach (ScopeAssignment assignment in assignments)
-            {
-                if (GetScopedIDs(assignment).Contains(entityID))
+                using (ClubManagement cm = new ClubManagement())
                 {
-                    if (fetchStrategy == null)
+                    List<int> IDs = new List<int>();
+
+                    switch (scopeAssignment.Scope.ScopeName)
                     {
-                        return Get(entityID);
+                        case "Club": // highest level
+                            List<int> clubTeamIDs = cm.Programs.Where(i => i.ClubID == scopeAssignment.ResourceID).Include<Program>(i => i.Teams).SelectMany(i => i.Teams).Select(i => i.TeamID).Distinct().ToList();
+                            IDs.AddRange(cm.Teams.Where(i => clubTeamIDs.Contains(i.TeamID)).Select(i => i.TeamID));
+                            break;
+
+                        case "Program":
+                            List<int> programTeamIDs = cm.Teams.Where(i => i.ProgramID == scopeAssignment.ResourceID).Select(i => i.TeamID).Distinct().ToList();
+                            IDs.AddRange(cm.Teams.Where(i => programTeamIDs.Contains(i.TeamID)).Select(i => i.TeamID).Distinct());
+                            break;
+
+                        case "Team":
+                            IDs.AddRange(cm.Teams.Where(i => i.TeamID == scopeAssignment.ResourceID).Select(i => i.TeamID).Distinct());
+                            break;
                     }
-                    else
-                    {
-                        return GetWhere(i => i.TeamID == entityID, fetchStrategy).First();
-                    }
+
+                    return IDs;
                 }
             }
+        }
 
-            return null;
+
+
+        public IEnumerable<Team> GetScopedEntities(int UserID, string permission)
+        {
+            List<int> teamIDs = ScopeController<TeamsScopeController, Team, int>.GetScopedIDList(UserID, permission, i => true == true);
+            return GetWhere(i => teamIDs.Contains(i.TeamID));
         }
 
         public bool IsUserScoped(int UserID, string permission, int entityID)
         {
-            ScopeController sc = new ScopeController();
-            var assignments = sc.GetScopeAssignments(UserID, permission);
-
-            foreach (ScopeAssignment assignment in assignments)
-            {
-                if (GetScopedIDs(assignment).Contains(entityID))
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return ScopeController<TeamsScopeController, Team, int>.IsUserScoped(UserID, permission, entityID);
         }
 
-        private List<int> GetScopedIDs(ScopeAssignment scopeAssignment)
+        public List<int> GetScopedIDs(int UserID, string permission)
         {
-            List<int> teamIDs = new List<int>();
-
-            switch (scopeAssignment.Scope.ScopeName)
-            {
-                case "Club": // highest level
-                    teamIDs.AddRange(Get().Select(i => i.TeamID));
-                    break;
-
-                default: break;
-            }
-
-            return teamIDs;
-        }
-
-        private IQueryable<Team> GetScopedEntities(ScopeAssignment scopeAssignment, FetchStrategy fetchStrategy = null)
-        {
-            List<int> scopedIDs = GetScopedIDs(scopeAssignment);
-
-            if (fetchStrategy == null)
-            {
-                return GetWhere(i => scopedIDs.Contains(i.TeamID));
-            }
-            else
-            {
-                return GetWhere(i => scopedIDs.Contains(i.TeamID), fetchStrategy);
-            }
+            return ScopeController<TeamsScopeController, Team, int>.GetScopedIDList(UserID, permission, i => true == true);
         }
     }
 }

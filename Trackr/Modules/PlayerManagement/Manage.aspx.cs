@@ -20,7 +20,7 @@ namespace Trackr.Modules.PlayerManagement
             if (int.TryParse(Request.QueryString["id"], out playerID))
             {
                 // edit
-                CheckAllowed<PlayersController, TrackrModels.Player, int>(Permissions.PlayerManagement.EditPlayer, playerID);
+                CheckAllowed<PlayersController, int>(Permissions.PlayerManagement.EditPlayer, playerID);
             }
             else
             {

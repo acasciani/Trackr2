@@ -7,106 +7,65 @@ using System.Web;
 using System.Web.Http;
 using Telerik.OpenAccess.FetchOptimization;
 using TrackrModels;
+using Telerik.OpenAccess;
+using System.Linq.Expressions;
+using Telerik.OpenAccess;
 
 namespace Trackr
 {
-    public partial class TeamSchedulesController : OpenAccessBaseApiController<TrackrModels.TeamSchedule, TrackrModels.ClubManagement>, IScopable<TeamSchedule, int>
+    public partial class TeamSchedulesController : OpenAccessBaseApiController<TrackrModels.TeamSchedule, TrackrModels.ClubManagement>, IScopableController<int>
     {
-        public List<TeamSchedule> GetScopedEntities(int UserID, string permission, FetchStrategy fetchStrategy = null)
+        private class TeamSchedulesScopeController : IScopable<TeamSchedule, int>
         {
-            ScopeController sc = new ScopeController();
-            var assignments = sc.GetScopeAssignments(UserID, permission);
-
-            List<TeamSchedule> teamSchedules = new List<TeamSchedule>();
-            foreach (ScopeAssignment assignment in assignments)
+            public bool IsUserScoped(int UserID, string permission, int entityID)
             {
-                teamSchedules.AddRange(GetScopedEntities(assignment, fetchStrategy));
+                return ScopeController<TeamSchedulesScopeController, TeamSchedule, int>.IsUserScoped(UserID, permission, entityID);
             }
 
-            return teamSchedules;
-        }
-
-        public List<int> GetScopedIDs(int UserID, string permission)
-        {
-            ScopeController sc = new ScopeController();
-            var assignments = sc.GetScopeAssignments(UserID, permission);
-
-            List<int> ids = new List<int>();
-            foreach (ScopeAssignment assignment in assignments)
+            public List<int> SelectIDListByScopeAssignment(ScopeAssignment scopeAssignment, Expression<Func<TeamSchedule, bool>> preFilter)
             {
-                ids.AddRange(GetScopedIDs(assignment));
-            }
-
-            return ids;
-        }
-
-        public TeamSchedule GetScopedEntity(int UserID, string permission, int entityID, FetchStrategy fetchStrategy = null)
-        {
-            ScopeController sc = new ScopeController();
-            var assignments = sc.GetScopeAssignments(UserID, permission);
-
-            foreach (ScopeAssignment assignment in assignments)
-            {
-                if (GetScopedIDs(assignment).Contains(entityID))
+                using (ClubManagement cm = new ClubManagement())
                 {
-                    if (fetchStrategy == null)
+                    List<int> IDs = new List<int>();
+
+                    switch (scopeAssignment.Scope.ScopeName)
                     {
-                        return Get(entityID);
+                        case "Club": // highest level
+                            List<int> clubTeamIDs = cm.Programs.Where(i => i.ClubID == scopeAssignment.ResourceID).Include<Program>(i => i.Teams).SelectMany(i => i.Teams).Select(i => i.TeamID).Distinct().ToList();
+                            IDs.AddRange(cm.TeamSchedules.Where(i => clubTeamIDs.Contains(i.TeamID)).Select(i => i.TeamScheduleID));
+                            break;
+
+                        case "Program":
+                            List<int> programTeamIDs = cm.Teams.Where(i => i.ProgramID == scopeAssignment.ResourceID).Select(i => i.TeamID).Distinct().ToList();
+                            IDs.AddRange(cm.TeamSchedules.Where(i => programTeamIDs.Contains(i.TeamID)).Select(i => i.TeamScheduleID).Distinct());
+                            break;
+
+                        case "Team":
+                            IDs.AddRange(cm.TeamSchedules.Where(i => i.TeamID == scopeAssignment.ResourceID).Select(i => i.TeamScheduleID).Distinct());
+                            break;
                     }
-                    else
-                    {
-                        return GetWhere(i => i.TeamScheduleID == entityID, fetchStrategy).First();
-                    }
+
+                    return IDs;
                 }
             }
+        }
 
-            return null;
+
+
+        public IEnumerable<TeamSchedule> GetScopedEntities(int UserID, string permission)
+        {
+            List<int> teamScheduleIDs = ScopeController<TeamSchedulesScopeController, TeamSchedule, int>.GetScopedIDList(UserID, permission, i => true == true);
+            return GetWhere(i => teamScheduleIDs.Contains(i.TeamScheduleID));
         }
 
         public bool IsUserScoped(int UserID, string permission, int entityID)
         {
-            ScopeController sc = new ScopeController();
-            var assignments = sc.GetScopeAssignments(UserID, permission);
-
-            foreach (ScopeAssignment assignment in assignments)
-            {
-                if (GetScopedIDs(assignment).Contains(entityID))
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return ScopeController<TeamSchedulesScopeController, TeamSchedule, int>.IsUserScoped(UserID, permission, entityID);
         }
 
-        private List<int> GetScopedIDs(ScopeAssignment scopeAssignment)
+        public List<int> GetScopedIDs(int UserID, string permission)
         {
-            List<int> teamScheduleIDs = new List<int>();
-
-            switch (scopeAssignment.Scope.ScopeName)
-            {
-                case "Club": // highest level
-                    teamScheduleIDs.AddRange(Get().Select(i => i.TeamScheduleID));
-                    break;
-
-                default: break;
-            }
-
-            return teamScheduleIDs;
-        }
-
-        private IQueryable<TeamSchedule> GetScopedEntities(ScopeAssignment scopeAssignment, FetchStrategy fetchStrategy = null)
-        {
-            List<int> scopedIDs = GetScopedIDs(scopeAssignment);
-
-            if (fetchStrategy == null)
-            {
-                return GetWhere(i => scopedIDs.Contains(i.TeamScheduleID));
-            }
-            else
-            {
-                return GetWhere(i => scopedIDs.Contains(i.TeamScheduleID), fetchStrategy);
-            }
+            return ScopeController<TeamSchedulesScopeController, TeamSchedule, int>.GetScopedIDList(UserID, permission, i => true == true);
         }
     }
 }

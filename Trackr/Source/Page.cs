@@ -30,7 +30,9 @@ namespace Trackr
             }
         }
 
-        public void CheckAllowed<T,K,Q>(string permission, Q resourceID) where T : IScopable<K, Q>, IDisposable, new()
+        public void CheckAllowed<T, K>(string permission, K resourceID)
+            where K : struct
+            where T : IScopableController<K>, IDisposable, new()
         {
             using (T c = new T())
             {
