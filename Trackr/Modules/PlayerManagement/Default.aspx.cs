@@ -53,6 +53,11 @@ namespace Trackr.Modules.PlayerManagement
                     fetch.LoadWith<TeamPlayer>(i => i.Team);
                     fetch.LoadWith<Player>(i => i.TeamPlayers);
 
+                    var allTeamPlayers = tpc.GetScopedEntities(CurrentUser.UserID, "PlayerManagement.ViewPlayers", fetch)
+                        .Select(i=> new PlayerResult(){
+
+                        }).ToList();
+
                     var allPlayers = pc.GetScopedEntities(CurrentUser.UserID, "PlayerManagement.ViewPlayers", fetch)
                         .Select(i => new PlayerResult()
                         {

@@ -107,6 +107,12 @@ namespace Trackr.Source.Controls
                 ddlProgram.DataTextField = "Label";
                 ddlProgram.DataValueField = "Value";
                 ddlProgram.DataBind();
+
+                if (programs.Count() == 1)
+                {
+                    ddlProgram.SelectedIndex = 1;
+                    ddlProgram_SelectedIndexChanged(null, null);
+                }
             }
         }
 
@@ -128,6 +134,12 @@ namespace Trackr.Source.Controls
                 ddlTeam.DataTextField = "Label";
                 ddlTeam.DataValueField = "Value";
                 ddlTeam.DataBind();
+
+                if (teams.Count() == 1)
+                {
+                    ddlTeam.SelectedIndex = 1;
+                    ddlTeam_SelectedIndexChanged(null, null);
+                }
             }
         }
 
