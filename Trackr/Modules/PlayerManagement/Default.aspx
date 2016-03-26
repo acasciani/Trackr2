@@ -16,7 +16,7 @@
             </div>
             <hr />
             <div class="row">
-                <div class="col-sm-12">
+                <div class="col-sm-12 table-responsive">
                     <asp:GridView runat="server" ID="gvAllPlayers" AutoGenerateColumns="false" CssClass="table table-striped" SelectMethod="gvAllPlayers_GetData" AllowSorting="true">
                         <Columns>
                             <asp:BoundField DataField="LastName" SortExpression="LastName" HeaderText="Last name" ItemStyle-CssClass="col-xs-3" />

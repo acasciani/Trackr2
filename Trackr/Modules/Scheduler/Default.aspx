@@ -3,6 +3,21 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="NestedContent" runat="server">
     <link rel="stylesheet" href="/Content/Calendar.css" />
 
+    <style type="text/css">
+        @media screen and (max-width: 991px) {
+            .cal1 .event-listing {
+                width:100% !important;
+                clear: both;
+                margin-top: 25px;
+            }
+
+            .cal1 .clndr-table {
+                width: 100%;
+                clear: both;
+            }
+        }
+    </style>
+
     <asp:UpdatePanel runat="server" ID="updatePanelAlert" UpdateMode="Always">
         <ContentTemplate>
             <ui:AlertBox runat="server" ID="AlertBox" />
@@ -200,7 +215,7 @@
     </div>
                 <asp:UpdatePanel runat="server" UpdateMode="Conditional" ID="updatePanel">
                 <ContentTemplate>
-    <div class="row" style="margin-top: 50px" runat="server" id="divWidget" visible="false">
+    <div class="row" style="margin-top: 25px" runat="server" id="divWidget" visible="false">
         <div class="col-sm-12">
 
                     <widget:AttendanceTracking runat="server" ID="widgetAttendanceTracking" OnTeamScheduleDeleted="widgetAttendanceTracking_TeamScheduleDeleted" />
