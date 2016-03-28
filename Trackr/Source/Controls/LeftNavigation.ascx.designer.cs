@@ -13,6 +13,15 @@ namespace Trackr.Source.Controls {
     public partial class LeftNavigation {
         
         /// <summary>
+        /// navLeftSide control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.PlaceHolder navLeftSide;
+        
+        /// <summary>
         /// ulNoGroups control.
         /// </summary>
         /// <remarks>
@@ -29,5 +38,59 @@ namespace Trackr.Source.Controls {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Repeater rptNoGroup;
+        
+        /// <summary>
+        /// ulGroups control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl ulGroups;
+        
+        /// <summary>
+        /// rptGroup control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Repeater rptGroup;
+        
+        /// <summary>
+        /// navTopPart control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.PlaceHolder navTopPart;
+        
+        /// <summary>
+        /// ulMobileNav control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl ulMobileNav;
+        
+        /// <summary>
+        /// rptNavMobile_NoGroups control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Repeater rptNavMobile_NoGroups;
+        
+        /// <summary>
+        /// rptNavMobile_Groups control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Repeater rptNavMobile_Groups;
     }
 }

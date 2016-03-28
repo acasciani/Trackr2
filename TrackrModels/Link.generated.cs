@@ -115,6 +115,32 @@ namespace TrackrModels
 			}
 		}
 		
+		private string _currentModulePattern;
+		public virtual string CurrentModulePattern
+		{
+			get
+			{
+				return this._currentModulePattern;
+			}
+			set
+			{
+				this._currentModulePattern = value;
+			}
+		}
+		
+		private bool _showInMobileNav;
+		public virtual bool ShowInMobileNav
+		{
+			get
+			{
+				return this._showInMobileNav;
+			}
+			set
+			{
+				this._showInMobileNav = value;
+			}
+		}
+		
 		private LinkGroup _linkGroup;
 		public virtual LinkGroup LinkGroup
 		{

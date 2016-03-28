@@ -16,6 +16,10 @@
 
     <link rel="stylesheet" href="Content/menu/left-full.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.css" />
+
+    <!-- glyphicons -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+
 </head>
 <body>
     <form runat="server">
@@ -47,7 +51,7 @@
 
         <div class="sidebar" runat="server" visible="true">
             <nav id="nav" role="navigation">
-                <nav:LeftNavigation runat="server" ID="navLeftNavigation" />
+                <nav:LeftNavigation runat="server" ID="navLeftNavigation" IsLeftSide="true" />
             </nav>
         </div>
 
@@ -71,29 +75,7 @@
 
                         <!-- Collect the nav links, forms, and other content for toggling -->
                         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                            <ul class="nav navbar-nav navbar-right hidden-sm hidden-md hidden-lg">
-                                <li class="dropdown">
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Scheduler</a>
-                                    <ul class="dropdown-menu">
-                                        <li><a href="/Modules/Scheduler/">View Calendar</a></li>
-                                        <li><a href="/Modules/Scheduler/ManageEvent">Add New Event</a></li>
-                                    </ul>
-                                </li>
-                                <li class="dropdown">
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Player Management</a>
-                                    <ul class="dropdown-menu">
-                                        <li><a href="/Modules/PlayerManagement/">View Players</a></li>
-                                        <li><a href="/Modules/PlayerManagement/Manage">Add New Player</a></li>
-                                    </ul>
-                                </li>
-                                <li class="dropdown">
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">User Management</a>
-                                    <ul class="dropdown-menu">
-                                        <li><a href="/Modules/UserManagement/">View User</a></li>
-                                        <li><a href="/Modules/UserManagement/Manage">Add New User</a></li>
-                                    </ul>
-                                </li>
-                            </ul>
+                            <nav:LeftNavigation runat="server" ID="navTopNavigation" IsLeftSide="false" /> 
 
                             <ul class="nav navbar-nav navbar-right hidden-xs">
                                 <li><a href="#">

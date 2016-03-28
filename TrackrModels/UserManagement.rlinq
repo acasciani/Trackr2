@@ -187,6 +187,12 @@
         <orm:field name="_glyphiconID" property="GlyphiconID" behavior="readwrite" uniqueId="62de56d9-b3e4-48c1-a6fa-82775e50c80d" type="System.Nullable`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
           <orm:column name="GlyphiconID" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
         </orm:field>
+        <orm:field name="_currentModulePattern" property="CurrentModulePattern" behavior="readwrite" uniqueId="e4435525-0246-4dc3-9860-841f37fedf91" type="System.String">
+          <orm:column name="CurrentModulePattern" sql-type="varchar" nullable="true" length="100" scale="0" ado-type="StringVariableLength" />
+        </orm:field>
+        <orm:field name="_showInMobileNav" property="ShowInMobileNav" behavior="readwrite" uniqueId="de258698-3bdd-4529-939f-77bc647ebb73" type="System.Boolean">
+          <orm:column name="ShowInMobileNav" sql-type="bit" nullable="false" length="0" scale="0" ado-type="Bit" />
+        </orm:field>
         <orm:field name="_linkGroup" property="LinkGroup" behavior="readwrite" uniqueId="0df81235-c608-4807-b42a-adef6c292957" type="TrackrModels.LinkGroup">
           <orm:reference uniqueId="2a7ecf7e-73f0-4552-8b52-e5dad75463cf" association-name="LinkHasLinkGroup">
             <orm:sharedfield name="_linkGroupID" target-class="TrackrModels.LinkGroup" target-field="_linkGroupID" />
@@ -258,14 +264,20 @@
         <orm:field name="_sortOrder" property="SortOrder" behavior="readwrite" uniqueId="dfd61a4a-b0f7-442d-a363-cf16efbc2fe9" type="System.Int32">
           <orm:column name="SortOrder" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
         </orm:field>
-        <orm:field name="_links" property="Links" behavior="readwrite" uniqueId="cac606ad-3f03-4596-959b-b1fd8e9a3baa" type="TrackrModels.Link">
-          <orm:collection element-class="TrackrModels.Link" inverse-field="_linkGroup" order-by="" uniqueId="2a7ecf7e-73f0-4552-8b52-e5dad75463cf" />
+        <orm:field name="_currentModulePattern" property="CurrentModulePattern" behavior="readwrite" uniqueId="b1543eb9-9e7e-476b-89d4-1030f8dead55" type="System.String">
+          <orm:column name="CurrentModulePattern" sql-type="varchar" nullable="true" length="100" scale="0" ado-type="StringVariableLength" />
+        </orm:field>
+        <orm:field name="_showInMobileNav" property="ShowInMobileNav" behavior="readwrite" uniqueId="2733e00c-069f-4979-8b89-b56adff2b23e" type="System.Boolean">
+          <orm:column name="ShowInMobileNav" sql-type="bit" nullable="false" length="0" scale="0" ado-type="Bit" />
         </orm:field>
         <orm:field name="_glyphicon" property="Glyphicon" behavior="readwrite" uniqueId="a4bec6ca-6360-4e2a-8dd0-50790b357b80" type="TrackrModels.Glyphicon">
           <orm:reference uniqueId="b8962f26-1ce4-439f-b03a-e38d176ab727" association-name="LinkGroupHasGlyphicon">
             <orm:sharedfield name="_glyphiconID" target-class="TrackrModels.Glyphicon" target-field="_glyphiconID" />
             <orm:constraint name="FK_LinkGroups_Glyphicons" delete-action="dbdefaultrule" destination-table="Glyphicons" />
           </orm:reference>
+        </orm:field>
+        <orm:field name="_links" property="Links" behavior="readwrite" uniqueId="cac606ad-3f03-4596-959b-b1fd8e9a3baa" type="TrackrModels.Link">
+          <orm:collection element-class="TrackrModels.Link" inverse-field="_linkGroup" order-by="" uniqueId="2a7ecf7e-73f0-4552-8b52-e5dad75463cf" />
         </orm:field>
       </orm:class>
       <orm:class name="Glyphicon" uniqueId="151e60c4-9ed8-4b76-9774-d0aaff04ccea">
@@ -348,6 +360,8 @@
         <orm:column name="LinkGroupID" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
         <orm:column name="SortOrder" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
         <orm:column name="GlyphiconID" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        <orm:column name="CurrentModulePattern" sql-type="varchar" nullable="true" length="100" scale="0" ado-type="StringVariableLength" />
+        <orm:column name="ShowInMobileNav" sql-type="bit" nullable="false" length="0" scale="0" ado-type="Bit" />
         <orm:constraint name="FK_Links_LinkGroups" delete-action="dbdefaultrule" destination-table="LinkGroups">
           <orm:column name="LinkGroupID" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
         </orm:constraint>
@@ -372,6 +386,8 @@
         <orm:column name="LinkGroupName" sql-type="varchar" nullable="false" length="50" scale="0" ado-type="StringVariableLength" />
         <orm:column name="GlyphiconID" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
         <orm:column name="SortOrder" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        <orm:column name="CurrentModulePattern" sql-type="varchar" nullable="true" length="100" scale="0" ado-type="StringVariableLength" />
+        <orm:column name="ShowInMobileNav" sql-type="bit" nullable="false" length="0" scale="0" ado-type="Bit" />
         <orm:constraint name="FK_LinkGroups_Glyphicons" delete-action="dbdefaultrule" destination-table="Glyphicons">
           <orm:column name="GlyphiconID" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
         </orm:constraint>
@@ -562,6 +578,8 @@
       <Property Id="7d019b75-f024-4831-b372-1344e4142f24" name="LinkTitle" label="LinkTitle : String" kind="Persistent" fieldName="_linkTitle" />
       <Property Id="1e3ebb5a-1831-440a-85ec-13c0e6dba630" name="LinkURL" label="LinkURL : String" kind="Persistent" fieldName="_linkURL" />
       <Property Id="cb9541d3-bc72-4cf4-8821-ca94e409c165" name="SortOrder" type="Int32" label="SortOrder : Int32" kind="Persistent" fieldName="_sortOrder" />
+      <Property Id="e4435525-0246-4dc3-9860-841f37fedf91" name="CurrentModulePattern" label="CurrentModulePattern : String" kind="Persistent" fieldName="_currentModulePattern" />
+      <Property Id="de258698-3bdd-4529-939f-77bc647ebb73" name="ShowInMobileNav" type="Boolean" label="ShowInMobileNav : Boolean" kind="Persistent" fieldName="_showInMobileNav" />
       <AssociationTargets>
         <Association Id="2a7ecf7e-73f0-4552-8b52-e5dad75463cf" SourceMultiplicity="ZeroOne" name="LinkHasLinkGroup">
           <DomainClassMoniker name="/UserManagement/LinkGroup" />
@@ -649,6 +667,8 @@
       <Property Id="a6905d93-8434-4e2b-83bf-18237dd7d200" name="GlyphiconID" type="Int32" label="GlyphiconID : Int32" nullable="true" kind="Persistent" fieldName="_glyphiconID" />
       <Property Id="069dc9d8-d180-474f-bf73-34135ea88179" name="LinkGroupName" label="LinkGroupName : String" kind="Persistent" fieldName="_linkGroupName" />
       <Property Id="dfd61a4a-b0f7-442d-a363-cf16efbc2fe9" name="SortOrder" type="Int32" label="SortOrder : Int32" kind="Persistent" fieldName="_sortOrder" />
+      <Property Id="b1543eb9-9e7e-476b-89d4-1030f8dead55" name="CurrentModulePattern" label="CurrentModulePattern : String" kind="Persistent" fieldName="_currentModulePattern" />
+      <Property Id="2733e00c-069f-4979-8b89-b56adff2b23e" name="ShowInMobileNav" type="Boolean" label="ShowInMobileNav : Boolean" kind="Persistent" fieldName="_showInMobileNav" />
       <AssociationTargets>
         <Association Id="b8962f26-1ce4-439f-b03a-e38d176ab727" SourceMultiplicity="ZeroOne" name="LinkGroupHasGlyphicon">
           <DomainClassMoniker name="/UserManagement/Glyphicon" />
