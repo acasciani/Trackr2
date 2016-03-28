@@ -195,6 +195,10 @@
     <Compile Include="Controllers\Scoping\TeamSchedulesController.Partial.cs" />
     <Compile Include="Controllers\Security\Authenticate.cs" />
     <Compile Include="Controllers\TeamSchedulesController.cs" />
+    <Compile Include="Controllers\GlyphiconsController.cs" />
+    <Compile Include="Controllers\LinkGroupsController.cs" />
+    <Compile Include="Controllers\LinkPermissionsController.cs" />
+    <Compile Include="Controllers\LinksController.cs" />
     <Content Include="Account\Login.aspx" />
     <Content Include="Account\Register.aspx" />
     <Content Include="Content\bootstrap.css" />

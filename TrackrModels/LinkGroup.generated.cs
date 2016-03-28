@@ -22,58 +22,79 @@ using TrackrModels;
 
 namespace TrackrModels	
 {
-	public partial class Permission
+	public partial class LinkGroup
 	{
-		private int _permissionID;
-		public virtual int PermissionID
+		private int _linkGroupID;
+		public virtual int LinkGroupID
 		{
 			get
 			{
-				return this._permissionID;
+				return this._linkGroupID;
 			}
 			set
 			{
-				this._permissionID = value;
+				this._linkGroupID = value;
 			}
 		}
 		
-		private string _permissionName;
-		public virtual string PermissionName
+		private string _linkGroupName;
+		public virtual string LinkGroupName
 		{
 			get
 			{
-				return this._permissionName;
+				return this._linkGroupName;
 			}
 			set
 			{
-				this._permissionName = value;
+				this._linkGroupName = value;
 			}
 		}
 		
-		private IList<Role> _roles = new List<Role>();
-		public virtual IList<Role> Roles
+		private int? _glyphiconID;
+		public virtual int? GlyphiconID
 		{
 			get
 			{
-				return this._roles;
+				return this._glyphiconID;
+			}
+			set
+			{
+				this._glyphiconID = value;
 			}
 		}
 		
-		private IList<ScopeAssignment> _scopeAssignments = new List<ScopeAssignment>();
-		public virtual IList<ScopeAssignment> ScopeAssignments
+		private int _sortOrder;
+		public virtual int SortOrder
 		{
 			get
 			{
-				return this._scopeAssignments;
+				return this._sortOrder;
+			}
+			set
+			{
+				this._sortOrder = value;
 			}
 		}
 		
-		private IList<LinkPermission> _linkPermissions = new List<LinkPermission>();
-		public virtual IList<LinkPermission> LinkPermissions
+		private Glyphicon _glyphicon;
+		public virtual Glyphicon Glyphicon
 		{
 			get
 			{
-				return this._linkPermissions;
+				return this._glyphicon;
+			}
+			set
+			{
+				this._glyphicon = value;
+			}
+		}
+		
+		private IList<Link> _links = new List<Link>();
+		public virtual IList<Link> Links
+		{
+			get
+			{
+				return this._links;
 			}
 		}
 		

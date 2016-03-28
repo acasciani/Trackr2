@@ -22,58 +22,49 @@ using TrackrModels;
 
 namespace TrackrModels	
 {
-	public partial class Permission
+	public partial class Glyphicon
 	{
-		private int _permissionID;
-		public virtual int PermissionID
+		private int _glyphiconID;
+		public virtual int GlyphiconID
 		{
 			get
 			{
-				return this._permissionID;
+				return this._glyphiconID;
 			}
 			set
 			{
-				this._permissionID = value;
+				this._glyphiconID = value;
 			}
 		}
 		
-		private string _permissionName;
-		public virtual string PermissionName
+		private string _glyphicon1;
+		public virtual string Glyphicon1
 		{
 			get
 			{
-				return this._permissionName;
+				return this._glyphicon1;
 			}
 			set
 			{
-				this._permissionName = value;
+				this._glyphicon1 = value;
 			}
 		}
 		
-		private IList<Role> _roles = new List<Role>();
-		public virtual IList<Role> Roles
+		private IList<Link> _links = new List<Link>();
+		public virtual IList<Link> Links
 		{
 			get
 			{
-				return this._roles;
+				return this._links;
 			}
 		}
 		
-		private IList<ScopeAssignment> _scopeAssignments = new List<ScopeAssignment>();
-		public virtual IList<ScopeAssignment> ScopeAssignments
+		private IList<LinkGroup> _linkGroups = new List<LinkGroup>();
+		public virtual IList<LinkGroup> LinkGroups
 		{
 			get
 			{
-				return this._scopeAssignments;
-			}
-		}
-		
-		private IList<LinkPermission> _linkPermissions = new List<LinkPermission>();
-		public virtual IList<LinkPermission> LinkPermissions
-		{
-			get
-			{
-				return this._linkPermissions;
+				return this._linkGroups;
 			}
 		}
 		

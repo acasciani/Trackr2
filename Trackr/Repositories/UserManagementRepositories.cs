@@ -10,6 +10,26 @@ using TrackrModels;
 
 namespace Trackr
 {
+    public partial class GlyphiconRepository : OpenAccessBaseRepository<TrackrModels.Glyphicon, TrackrModels.UserManagement>
+    {
+
+    }
+
+    public partial class LinkRepository : OpenAccessBaseRepository<TrackrModels.Link, TrackrModels.UserManagement>
+    {
+
+    }
+
+    public partial class LinkGroupRepository : OpenAccessBaseRepository<TrackrModels.LinkGroup, TrackrModels.UserManagement>
+    {
+
+    }
+
+    public partial class LinkPermissionRepository : OpenAccessBaseRepository<TrackrModels.LinkPermission, TrackrModels.UserManagement>
+    {
+
+    }
+
 	public partial class PermissionRepository : OpenAccessBaseRepository<TrackrModels.Permission, TrackrModels.UserManagement>
     {
 	
@@ -34,5 +54,4 @@ namespace Trackr
     {
 	
     }
-
 }

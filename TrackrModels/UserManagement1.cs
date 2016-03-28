@@ -90,6 +90,38 @@ namespace TrackrModels
 			}
 		}
 		
+		public IQueryable<Link> Links 
+		{
+			get
+			{
+				return this.GetAll<Link>();
+			}
+		}
+		
+		public IQueryable<LinkPermission> LinkPermissions 
+		{
+			get
+			{
+				return this.GetAll<LinkPermission>();
+			}
+		}
+		
+		public IQueryable<LinkGroup> LinkGroups 
+		{
+			get
+			{
+				return this.GetAll<LinkGroup>();
+			}
+		}
+		
+		public IQueryable<Glyphicon> Glyphicons 
+		{
+			get
+			{
+				return this.GetAll<Glyphicon>();
+			}
+		}
+		
 		public static BackendConfiguration GetBackendConfiguration()
 		{
 			BackendConfiguration backend = new BackendConfiguration();
@@ -128,6 +160,22 @@ namespace TrackrModels
 			get;
 		}
 		IQueryable<Permission> Permissions
+		{
+			get;
+		}
+		IQueryable<Link> Links
+		{
+			get;
+		}
+		IQueryable<LinkPermission> LinkPermissions
+		{
+			get;
+		}
+		IQueryable<LinkGroup> LinkGroups
+		{
+			get;
+		}
+		IQueryable<Glyphicon> Glyphicons
 		{
 			get;
 		}

@@ -11,13 +11,14 @@
     
 </script>
 
-<ul class="utilities">
-    <li>
-        <a href="#"><span class="glyphicon glyphicon-envelope"></span>Messages</a>
-    </li>
-    <li>
-        <a href="#"><span class="glyphicon glyphicon-user"></span>My Account</a>
-    </li>
+<ul class="utilities" runat="server" id="ulNoGroups" visible="false">
+    <asp:Repeater runat="server" ID="rptNoGroup">
+        <ItemTemplate>
+            <li>
+                <a href="<%#Eval("LinkURL") %>"><span class='<%#Eval("Glyphicon")%>' runat="server" visible='<%#Eval("Glyphicon") != null %>'></span><%#Eval("LinkURL") %></a>
+            </li>
+        </ItemTemplate>
+    </asp:Repeater>
 </ul>
 
 <ul class="links">

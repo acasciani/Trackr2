@@ -153,6 +153,142 @@
         <orm:field name="_scopeAssignments" property="ScopeAssignments" behavior="readwrite" uniqueId="e0cb8443-c6d2-49e7-8954-59492a1a9ade" type="TrackrModels.ScopeAssignment">
           <orm:collection element-class="TrackrModels.ScopeAssignment" inverse-field="_permission" order-by="" uniqueId="ab85e40d-41f5-479d-b0ad-5954283c62e1" />
         </orm:field>
+        <orm:field name="_linkPermissions" property="LinkPermissions" behavior="readwrite" uniqueId="063f91a2-c0ef-4f5f-b7b5-253f824de778" type="TrackrModels.LinkPermission">
+          <orm:collection element-class="TrackrModels.LinkPermission" inverse-field="_permission" order-by="" uniqueId="7922a97a-cdf6-4329-8c5e-bbcdf9a272e9" />
+        </orm:field>
+      </orm:class>
+      <orm:class name="Link" uniqueId="cb65f896-c53f-4de5-8ee9-f62e64ac8a09">
+        <orm:table name="Links" />
+        <orm:identity>
+          <orm:key-generator name="autoinc">
+            <orm:key-generator-member property-name="LinkID" />
+          </orm:key-generator>
+          <orm:single-field field-name="_linkID" />
+        </orm:identity>
+        <orm:concurrency strategy="changed" />
+        <orm:field name="_linkID" property="LinkID" behavior="readwrite" uniqueId="88643b51-dd00-489a-ac31-b4bc28b3c2fa" type="System.Int32">
+          <orm:column name="LinkID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_linkName" property="LinkName" behavior="readwrite" uniqueId="5b79c3fc-2169-4139-8f70-e4f2deb6fb07" type="System.String">
+          <orm:column name="LinkName" sql-type="varchar" nullable="false" length="50" scale="0" ado-type="StringVariableLength" />
+        </orm:field>
+        <orm:field name="_linkURL" property="LinkURL" behavior="readwrite" uniqueId="1e3ebb5a-1831-440a-85ec-13c0e6dba630" type="System.String">
+          <orm:column name="LinkURL" sql-type="varchar" nullable="false" length="255" scale="0" ado-type="StringVariableLength" />
+        </orm:field>
+        <orm:field name="_linkTitle" property="LinkTitle" behavior="readwrite" uniqueId="7d019b75-f024-4831-b372-1344e4142f24" type="System.String">
+          <orm:column name="LinkTitle" sql-type="varchar" nullable="true" length="100" scale="0" ado-type="StringVariableLength" />
+        </orm:field>
+        <orm:field name="_linkGroupID" property="LinkGroupID" behavior="readwrite" uniqueId="fabdbc5f-7c3d-4c69-b535-82e539f87e21" type="System.Nullable`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
+          <orm:column name="LinkGroupID" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_sortOrder" property="SortOrder" behavior="readwrite" uniqueId="cb9541d3-bc72-4cf4-8821-ca94e409c165" type="System.Int32">
+          <orm:column name="SortOrder" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_glyphiconID" property="GlyphiconID" behavior="readwrite" uniqueId="62de56d9-b3e4-48c1-a6fa-82775e50c80d" type="System.Nullable`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
+          <orm:column name="GlyphiconID" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_linkGroup" property="LinkGroup" behavior="readwrite" uniqueId="0df81235-c608-4807-b42a-adef6c292957" type="TrackrModels.LinkGroup">
+          <orm:reference uniqueId="2a7ecf7e-73f0-4552-8b52-e5dad75463cf" association-name="LinkHasLinkGroup">
+            <orm:sharedfield name="_linkGroupID" target-class="TrackrModels.LinkGroup" target-field="_linkGroupID" />
+            <orm:constraint name="FK_Links_LinkGroups" delete-action="dbdefaultrule" destination-table="LinkGroups" />
+          </orm:reference>
+        </orm:field>
+        <orm:field name="_glyphicon" property="Glyphicon" behavior="readwrite" uniqueId="7dac9e75-1571-48bf-b311-2572777ce707" type="TrackrModels.Glyphicon">
+          <orm:reference uniqueId="a38a0937-20f4-4555-814a-17869f1e8980" association-name="LinkHasGlyphicon">
+            <orm:sharedfield name="_glyphiconID" target-class="TrackrModels.Glyphicon" target-field="_glyphiconID" />
+            <orm:constraint name="FK_Links_Glyphicons" delete-action="dbdefaultrule" destination-table="Glyphicons" />
+          </orm:reference>
+        </orm:field>
+        <orm:field name="_linkPermissions" property="LinkPermissions" behavior="readwrite" uniqueId="34358f70-d548-4bdf-badc-068eacbd0a96" type="TrackrModels.LinkPermission">
+          <orm:collection element-class="TrackrModels.LinkPermission" inverse-field="_link" order-by="" uniqueId="11a2fe9f-01ed-46f4-8f8c-6effed7816b0" />
+        </orm:field>
+      </orm:class>
+      <orm:class name="LinkPermission" uniqueId="03095f2d-fb26-4843-a628-15f60697abd0">
+        <orm:table name="LinkPermissions" />
+        <orm:identity>
+          <orm:key-generator name="autoinc">
+            <orm:key-generator-member property-name="LinkPermissionID" />
+          </orm:key-generator>
+          <orm:single-field field-name="_linkPermissionID" />
+        </orm:identity>
+        <orm:concurrency strategy="changed" />
+        <orm:field name="_linkPermissionID" property="LinkPermissionID" behavior="readwrite" uniqueId="30dea2ee-865c-402f-a838-35ef55c90eee" type="System.Int32">
+          <orm:column name="LinkPermissionID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_permissionID" property="PermissionID" behavior="readwrite" uniqueId="d0d66ba9-3e6b-4cc7-b3ed-2cd137cee63c" type="System.Int32">
+          <orm:column name="PermissionID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_linkID" property="LinkID" behavior="readwrite" uniqueId="9e07d46d-bd26-44ac-b859-a0c7ef5d7f34" type="System.Int32">
+          <orm:column name="LinkID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_isDeny" property="IsDeny" behavior="readwrite" uniqueId="48ee11da-04a5-4a72-bb74-ca9d4ec7b29d" type="System.Boolean">
+          <orm:column name="IsDeny" sql-type="bit" nullable="false" length="0" scale="0" ado-type="Bit" />
+        </orm:field>
+        <orm:field name="_permission" property="Permission" behavior="readwrite" uniqueId="174b4e1f-6e5e-4d53-9275-afe2d9edb24f" type="TrackrModels.Permission">
+          <orm:reference uniqueId="7922a97a-cdf6-4329-8c5e-bbcdf9a272e9" association-name="LinkPermissionHasPermission">
+            <orm:sharedfield name="_permissionID" target-class="TrackrModels.Permission" target-field="_permissionID" />
+            <orm:constraint name="FK_LinkPermissions_Permissions" delete-action="dbdefaultrule" destination-table="Permissions" />
+          </orm:reference>
+        </orm:field>
+        <orm:field name="_link" property="Link" behavior="readwrite" uniqueId="65236549-de65-46fb-b97f-0cf33497c2bd" type="TrackrModels.Link">
+          <orm:reference uniqueId="11a2fe9f-01ed-46f4-8f8c-6effed7816b0" association-name="LinkPermissionHasLink">
+            <orm:sharedfield name="_linkID" target-class="TrackrModels.Link" target-field="_linkID" />
+            <orm:constraint name="FK_LinkPermissions_Links" delete-action="dbdefaultrule" destination-table="Links" />
+          </orm:reference>
+        </orm:field>
+      </orm:class>
+      <orm:class name="LinkGroup" uniqueId="4ea61367-0c4e-4daf-af3e-4b3fbc9bf51d">
+        <orm:table name="LinkGroups" />
+        <orm:identity>
+          <orm:key-generator name="autoinc">
+            <orm:key-generator-member property-name="LinkGroupID" />
+          </orm:key-generator>
+          <orm:single-field field-name="_linkGroupID" />
+        </orm:identity>
+        <orm:concurrency strategy="changed" />
+        <orm:field name="_linkGroupID" property="LinkGroupID" behavior="readwrite" uniqueId="d39d095f-4a13-467d-a5da-73aa774982b6" type="System.Int32">
+          <orm:column name="LinkGroupID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_linkGroupName" property="LinkGroupName" behavior="readwrite" uniqueId="069dc9d8-d180-474f-bf73-34135ea88179" type="System.String">
+          <orm:column name="LinkGroupName" sql-type="varchar" nullable="false" length="50" scale="0" ado-type="StringVariableLength" />
+        </orm:field>
+        <orm:field name="_glyphiconID" property="GlyphiconID" behavior="readwrite" uniqueId="a6905d93-8434-4e2b-83bf-18237dd7d200" type="System.Nullable`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
+          <orm:column name="GlyphiconID" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_sortOrder" property="SortOrder" behavior="readwrite" uniqueId="dfd61a4a-b0f7-442d-a363-cf16efbc2fe9" type="System.Int32">
+          <orm:column name="SortOrder" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_links" property="Links" behavior="readwrite" uniqueId="cac606ad-3f03-4596-959b-b1fd8e9a3baa" type="TrackrModels.Link">
+          <orm:collection element-class="TrackrModels.Link" inverse-field="_linkGroup" order-by="" uniqueId="2a7ecf7e-73f0-4552-8b52-e5dad75463cf" />
+        </orm:field>
+        <orm:field name="_glyphicon" property="Glyphicon" behavior="readwrite" uniqueId="a4bec6ca-6360-4e2a-8dd0-50790b357b80" type="TrackrModels.Glyphicon">
+          <orm:reference uniqueId="b8962f26-1ce4-439f-b03a-e38d176ab727" association-name="LinkGroupHasGlyphicon">
+            <orm:sharedfield name="_glyphiconID" target-class="TrackrModels.Glyphicon" target-field="_glyphiconID" />
+            <orm:constraint name="FK_LinkGroups_Glyphicons" delete-action="dbdefaultrule" destination-table="Glyphicons" />
+          </orm:reference>
+        </orm:field>
+      </orm:class>
+      <orm:class name="Glyphicon" uniqueId="151e60c4-9ed8-4b76-9774-d0aaff04ccea">
+        <orm:table name="Glyphicons" />
+        <orm:identity>
+          <orm:key-generator name="autoinc">
+            <orm:key-generator-member property-name="GlyphiconID" />
+          </orm:key-generator>
+          <orm:single-field field-name="_glyphiconID" />
+        </orm:identity>
+        <orm:concurrency strategy="changed" />
+        <orm:field name="_glyphiconID" property="GlyphiconID" behavior="readwrite" uniqueId="6df565fd-8ddc-4998-9866-395d339989e2" type="System.Int32">
+          <orm:column name="GlyphiconID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_glyphicon1" property="Glyphicon1" behavior="readwrite" uniqueId="f38d76d2-7346-4422-a4c1-82f1e2bba489" type="System.String">
+          <orm:column name="Glyphicon" sql-type="varchar" nullable="false" length="70" scale="0" ado-type="StringVariableLength" />
+        </orm:field>
+        <orm:field name="_links" property="Links" behavior="readwrite" uniqueId="dc07a165-75a1-4ea4-9c8a-3118361435e8" type="TrackrModels.Link">
+          <orm:collection element-class="TrackrModels.Link" inverse-field="_glyphicon" order-by="" uniqueId="a38a0937-20f4-4555-814a-17869f1e8980" />
+        </orm:field>
+        <orm:field name="_linkGroups" property="LinkGroups" behavior="readwrite" uniqueId="38832b89-b955-49a6-942a-555ea60fc633" type="TrackrModels.LinkGroup">
+          <orm:collection element-class="TrackrModels.LinkGroup" inverse-field="_glyphicon" order-by="" uniqueId="b8962f26-1ce4-439f-b03a-e38d176ab727" />
+        </orm:field>
       </orm:class>
     </orm:namespace>
     <orm:schema schema="">
@@ -204,6 +340,46 @@
         <orm:column name="PermissionID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
         <orm:column name="PermissionName" sql-type="nvarchar" nullable="false" length="100" scale="0" ado-type="UnicodeStringVariableLength" />
       </orm:table>
+      <orm:table name="Links">
+        <orm:column name="LinkID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        <orm:column name="LinkName" sql-type="varchar" nullable="false" length="50" scale="0" ado-type="StringVariableLength" />
+        <orm:column name="LinkURL" sql-type="varchar" nullable="false" length="255" scale="0" ado-type="StringVariableLength" />
+        <orm:column name="LinkTitle" sql-type="varchar" nullable="true" length="100" scale="0" ado-type="StringVariableLength" />
+        <orm:column name="LinkGroupID" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        <orm:column name="SortOrder" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        <orm:column name="GlyphiconID" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        <orm:constraint name="FK_Links_LinkGroups" delete-action="dbdefaultrule" destination-table="LinkGroups">
+          <orm:column name="LinkGroupID" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        </orm:constraint>
+        <orm:constraint name="FK_Links_Glyphicons" delete-action="dbdefaultrule" destination-table="Glyphicons">
+          <orm:column name="GlyphiconID" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        </orm:constraint>
+      </orm:table>
+      <orm:table name="LinkPermissions">
+        <orm:column name="LinkPermissionID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        <orm:column name="PermissionID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        <orm:column name="LinkID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        <orm:column name="IsDeny" sql-type="bit" nullable="false" length="0" scale="0" ado-type="Bit" />
+        <orm:constraint name="FK_LinkPermissions_Permissions" delete-action="dbdefaultrule" destination-table="Permissions">
+          <orm:column name="PermissionID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:constraint>
+        <orm:constraint name="FK_LinkPermissions_Links" delete-action="dbdefaultrule" destination-table="Links">
+          <orm:column name="LinkID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:constraint>
+      </orm:table>
+      <orm:table name="LinkGroups">
+        <orm:column name="LinkGroupID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        <orm:column name="LinkGroupName" sql-type="varchar" nullable="false" length="50" scale="0" ado-type="StringVariableLength" />
+        <orm:column name="GlyphiconID" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        <orm:column name="SortOrder" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        <orm:constraint name="FK_LinkGroups_Glyphicons" delete-action="dbdefaultrule" destination-table="Glyphicons">
+          <orm:column name="GlyphiconID" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        </orm:constraint>
+      </orm:table>
+      <orm:table name="Glyphicons">
+        <orm:column name="GlyphiconID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        <orm:column name="Glyphicon" sql-type="varchar" nullable="false" length="70" scale="0" ado-type="StringVariableLength" />
+      </orm:table>
     </orm:schema>
     <orm:relational-naming-settings>
       <orm:source-strategy>Property</orm:source-strategy>
@@ -212,7 +388,7 @@
   </orm:orm>
   <ModelSettings xmlns="">
     <AppConfigConnectionPropertyName>UserManagementConnection</AppConfigConnectionPropertyName>
-    <AppConfigConnectionString>data source=dempsey.cgya5ichg1th.us-west-2.rds.amazonaws.com,1433;initial catalog=UserManagement;persist security info=True;user id=alex;password=casciani;multipleactiveresultsets=True;application name=EntityFramework</AppConfigConnectionString>
+    <AppConfigConnectionString>data source=aa1rkzfjc1zm4wp.czrmlqzwnyeu.us-west-2.rds.amazonaws.com,1433;initial catalog=UserManagement;persist security info=True;user id=alex;password=casciani;multipleactiveresultsets=True;application name=EntityFramework</AppConfigConnectionString>
     <InitialCatalog>UserManagement</InitialCatalog>
     <NamingSettings>
       <ClassRules>
@@ -373,6 +549,140 @@
         <classHasNavigationalProperties Id="69063157-d3ff-4b08-b097-4958b550eae1">
           <NavigationalProperty Id="6dd22a0b-ec38-4fd2-8d11-ee005afe8db3" name="Roles" type="IList&lt;Role&gt;" label="Roles : IList&lt;Role&gt;" nullable="true" kind="Persistent" fieldName="_roles" isDependent="false" isManaged="false" />
         </classHasNavigationalProperties>
+        <classHasNavigationalProperties Id="f271421a-5d2f-4741-b00c-92484e4917ae">
+          <NavigationalProperty Id="063f91a2-c0ef-4f5f-b7b5-253f824de778" name="LinkPermissions" type="IList&lt;LinkPermission&gt;" label="LinkPermissions : IList&lt;LinkPermission&gt;" nullable="true" kind="Persistent" fieldName="_linkPermissions" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+      </navigationalProperties>
+    </DomainClass>
+    <DomainClass Id="cb65f896-c53f-4de5-8ee9-f62e64ac8a09" name="Link" namespace="TrackrModels" showPropertiesCompartment="true" identityMechanism="DatabaseServerCalculated" concurrencyMode="Changed" showNavigationCompartment="true" showImplementationCompartment="true" identityMechanismMember="LinkID">
+      <Property Id="88643b51-dd00-489a-ac31-b4bc28b3c2fa" name="LinkID" type="Int32" label="LinkID : Int32" kind="Persistent" identity="true" fieldName="_linkID" />
+      <Property Id="62de56d9-b3e4-48c1-a6fa-82775e50c80d" name="GlyphiconID" type="Int32" label="GlyphiconID : Int32" nullable="true" kind="Persistent" fieldName="_glyphiconID" />
+      <Property Id="fabdbc5f-7c3d-4c69-b535-82e539f87e21" name="LinkGroupID" type="Int32" label="LinkGroupID : Int32" nullable="true" kind="Persistent" fieldName="_linkGroupID" />
+      <Property Id="5b79c3fc-2169-4139-8f70-e4f2deb6fb07" name="LinkName" label="LinkName : String" kind="Persistent" fieldName="_linkName" />
+      <Property Id="7d019b75-f024-4831-b372-1344e4142f24" name="LinkTitle" label="LinkTitle : String" kind="Persistent" fieldName="_linkTitle" />
+      <Property Id="1e3ebb5a-1831-440a-85ec-13c0e6dba630" name="LinkURL" label="LinkURL : String" kind="Persistent" fieldName="_linkURL" />
+      <Property Id="cb9541d3-bc72-4cf4-8821-ca94e409c165" name="SortOrder" type="Int32" label="SortOrder : Int32" kind="Persistent" fieldName="_sortOrder" />
+      <AssociationTargets>
+        <Association Id="2a7ecf7e-73f0-4552-8b52-e5dad75463cf" SourceMultiplicity="ZeroOne" name="LinkHasLinkGroup">
+          <DomainClassMoniker name="/UserManagement/LinkGroup" />
+          <targetNavigationalProperty>
+            <associationDefinesTargetProperty Id="009687d1-ce23-49cb-a7af-f603f853770f">
+              <NavigationalPropertyMoniker name="/UserManagement/LinkGroup/Links" />
+            </associationDefinesTargetProperty>
+          </targetNavigationalProperty>
+          <sourceNavigationalProperty>
+            <associationDefinesSourceProperty Id="07ea9fe2-e1d3-4b88-9ab3-d8fef851a972">
+              <NavigationalPropertyMoniker name="/UserManagement/Link/LinkGroup" />
+            </associationDefinesSourceProperty>
+          </sourceNavigationalProperty>
+        </Association>
+        <Association Id="a38a0937-20f4-4555-814a-17869f1e8980" SourceMultiplicity="ZeroOne" name="LinkHasGlyphicon">
+          <DomainClassMoniker name="/UserManagement/Glyphicon" />
+          <targetNavigationalProperty>
+            <associationDefinesTargetProperty Id="d167e6ef-3b1e-40a6-a8fd-c6238d7713f5">
+              <NavigationalPropertyMoniker name="/UserManagement/Glyphicon/Links" />
+            </associationDefinesTargetProperty>
+          </targetNavigationalProperty>
+          <sourceNavigationalProperty>
+            <associationDefinesSourceProperty Id="d18a4ce8-9966-4a71-a27a-d25658bd3fe7">
+              <NavigationalPropertyMoniker name="/UserManagement/Link/Glyphicon" />
+            </associationDefinesSourceProperty>
+          </sourceNavigationalProperty>
+        </Association>
+      </AssociationTargets>
+      <navigationalProperties>
+        <classHasNavigationalProperties Id="25280970-7388-4300-ad8c-d1f6d25fbd47">
+          <NavigationalProperty Id="0df81235-c608-4807-b42a-adef6c292957" name="LinkGroup" type="LinkGroup" label="LinkGroup : LinkGroup" nullable="true" kind="Persistent" fieldName="_linkGroup" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+        <classHasNavigationalProperties Id="be024e39-f91d-4ac1-b739-2c6402cf0edf">
+          <NavigationalProperty Id="7dac9e75-1571-48bf-b311-2572777ce707" name="Glyphicon" type="Glyphicon" label="Glyphicon : Glyphicon" nullable="true" kind="Persistent" fieldName="_glyphicon" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+        <classHasNavigationalProperties Id="0ded0150-a5cd-412e-940c-b638d61cea3a">
+          <NavigationalProperty Id="34358f70-d548-4bdf-badc-068eacbd0a96" name="LinkPermissions" type="IList&lt;LinkPermission&gt;" label="LinkPermissions : IList&lt;LinkPermission&gt;" nullable="true" kind="Persistent" fieldName="_linkPermissions" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+      </navigationalProperties>
+    </DomainClass>
+    <DomainClass Id="03095f2d-fb26-4843-a628-15f60697abd0" name="LinkPermission" namespace="TrackrModels" showPropertiesCompartment="true" identityMechanism="DatabaseServerCalculated" concurrencyMode="Changed" showNavigationCompartment="true" showImplementationCompartment="true" identityMechanismMember="LinkPermissionID">
+      <Property Id="30dea2ee-865c-402f-a838-35ef55c90eee" name="LinkPermissionID" type="Int32" label="LinkPermissionID : Int32" kind="Persistent" identity="true" fieldName="_linkPermissionID" />
+      <Property Id="48ee11da-04a5-4a72-bb74-ca9d4ec7b29d" name="IsDeny" type="Boolean" label="IsDeny : Boolean" kind="Persistent" fieldName="_isDeny" />
+      <Property Id="9e07d46d-bd26-44ac-b859-a0c7ef5d7f34" name="LinkID" type="Int32" label="LinkID : Int32" kind="Persistent" fieldName="_linkID" />
+      <Property Id="d0d66ba9-3e6b-4cc7-b3ed-2cd137cee63c" name="PermissionID" type="Int32" label="PermissionID : Int32" kind="Persistent" fieldName="_permissionID" />
+      <AssociationTargets>
+        <Association Id="7922a97a-cdf6-4329-8c5e-bbcdf9a272e9" SourceMultiplicity="One" name="LinkPermissionHasPermission">
+          <DomainClassMoniker name="/UserManagement/Permission" />
+          <targetNavigationalProperty>
+            <associationDefinesTargetProperty Id="76b7fd4a-c7f3-401b-9cc9-c177c51ee63a">
+              <NavigationalPropertyMoniker name="/UserManagement/Permission/LinkPermissions" />
+            </associationDefinesTargetProperty>
+          </targetNavigationalProperty>
+          <sourceNavigationalProperty>
+            <associationDefinesSourceProperty Id="f2d06612-891a-4171-9f7c-db70878993ff">
+              <NavigationalPropertyMoniker name="/UserManagement/LinkPermission/Permission" />
+            </associationDefinesSourceProperty>
+          </sourceNavigationalProperty>
+        </Association>
+        <Association Id="11a2fe9f-01ed-46f4-8f8c-6effed7816b0" SourceMultiplicity="One" name="LinkPermissionHasLink">
+          <DomainClassMoniker name="/UserManagement/Link" />
+          <targetNavigationalProperty>
+            <associationDefinesTargetProperty Id="f96e298a-492a-42a1-9318-28ed52741a53">
+              <NavigationalPropertyMoniker name="/UserManagement/Link/LinkPermissions" />
+            </associationDefinesTargetProperty>
+          </targetNavigationalProperty>
+          <sourceNavigationalProperty>
+            <associationDefinesSourceProperty Id="e6fac9fd-9ffd-40b0-876c-92de30d774de">
+              <NavigationalPropertyMoniker name="/UserManagement/LinkPermission/Link" />
+            </associationDefinesSourceProperty>
+          </sourceNavigationalProperty>
+        </Association>
+      </AssociationTargets>
+      <navigationalProperties>
+        <classHasNavigationalProperties Id="97104261-3cf5-419b-ac15-2982cc5e80df">
+          <NavigationalProperty Id="174b4e1f-6e5e-4d53-9275-afe2d9edb24f" name="Permission" type="Permission" label="Permission : Permission" nullable="true" kind="Persistent" fieldName="_permission" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+        <classHasNavigationalProperties Id="f0044052-c947-4e57-bd20-2a83fde3c0ab">
+          <NavigationalProperty Id="65236549-de65-46fb-b97f-0cf33497c2bd" name="Link" type="Link" label="Link : Link" nullable="true" kind="Persistent" fieldName="_link" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+      </navigationalProperties>
+    </DomainClass>
+    <DomainClass Id="4ea61367-0c4e-4daf-af3e-4b3fbc9bf51d" name="LinkGroup" namespace="TrackrModels" showPropertiesCompartment="true" identityMechanism="DatabaseServerCalculated" concurrencyMode="Changed" showNavigationCompartment="true" showImplementationCompartment="true" identityMechanismMember="LinkGroupID">
+      <Property Id="d39d095f-4a13-467d-a5da-73aa774982b6" name="LinkGroupID" type="Int32" label="LinkGroupID : Int32" kind="Persistent" identity="true" fieldName="_linkGroupID" />
+      <Property Id="a6905d93-8434-4e2b-83bf-18237dd7d200" name="GlyphiconID" type="Int32" label="GlyphiconID : Int32" nullable="true" kind="Persistent" fieldName="_glyphiconID" />
+      <Property Id="069dc9d8-d180-474f-bf73-34135ea88179" name="LinkGroupName" label="LinkGroupName : String" kind="Persistent" fieldName="_linkGroupName" />
+      <Property Id="dfd61a4a-b0f7-442d-a363-cf16efbc2fe9" name="SortOrder" type="Int32" label="SortOrder : Int32" kind="Persistent" fieldName="_sortOrder" />
+      <AssociationTargets>
+        <Association Id="b8962f26-1ce4-439f-b03a-e38d176ab727" SourceMultiplicity="ZeroOne" name="LinkGroupHasGlyphicon">
+          <DomainClassMoniker name="/UserManagement/Glyphicon" />
+          <targetNavigationalProperty>
+            <associationDefinesTargetProperty Id="74d7ca6d-a56a-4921-a382-2a10856f6545">
+              <NavigationalPropertyMoniker name="/UserManagement/Glyphicon/LinkGroups" />
+            </associationDefinesTargetProperty>
+          </targetNavigationalProperty>
+          <sourceNavigationalProperty>
+            <associationDefinesSourceProperty Id="71ef5abc-dc8b-47e2-a2b5-4cd9603299b4">
+              <NavigationalPropertyMoniker name="/UserManagement/LinkGroup/Glyphicon" />
+            </associationDefinesSourceProperty>
+          </sourceNavigationalProperty>
+        </Association>
+      </AssociationTargets>
+      <navigationalProperties>
+        <classHasNavigationalProperties Id="158de8a1-cb97-4595-b277-cb6f813f6882">
+          <NavigationalProperty Id="cac606ad-3f03-4596-959b-b1fd8e9a3baa" name="Links" type="IList&lt;Link&gt;" label="Links : IList&lt;Link&gt;" nullable="true" kind="Persistent" fieldName="_links" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+        <classHasNavigationalProperties Id="49f9a379-82ff-47b5-96ca-4455f67c0fe3">
+          <NavigationalProperty Id="a4bec6ca-6360-4e2a-8dd0-50790b357b80" name="Glyphicon" type="Glyphicon" label="Glyphicon : Glyphicon" nullable="true" kind="Persistent" fieldName="_glyphicon" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+      </navigationalProperties>
+    </DomainClass>
+    <DomainClass Id="151e60c4-9ed8-4b76-9774-d0aaff04ccea" name="Glyphicon" namespace="TrackrModels" showPropertiesCompartment="true" identityMechanism="DatabaseServerCalculated" concurrencyMode="Changed" showNavigationCompartment="true" showImplementationCompartment="true" identityMechanismMember="GlyphiconID">
+      <Property Id="6df565fd-8ddc-4998-9866-395d339989e2" name="GlyphiconID" type="Int32" label="GlyphiconID : Int32" kind="Persistent" identity="true" fieldName="_glyphiconID" />
+      <Property Id="f38d76d2-7346-4422-a4c1-82f1e2bba489" name="Glyphicon1" label="Glyphicon1 : String" kind="Persistent" fieldName="_glyphicon1" />
+      <navigationalProperties>
+        <classHasNavigationalProperties Id="70e1bbab-af5b-4830-aad3-a2a5b95e0dfd">
+          <NavigationalProperty Id="dc07a165-75a1-4ea4-9c8a-3118361435e8" name="Links" type="IList&lt;Link&gt;" label="Links : IList&lt;Link&gt;" nullable="true" kind="Persistent" fieldName="_links" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+        <classHasNavigationalProperties Id="b6713c0f-e205-48f7-be81-7b1571540309">
+          <NavigationalProperty Id="38832b89-b955-49a6-942a-555ea60fc633" name="LinkGroups" type="IList&lt;LinkGroup&gt;" label="LinkGroups : IList&lt;LinkGroup&gt;" nullable="true" kind="Persistent" fieldName="_linkGroups" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
       </navigationalProperties>
     </DomainClass>
   </Types>
@@ -384,6 +694,10 @@
         <entitySetProperty name="ScopeAssignments" namespace="TrackrModels" type="ScopeAssignment" label="ScopeAssignments : IQueryable&lt;TrackrModels.ScopeAssignment&gt;" />
         <entitySetProperty name="Roles" namespace="TrackrModels" type="Role" label="Roles : IQueryable&lt;TrackrModels.Role&gt;" />
         <entitySetProperty name="Permissions" namespace="TrackrModels" type="Permission" label="Permissions : IQueryable&lt;TrackrModels.Permission&gt;" />
+        <entitySetProperty name="Links" namespace="TrackrModels" type="Link" label="Links : IQueryable&lt;TrackrModels.Link&gt;" />
+        <entitySetProperty name="LinkPermissions" namespace="TrackrModels" type="LinkPermission" label="LinkPermissions : IQueryable&lt;TrackrModels.LinkPermission&gt;" />
+        <entitySetProperty name="LinkGroups" namespace="TrackrModels" type="LinkGroup" label="LinkGroups : IQueryable&lt;TrackrModels.LinkGroup&gt;" />
+        <entitySetProperty name="Glyphicons" namespace="TrackrModels" type="Glyphicon" label="Glyphicons : IQueryable&lt;TrackrModels.Glyphicon&gt;" />
       </domainContainer>
     </domainModelHasDomainContext>
   </domainContext>

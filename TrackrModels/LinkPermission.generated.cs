@@ -22,8 +22,21 @@ using TrackrModels;
 
 namespace TrackrModels	
 {
-	public partial class Permission
+	public partial class LinkPermission
 	{
+		private int _linkPermissionID;
+		public virtual int LinkPermissionID
+		{
+			get
+			{
+				return this._linkPermissionID;
+			}
+			set
+			{
+				this._linkPermissionID = value;
+			}
+		}
+		
 		private int _permissionID;
 		public virtual int PermissionID
 		{
@@ -37,43 +50,55 @@ namespace TrackrModels
 			}
 		}
 		
-		private string _permissionName;
-		public virtual string PermissionName
+		private int _linkID;
+		public virtual int LinkID
 		{
 			get
 			{
-				return this._permissionName;
+				return this._linkID;
 			}
 			set
 			{
-				this._permissionName = value;
+				this._linkID = value;
 			}
 		}
 		
-		private IList<Role> _roles = new List<Role>();
-		public virtual IList<Role> Roles
+		private bool _isDeny;
+		public virtual bool IsDeny
 		{
 			get
 			{
-				return this._roles;
+				return this._isDeny;
+			}
+			set
+			{
+				this._isDeny = value;
 			}
 		}
 		
-		private IList<ScopeAssignment> _scopeAssignments = new List<ScopeAssignment>();
-		public virtual IList<ScopeAssignment> ScopeAssignments
+		private Permission _permission;
+		public virtual Permission Permission
 		{
 			get
 			{
-				return this._scopeAssignments;
+				return this._permission;
+			}
+			set
+			{
+				this._permission = value;
 			}
 		}
 		
-		private IList<LinkPermission> _linkPermissions = new List<LinkPermission>();
-		public virtual IList<LinkPermission> LinkPermissions
+		private Link _link;
+		public virtual Link Link
 		{
 			get
 			{
-				return this._linkPermissions;
+				return this._link;
+			}
+			set
+			{
+				this._link = value;
 			}
 		}
 		

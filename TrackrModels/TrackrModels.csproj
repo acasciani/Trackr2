@@ -89,8 +89,20 @@
     <Compile Include="EmailAddress.generated.cs">
       <DependentUpon>ClubManagement.rlinq</DependentUpon>
     </Compile>
+    <Compile Include="Glyphicon.generated.cs">
+      <DependentUpon>UserManagement.rlinq</DependentUpon>
+    </Compile>
     <Compile Include="Guardian.generated.cs">
       <DependentUpon>ClubManagement.rlinq</DependentUpon>
+    </Compile>
+    <Compile Include="Link.generated.cs">
+      <DependentUpon>UserManagement.rlinq</DependentUpon>
+    </Compile>
+    <Compile Include="LinkGroup.generated.cs">
+      <DependentUpon>UserManagement.rlinq</DependentUpon>
+    </Compile>
+    <Compile Include="LinkPermission.generated.cs">
+      <DependentUpon>UserManagement.rlinq</DependentUpon>
     </Compile>
     <Compile Include="Permission.generated.cs">
       <DependentUpon>UserManagement.rlinq</DependentUpon>
