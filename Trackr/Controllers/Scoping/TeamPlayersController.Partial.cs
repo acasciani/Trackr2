@@ -30,13 +30,13 @@ namespace Trackr
                     switch (scopeAssignment.Scope.ScopeName)
                     {
                         case "Club": // highest level
-                                List<int> clubTeamIDs = cm.Programs.Where(i => i.ClubID == scopeAssignment.ResourceID).Include<Program>(i => i.Teams).SelectMany(i => i.Teams).Select(i => i.TeamID).Distinct().ToList();
-                                IDs.AddRange(cm.TeamPlayers.Where(i=>clubTeamIDs.Contains(i.TeamID)).Select(i => i.TeamPlayerID));
+                            List<int> clubTeamIDs = cm.Programs.Where(i => i.ClubID == scopeAssignment.ResourceID).Include<Program>(i => i.Teams).SelectMany(i => i.Teams).Select(i => i.TeamID).Distinct().ToList();
+                            IDs.AddRange(cm.TeamPlayers.Where(i => clubTeamIDs.Contains(i.TeamID)).Select(i => i.TeamPlayerID));
                             break;
 
                         case "Program":
-                                List<int> programTeamIDs = cm.Teams.Where(i => i.ProgramID == scopeAssignment.ResourceID).Select(i => i.TeamID).Distinct().ToList();
-                                IDs.AddRange(cm.TeamPlayers.Where(i => programTeamIDs.Contains(i.TeamID)).Select(i => i.TeamPlayerID).Distinct());
+                            List<int> programTeamIDs = cm.Teams.Where(i => i.ProgramID == scopeAssignment.ResourceID).Select(i => i.TeamID).Distinct().ToList();
+                            IDs.AddRange(cm.TeamPlayers.Where(i => programTeamIDs.Contains(i.TeamID)).Select(i => i.TeamPlayerID).Distinct());
                             break;
 
                         case "Team":
@@ -67,9 +67,13 @@ namespace Trackr
             return ScopeController<TeamPlayersScopeController, TeamPlayer, int>.IsUserScoped(UserID, permission, entityID);
         }
 
+        public List<int> GetScopedIDs(int UserID, string permission, Expression<Func<TeamPlayer, bool>> filter)
+        {
+            return ScopeController<TeamPlayersScopeController, TeamPlayer, int>.GetScopedIDList(UserID, permission, filter);
+        }
         public List<int> GetScopedIDs(int UserID, string permission)
         {
-            return ScopeController<TeamPlayersScopeController, TeamPlayer, int>.GetScopedIDList(UserID, permission, i => true == true);
+            return GetScopedIDs(UserID, permission, i => true == true);
         }
     }
 }

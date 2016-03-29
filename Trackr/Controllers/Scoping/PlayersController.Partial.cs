@@ -25,8 +25,15 @@ namespace Trackr
                     switch (scopeAssignment.Scope.ScopeName)
                     {
                         case "Club": // highest level
-                            //List<int> clubTeamIDs = cm.Programs.Where(i => i.ClubID == scopeAssignment.ResourceID).Include<Program>(i => i.Teams).SelectMany(i => i.Teams).Select(i => i.TeamID).Distinct().ToList();
-                            //IDs.AddRange(cm.Players.Include<Player>(i=>i.TeamPlayers).Where(i => clubTeamIDs.Contains(i.player)).Select(i => i.TeamPlayerID));
+
+                            List<int> clubTeamIDs = cm.Programs.Where(i => i.ClubID == scopeAssignment.ResourceID).Include<Program>(i => i.Teams).SelectMany(i => i.Teams).Select(i => i.TeamID).Distinct().ToList();
+
+                            List<int> teamPlayerPlayerIDs = cm.TeamPlayers.Where(i => i.PlayerID.HasValue && clubTeamIDs.Contains(i.TeamID)).Select(i => i.PlayerID.Value).ToList();
+                            List<int> playerPassPlayerIDs = cm.TeamPlayers.Where(i => i.PlayerPassID.HasValue && clubTeamIDs.Contains(i.TeamID)).Include<TeamPlayer>(i => i.PlayerPass).Select(i => i.PlayerPass.PlayerID).ToList();
+
+                            teamPlayerPlayerIDs.AddRange(playerPassPlayerIDs);
+                            IDs.AddRange(teamPlayerPlayerIDs.Distinct());
+
                             break;
 
                         case "Program":

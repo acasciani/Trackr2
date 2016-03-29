@@ -12,14 +12,14 @@ namespace Trackr.Modules.PlayerManagement
 {
     public partial class Default : Page
     {
-        private class PlayerResultEqualityComparer : IEqualityComparer<PlayerResult>
+        private class PlayerResultEqualityComparer : IEqualityComparer<Trackr.PlayersController.PlayerViewObject>
         {
-            public bool Equals(PlayerResult x, PlayerResult y)
+            public bool Equals(Trackr.PlayersController.PlayerViewObject x, Trackr.PlayersController.PlayerViewObject y)
             {
                 return x.BirthDate == y.BirthDate && x.FirstName == y.FirstName && x.LastName == y.LastName && x.PlayerID == y.PlayerID;
             }
 
-            public int GetHashCode(PlayerResult obj)
+            public int GetHashCode(Trackr.PlayersController.PlayerViewObject obj)
             {
                 return (obj.BirthDate.HasValue ? obj.BirthDate.Value.GetHashCode() : 0) |
                         (obj.FirstName ?? "").GetHashCode() |
@@ -28,21 +28,9 @@ namespace Trackr.Modules.PlayerManagement
             }
         }
 
-        [Serializable]
-        private class PlayerResult
+        private List<Trackr.PlayersController.PlayerViewObject> Data
         {
-            public string FirstName { get; set; }
-            public string LastName { get; set; }
-            public int? Age { get; set; }
-            public DateTime? BirthDate { get; set; }
-            public int PlayerID { get; set; }
-            public List<int> ProgramIDs { get; set; }
-            public List<int> TeamIDs { get; set; }
-        }
-
-        private List<PlayerResult> Data
-        {
-            get { return Session["DataSet"] as List<PlayerResult>; }
+            get { return Session["DataSet"] as List<Trackr.PlayersController.PlayerViewObject>; }
             set { Session["DataSet"] = value; }
         }
 
@@ -76,31 +64,8 @@ namespace Trackr.Modules.PlayerManagement
 
                     // put all players into 2 buckets, those that are assigned by player pass and those assigned directly to teamplayer
 
-                    var allPlayers = tpc.GetScopedEntities(CurrentUser.UserID, "PlayerManagement.ViewPlayers", fetch);
-
-                    var playerPassPlayers = allPlayers.Where(i=>i.PlayerPassID.HasValue)
-                        .Select(i=> new PlayerResult(){
-                            Age = i.PlayerPass.Player.Person.DateOfBirth.HasValue ? DateTime.Today.ToUniversalTime().Year - i.PlayerPass.Player.Person.DateOfBirth.Value.Year : (int?)null,
-                            BirthDate = i.PlayerPass.Player.Person.DateOfBirth.HasValue ? i.PlayerPass.Player.Person.DateOfBirth.Value : (DateTime?)null,
-                            FirstName = i.PlayerPass.Player.Person.FName,
-                            LastName = i.PlayerPass.Player.Person.LName,
-                            PlayerID = i.PlayerPass.Player.PlayerID,
-                            TeamIDs = i.PlayerPass.Player.PlayerPasses.Where(j => DateTime.Now.ToUniversalTime() < j.Expires).SelectMany(j => j.TeamPlayers).Select(j => j.TeamID).Union(i.PlayerPass.Player.TeamPlayers.Select(j => j.TeamID)).Distinct().ToList(),
-                            ProgramIDs = i.PlayerPass.Player.PlayerPasses.Where(j => DateTime.Now.ToUniversalTime() < j.Expires).SelectMany(j => j.TeamPlayers).Select(j => j.Team.ProgramID).Union(i.PlayerPass.Player.TeamPlayers.Select(j => j.Team.ProgramID)).Distinct().ToList()
-                        }).ToList();
-
-                    var playerTeamPlayers = allPlayers.Where(i=>i.PlayerID.HasValue)
-                        .Select(i=> new PlayerResult(){
-                            Age = i.Player.Person.DateOfBirth.HasValue ? DateTime.Today.ToUniversalTime().Year - i.Player.Person.DateOfBirth.Value.Year : (int?)null,
-                            BirthDate = i.Player.Person.DateOfBirth.HasValue ? i.Player.Person.DateOfBirth.Value : (DateTime?)null,
-                            FirstName = i.Player.Person.FName,
-                            LastName = i.Player.Person.LName,
-                            PlayerID = i.PlayerID.Value,
-                            TeamIDs = i.Player.PlayerPasses.Where(j => DateTime.Now.ToUniversalTime() < j.Expires).SelectMany(j => j.TeamPlayers).Select(j => j.TeamID).Union(i.Player.TeamPlayers.Select(j => j.TeamID)).Distinct().ToList(),
-                            ProgramIDs = i.Player.PlayerPasses.Where(j => DateTime.Now.ToUniversalTime() < j.Expires).SelectMany(j => j.TeamPlayers).Select(j => j.Team.ProgramID).Union(i.Player.TeamPlayers.Select(j => j.Team.ProgramID)).Distinct().ToList()
-                        }).ToList();
-
-                    Data = playerPassPlayers.Union(playerTeamPlayers).Distinct(new PlayerResultEqualityComparer()).ToList();
+                    var allPlayers = pc.GetAllScopedPlayerViewObjects(CurrentUser.UserID, "PlayerManagement.ViewPlayers", i=>true==true);
+                    Data = allPlayers.Distinct(new PlayerResultEqualityComparer()).ToList();
                 }
 
                 var filteredData = Data;
@@ -117,7 +82,7 @@ namespace Trackr.Modules.PlayerManagement
                     }
                 }
 
-                return filteredData.OrderBy(i => i.LastName).ThenBy(i => i.FirstName).AsQueryable<PlayerResult>();
+                return filteredData.OrderBy(i => i.LastName).ThenBy(i => i.FirstName).AsQueryable<Trackr.PlayersController.PlayerViewObject>();
             }
         }
 

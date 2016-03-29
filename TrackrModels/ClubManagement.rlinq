@@ -931,8 +931,14 @@
         <Backend>MsSql</Backend>
         <ProviderName>System.Data.SqlClient</ProviderName>
         <Logging>
-          <MetricStoreSnapshotInterval>0</MetricStoreSnapshotInterval>
+          <LogLevel>Normal</LogLevel>
+          <EventStoreCapacity>10000</EventStoreCapacity>
+          <MetricStoreCapacity>3600</MetricStoreCapacity>
         </Logging>
+        <SecondLevelCache>
+          <Enabled>True</Enabled>
+          <CacheQueryResults>True</CacheQueryResults>
+        </SecondLevelCache>
       </BackendConfiguration>
     </BackendConfigurationSettings>
   </ModelSettings>

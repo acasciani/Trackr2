@@ -183,7 +183,11 @@ namespace TrackrModels
 			BackendConfiguration backend = new BackendConfiguration();
 			backend.Backend = "MsSql";
 			backend.ProviderName = "System.Data.SqlClient";
-			backend.Logging.MetricStoreSnapshotInterval = 0;
+			backend.Logging.LogEvents = LoggingLevel.Normal;
+			backend.Logging.EventStoreCapacity = 10000;
+			backend.Logging.MetricStoreCapacity = 3600;
+			backend.SecondLevelCache.Enabled = true;
+			backend.SecondLevelCache.CacheQueryResults = true;
 		
 			CustomizeBackendConfiguration(ref backend);
 		
