@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.UI.WebControls;
 
@@ -90,6 +91,26 @@ namespace Trackr.Utils
                     }
                 }
             }
+        }
+
+        public static string GetTenDigitNumber(string input)
+        {
+            // ##########
+            MatchCollection matches = Regex.Matches(input, @"[0-9]");
+
+            if (matches.Count != 10)
+            {
+                throw new Exception("The phone number does not have ten digits. Unable to get the ten digit phone number.");
+            }
+
+            return string.Join("", matches.Cast<Match>().Select(m => m.Value));
+        }
+
+        public static string FormatTenDigitNumber(string input)
+        {
+            // (###) ###-####
+            char[] ten = GetTenDigitNumber(input).ToCharArray();
+            return string.Format("({0}{1}{2}) {3}{4}{5}-{6}{7}{8}{9}", ten[0], ten[1], ten[2], ten[3], ten[4], ten[5], ten[6], ten[7], ten[8], ten[9]);
         }
     }
 }

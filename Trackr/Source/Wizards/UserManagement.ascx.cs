@@ -94,9 +94,9 @@ namespace Trackr.Source.Wizards
             }
 
             // update dropdownlists
-            ddlRole.Populate(DropDownType.Role);
+            ddlRole.Populate(DropDownType.Role, retainFirst: true);
             ddlScopeType.Populate(DropDownType.ScopeType);
-            ddlPermission.Populate(DropDownType.Permission);
+            ddlPermission.Populate(DropDownType.Permission, retainFirst: true);
         }
 
         

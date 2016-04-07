@@ -100,7 +100,7 @@ namespace Trackr
         public WebUser GetScopedEntity(int UserID, string permission, int primaryKey, FetchStrategy fetch)
         {
             List<int> userIDs = ScopeController<WebUsersScopeController, WebUser, int>.GetScopedIDList(UserID, permission, i => i.UserID == primaryKey);
-            return GetWhere(i => userIDs.Contains(i.UserID), fetch).FirstOrDefault();
+            return GetWhere(i => userIDs.Contains(i.UserID) && i.UserID == primaryKey, fetch).FirstOrDefault();
         }
 
         public IEnumerable<WebUser> GetScopedEntities(int UserID, string permission)
