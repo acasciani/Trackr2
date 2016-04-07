@@ -269,6 +269,9 @@
         <orm:field name="_programs" property="Programs" behavior="readwrite" uniqueId="822dee46-d5f1-463d-a1c9-9b8c29dd18b7" type="TrackrModels.Program">
           <orm:collection element-class="TrackrModels.Program" inverse-field="_club" order-by="" uniqueId="d5abb3e9-2dd5-4453-a355-45918f1fef23" />
         </orm:field>
+        <orm:field name="_people" property="People" behavior="readwrite" uniqueId="c043fa1d-f50b-4c5f-b1f9-86f6bc8e1934" type="TrackrModels.Person">
+          <orm:collection element-class="TrackrModels.Person" inverse-field="_club" order-by="" uniqueId="6847fabc-e976-4203-9b4c-0867fd06fb0a" />
+        </orm:field>
       </orm:class>
       <orm:class name="PlayerPass" uniqueId="cc46e759-acc2-42af-82bd-c75dee018045">
         <orm:table name="PlayerPasses" />
@@ -390,6 +393,9 @@
         <orm:field name="_gender" property="Gender" behavior="readwrite" uniqueId="d5c2b8b6-40b6-48ca-bc0d-441643fa395c" type="System.Nullable`1[[System.Byte, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
           <orm:column name="Gender" sql-type="tinyint" nullable="true" length="0" scale="0" ado-type="Byte" />
         </orm:field>
+        <orm:field name="_clubID" property="ClubID" behavior="readwrite" uniqueId="321a0ba3-5a3c-4851-8c23-37a81bdb49c1" type="System.Int32">
+          <orm:column name="ClubID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
         <orm:field name="_guardians" property="Guardians" behavior="readwrite" uniqueId="7c0c4a12-add5-4dd4-86fc-b0e87244139e" type="TrackrModels.Guardian">
           <orm:collection element-class="TrackrModels.Guardian" inverse-field="_person" order-by="" uniqueId="e7bc19ce-a67f-418d-9eb6-91f4ccba29ea" />
         </orm:field>
@@ -401,6 +407,12 @@
         </orm:field>
         <orm:field name="_emailAddresses" property="EmailAddresses" behavior="readwrite" uniqueId="60571906-d0d6-4fd5-8542-97d00e384408" type="TrackrModels.EmailAddress">
           <orm:collection element-class="TrackrModels.EmailAddress" inverse-field="_person" order-by="" uniqueId="2f6a5adb-ad23-4683-949f-224f037f7df5" />
+        </orm:field>
+        <orm:field name="_club" property="Club" behavior="readwrite" uniqueId="1a7aac61-adb1-4273-bf7c-bc7820719bb5" type="TrackrModels.Club">
+          <orm:reference uniqueId="6847fabc-e976-4203-9b4c-0867fd06fb0a" association-name="PersonHasClub">
+            <orm:sharedfield name="_clubID" target-class="TrackrModels.Club" target-field="_clubID" />
+            <orm:constraint name="FK_People_Clubs" delete-action="dbdefaultrule" destination-table="Clubs" />
+          </orm:reference>
         </orm:field>
       </orm:class>
       <orm:class name="Guardian" uniqueId="f9e226b5-203b-494d-b033-ac05193b8e60">
@@ -798,6 +810,10 @@
         <orm:column name="LName" sql-type="nvarchar" nullable="false" length="30" scale="0" ado-type="UnicodeStringVariableLength" />
         <orm:column name="DateOfBirth" sql-type="date" nullable="true" length="0" scale="0" ado-type="Date" />
         <orm:column name="Gender" sql-type="tinyint" nullable="true" length="0" scale="0" ado-type="Byte" />
+        <orm:column name="ClubID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        <orm:constraint name="FK_People_Clubs" delete-action="dbdefaultrule" destination-table="Clubs">
+          <orm:column name="ClubID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:constraint>
       </orm:table>
       <orm:table name="Guardians">
         <orm:column name="GuardianID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
@@ -903,7 +919,7 @@
   </orm:orm>
   <ModelSettings xmlns="">
     <AppConfigConnectionPropertyName>ClubManagementConnection</AppConfigConnectionPropertyName>
-    <AppConfigConnectionString>data source=dempsey.cgya5ichg1th.us-west-2.rds.amazonaws.com,1433;initial catalog=ClubManagement;persist security info=True;user id=alex;password=casciani</AppConfigConnectionString>
+    <AppConfigConnectionString>data source=aa1rkzfjc1zm4wp.czrmlqzwnyeu.us-west-2.rds.amazonaws.com,1433;initial catalog=ClubManagement;persist security info=True;user id=alex;password=casciani</AppConfigConnectionString>
     <InitialCatalog>ClubManagement</InitialCatalog>
     <NamingSettings>
       <ClassRules>
@@ -1171,6 +1187,9 @@
         <classHasNavigationalProperties Id="c7c5bfce-79a5-43e6-9404-f646d5b7b2e1">
           <NavigationalProperty Id="822dee46-d5f1-463d-a1c9-9b8c29dd18b7" name="Programs" type="IList&lt;Program&gt;" label="Programs : IList&lt;Program&gt;" nullable="true" kind="Persistent" fieldName="_programs" isDependent="false" isManaged="false" />
         </classHasNavigationalProperties>
+        <classHasNavigationalProperties Id="106f0a99-47d3-4ce1-a6c0-8c0d34b49d30">
+          <NavigationalProperty Id="c043fa1d-f50b-4c5f-b1f9-86f6bc8e1934" name="People" type="IList&lt;Person&gt;" label="People : IList&lt;Person&gt;" nullable="true" kind="Persistent" fieldName="_people" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
       </navigationalProperties>
     </DomainClass>
     <DomainClass Id="cc46e759-acc2-42af-82bd-c75dee018045" name="PlayerPass" namespace="TrackrModels" showPropertiesCompartment="true" identityMechanism="DatabaseServerCalculated" concurrencyMode="Changed" showNavigationCompartment="true" showImplementationCompartment="true" identityMechanismMember="PlayerPassID">
@@ -1269,6 +1288,22 @@
       <Property Id="d5c2b8b6-40b6-48ca-bc0d-441643fa395c" name="Gender" type="Byte" label="Gender : Byte" nullable="true" kind="Persistent" fieldName="_gender" />
       <Property Id="d3a24ebe-7170-4685-a450-bb909e48517f" name="LName" label="LName : String" kind="Persistent" fieldName="_lName" />
       <Property Id="6f76d842-b3ed-4865-a982-970b2a1fb01e" name="MInitial" type="Char" label="MInitial : Char" nullable="true" kind="Persistent" fieldName="_mInitial" />
+      <Property Id="321a0ba3-5a3c-4851-8c23-37a81bdb49c1" name="ClubID" type="Int32" label="ClubID : Int32" kind="Persistent" fieldName="_clubID" />
+      <AssociationTargets>
+        <Association Id="6847fabc-e976-4203-9b4c-0867fd06fb0a" SourceMultiplicity="One" name="PersonHasClub">
+          <DomainClassMoniker name="/ClubManagement/Club" />
+          <targetNavigationalProperty>
+            <associationDefinesTargetProperty Id="e0c5121d-3613-4bf8-b302-88896cfde14d">
+              <NavigationalPropertyMoniker name="/ClubManagement/Club/People" />
+            </associationDefinesTargetProperty>
+          </targetNavigationalProperty>
+          <sourceNavigationalProperty>
+            <associationDefinesSourceProperty Id="4fffec74-daa4-4abb-b85a-da98f83008f8">
+              <NavigationalPropertyMoniker name="/ClubManagement/Person/Club" />
+            </associationDefinesSourceProperty>
+          </sourceNavigationalProperty>
+        </Association>
+      </AssociationTargets>
       <navigationalProperties>
         <classHasNavigationalProperties Id="f8b4b613-0021-4697-bd22-ce825377dce5">
           <NavigationalProperty Id="7c0c4a12-add5-4dd4-86fc-b0e87244139e" name="Guardians" type="IList&lt;Guardian&gt;" label="Guardians : IList&lt;Guardian&gt;" nullable="true" kind="Persistent" fieldName="_guardians" isDependent="false" isManaged="false" />
@@ -1281,6 +1316,9 @@
         </classHasNavigationalProperties>
         <classHasNavigationalProperties Id="d92e15b2-1e94-4a0b-89fc-1e097ea573d0">
           <NavigationalProperty Id="60571906-d0d6-4fd5-8542-97d00e384408" name="EmailAddresses" type="IList&lt;EmailAddress&gt;" label="EmailAddresses : IList&lt;EmailAddress&gt;" nullable="true" kind="Persistent" fieldName="_emailAddresses" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+        <classHasNavigationalProperties Id="b54beadd-65f5-4ef0-b11a-beb121a83743">
+          <NavigationalProperty Id="1a7aac61-adb1-4273-bf7c-bc7820719bb5" name="Club" type="Club" label="Club : Club" nullable="true" kind="Persistent" fieldName="_club" isDependent="false" isManaged="false" />
         </classHasNavigationalProperties>
       </navigationalProperties>
     </DomainClass>

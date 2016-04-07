@@ -103,6 +103,32 @@ namespace TrackrModels
 			}
 		}
 		
+		private int _clubID;
+		public virtual int ClubID
+		{
+			get
+			{
+				return this._clubID;
+			}
+			set
+			{
+				this._clubID = value;
+			}
+		}
+		
+		private Club _club;
+		public virtual Club Club
+		{
+			get
+			{
+				return this._club;
+			}
+			set
+			{
+				this._club = value;
+			}
+		}
+		
 		private IList<Guardian> _guardians = new List<Guardian>();
 		public virtual IList<Guardian> Guardians
 		{
@@ -153,6 +179,7 @@ namespace TrackrModels
 			this.LName = info.GetString("LName");
 			this.DateOfBirth = (DateTime?)info.GetValue("DateOfBirth", typeof(DateTime?));
 			this.Gender = (byte?)info.GetValue("Gender", typeof(byte?));
+			this.ClubID = info.GetInt32("ClubID");
 			CustomizeDeserializationProcess(info, context);
 		}
 		
@@ -164,6 +191,7 @@ namespace TrackrModels
 			info.AddValue("LName", this.LName, typeof(string));
 			info.AddValue("DateOfBirth", this.DateOfBirth, typeof(DateTime?));
 			info.AddValue("Gender", this.Gender, typeof(byte?));
+			info.AddValue("ClubID", this.ClubID, typeof(int));
 			CustomizeSerializationProcess(info, context);
 		}
 		

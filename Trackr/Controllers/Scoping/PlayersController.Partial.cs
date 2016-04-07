@@ -26,13 +26,16 @@ namespace Trackr
                     {
                         case "Club": // highest level
 
-                            List<int> clubTeamIDs = cm.Programs.Where(i => i.ClubID == scopeAssignment.ResourceID).Include<Program>(i => i.Teams).SelectMany(i => i.Teams).Select(i => i.TeamID).Distinct().ToList();
+                            //List<int> clubTeamIDs = cm.Programs.Where(i => i.ClubID == scopeAssignment.ResourceID).Include<Program>(i => i.Teams).SelectMany(i => i.Teams).Select(i => i.TeamID).Distinct().ToList();
 
-                            List<int> teamPlayerPlayerIDs = cm.TeamPlayers.Where(i => i.PlayerID.HasValue && clubTeamIDs.Contains(i.TeamID)).Select(i => i.PlayerID.Value).ToList();
-                            List<int> playerPassPlayerIDs = cm.TeamPlayers.Where(i => i.PlayerPassID.HasValue && clubTeamIDs.Contains(i.TeamID)).Include<TeamPlayer>(i => i.PlayerPass).Select(i => i.PlayerPass.PlayerID).ToList();
+                            //List<int> teamPlayerPlayerIDs = cm.TeamPlayers.Where(i => i.PlayerID.HasValue && clubTeamIDs.Contains(i.TeamID)).Select(i => i.PlayerID.Value).ToList();
+                            //List<int> playerPassPlayerIDs = cm.TeamPlayers.Where(i => i.PlayerPassID.HasValue && clubTeamIDs.Contains(i.TeamID)).Include<TeamPlayer>(i => i.PlayerPass).Select(i => i.PlayerPass.PlayerID).ToList();
+                            List<int> personPlayerIDs = cm.Players.Where(i => i.Person.ClubID == scopeAssignment.ResourceID).Select(i => i.PlayerID).ToList();
 
-                            teamPlayerPlayerIDs.AddRange(playerPassPlayerIDs);
-                            IDs.AddRange(teamPlayerPlayerIDs.Distinct());
+                            //teamPlayerPlayerIDs.AddRange(playerPassPlayerIDs);
+                            //teamPlayerPlayerIDs.AddRange(personPlayerIDs);
+                            //IDs.AddRange(teamPlayerPlayerIDs.Distinct());
+                            IDs.AddRange(personPlayerIDs.Distinct());
 
                             break;
 

@@ -60,6 +60,15 @@ namespace TrackrModels
 			}
 		}
 		
+		private IList<Person> _people = new List<Person>();
+		public virtual IList<Person> People
+		{
+			get
+			{
+				return this._people;
+			}
+		}
+		
 		#region ISerializable Implementation
 		
 		public Club()

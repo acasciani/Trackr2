@@ -145,6 +145,7 @@ namespace Trackr.Source.Wizards
                 if (IsNew)
                 {
                     player.Person = new Person();
+                    player.Person.ClubID = 1;
                 }
 
                 player.Person.DateOfBirth = DateTime.Parse(txtDateOfBirth.Text);
@@ -660,6 +661,7 @@ namespace Trackr.Source.Wizards
                 if (!guardianID.HasValue)
                 {
                     guardian.Person = new Person();
+                    guardian.Person.ClubID = 1;
                 }
 
                 guardian.Person.FName = txtGuardianFirstName.Text;
