@@ -92,6 +92,7 @@ namespace Trackr.Source.Wizards
         {
             OldPlayerPicture = null;
             NewPlayerPicture = null;
+            pnlPossiblePlayerMatches.Visible = false;
         }
 
         private void Populate_Edit()
@@ -128,6 +129,8 @@ namespace Trackr.Source.Wizards
                 PhoneNumberBook_Player.Reset();
                 PhoneNumberBook_Player.PersonID = player.PersonID;
                 PhoneNumberBook_Player.DataBind();
+
+                pnlPossiblePlayerMatches.Visible = false;
             }
         }
 
@@ -199,6 +202,17 @@ namespace Trackr.Source.Wizards
 
         protected void lnkSavePlayer_Click(object sender, EventArgs e)
         {
+            if (!Page.IsValid || HasPlayerMatches())
+            {
+                return;
+            }
+
+            Save_Step1();
+            UpdatePlayerTabs();
+        }
+
+        protected void lnkContinueAnywaysPlayer_Click(object sender, EventArgs e)
+        {
             if (!Page.IsValid)
             {
                 return;
@@ -219,7 +233,14 @@ namespace Trackr.Source.Wizards
             switch (e.CurrentStepIndex)
             {
                 case 0:
-                    Save_Step1();
+                    if (HasPlayerMatches())
+                    {
+                        e.Cancel = true;
+                    }
+                    else
+                    {
+                        Save_Step1();
+                    }
                     break;
 
                 default: break;
@@ -239,6 +260,42 @@ namespace Trackr.Source.Wizards
                 e.Cancel = true;
                 return;
             }
+        }
+
+        private bool HasPlayerMatches()
+        {
+            // now check for any possible duplicate players (only when creating a new player)
+            if (IsNew)
+            {
+                using (PlayersController pc = new PlayersController())
+                {
+                    string fName = txtFirstName.Text.Trim();
+                    string lName = txtLastName.Text.Trim();
+                    char? mInitial = string.IsNullOrWhiteSpace(txtMiddleInitial.Text) ? (char?)null : txtMiddleInitial.Text.ToCharArray()[0];
+
+                    var matches = pc.GetPossibleMatches(1, fName, lName, mInitial, DateTime.Parse(txtDateOfBirth.Text))
+                        .GroupBy(i => new { i.PlayerID, i.DOB_Distance, i.FirstName_Distance, i.LastName_Distance })
+                        .OrderBy(i => i.Key.DOB_Distance).ThenBy(i => i.Key.LastName_Distance).ThenBy(i => i.Key.FirstName_Distance)
+                        .Select(i => new
+                        {
+                            PlayerID = i.Key.PlayerID,
+                            FirstName = i.First().FirstName,
+                            LastName = i.First().LastName,
+                            DateOfBirth = i.First().DateOfBirth,
+                            Teams = i.Select(j => new { Name = j.TeamName, Year = j.TeamStart.HasValue ? j.TeamStart.Value.Year : DateTime.MinValue.Year }).OrderByDescending(j => j.Year).ThenBy(j => j.Name)
+                        });
+
+                    if (matches.Count() > 0)
+                    {
+                        gvPossiblePlayerMatches.DataSource = matches;
+                        gvPossiblePlayerMatches.DataBind();
+                        pnlPossiblePlayerMatches.Visible = true;
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
 
 

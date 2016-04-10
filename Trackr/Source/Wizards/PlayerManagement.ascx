@@ -1,5 +1,15 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="PlayerManagement.ascx.cs" Inherits="Trackr.Source.Wizards.PlayerManagement" %>
 
+<style type="text/css">
+    .alert.alert-danger > div >table {
+        color: initial;
+        margin-top: 10px;
+    }
+    .alert.alert-danger > div {
+        background-color: white;
+    }
+</style>
+
 <ui:AlertBox runat="server" ID="AlertBox" />
 
 <asp:Wizard runat="server" ID="PlayerWizard" DisplaySideBar="true" OnNextButtonClick="PlayerWizard_NextButtonClick" OnFinishButtonClick="PlayerWizard_FinishButtonClick">
@@ -70,6 +80,37 @@
                 <div class="tab-pane active">
                     <asp:MultiView runat="server" ID="mvPlayerInfoTabs" ActiveViewIndex="0">
                         <asp:View runat="server">
+                            <asp:Panel runat="server" ID="pnlPossiblePlayerMatches" CssClass="row" Visible="false">
+                                <div class="col-sm-12">
+                                    <div class="alert alert-danger" style="padding-bottom: 0px;">
+                                        <strong>Possible Matches:</strong> The following players in your club already exist and may match the one you are trying to create. If none of the players match, 
+                                        <asp:LinkButton runat="server" ID="lnkContinueAnywaysPlayer" CausesValidation="true" OnClick="lnkContinueAnywaysPlayer_Click">then click here to add the player</asp:LinkButton>.
+
+                                        <asp:GridView runat="server" ID="gvPossiblePlayerMatches" AutoGenerateColumns="false" CssClass="table table-striped">
+                                            <Columns>
+                                                <asp:BoundField DataField="FirstName" HeaderText="First name" />
+                                                <asp:BoundField DataField="LastName" HeaderText="Last name" />
+                                                <asp:BoundField DataField="DateOfBirth" HeaderText="Date of birth" DataFormatString="{0:MMM dd, yyyy}" />
+                                                <asp:TemplateField>
+                                                    <ItemTemplate>
+                                                        <asp:Repeater runat="server" DataSource='<%# Eval("Teams") %>'>
+                                                            <ItemTemplate>
+                                                                <%#Eval("Name") %><%#(int)Eval("Year") > DateTime.MinValue.Year ? " (" + Eval("Year").ToString() + ")" : "" %>
+                                                            </ItemTemplate>
+                                                            <SeparatorTemplate>
+                                                                <br />
+                                                            </SeparatorTemplate>
+                                                        </asp:Repeater>
+                                                    </ItemTemplate>
+                                                </asp:TemplateField>
+                                            </Columns>
+                                        </asp:GridView>
+                                    </div>
+
+
+                                </div>
+                            </asp:Panel>
+
                             <div class="row form-group">
                                 <label for="<%=txtFirstName.ClientID %>" class="col-sm-12 control-label">First name</label>
                                 <div class="col-sm-12">

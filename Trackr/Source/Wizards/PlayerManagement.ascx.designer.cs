@@ -85,6 +85,33 @@ namespace Trackr.Source.Wizards {
         protected global::System.Web.UI.WebControls.MultiView mvPlayerInfoTabs;
         
         /// <summary>
+        /// pnlPossiblePlayerMatches control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlPossiblePlayerMatches;
+        
+        /// <summary>
+        /// lnkContinueAnywaysPlayer control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton lnkContinueAnywaysPlayer;
+        
+        /// <summary>
+        /// gvPossiblePlayerMatches control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView gvPossiblePlayerMatches;
+        
+        /// <summary>
         /// txtFirstName control.
         /// </summary>
         /// <remarks>
