@@ -22,8 +22,21 @@ using TrackrModels;
 
 namespace TrackrModels	
 {
-	public partial class Role
+	public partial class NewUserMapping
 	{
+		private int _newUserMappingID;
+		public virtual int NewUserMappingID
+		{
+			get
+			{
+				return this._newUserMappingID;
+			}
+			set
+			{
+				this._newUserMappingID = value;
+			}
+		}
+		
 		private int _roleID;
 		public virtual int RoleID
 		{
@@ -37,43 +50,29 @@ namespace TrackrModels
 			}
 		}
 		
-		private string _roleName;
-		public virtual string RoleName
+		private int _clubID;
+		public virtual int ClubID
 		{
 			get
 			{
-				return this._roleName;
+				return this._clubID;
 			}
 			set
 			{
-				this._roleName = value;
+				this._clubID = value;
 			}
 		}
 		
-		private IList<ScopeAssignment> _scopeAssignments = new List<ScopeAssignment>();
-		public virtual IList<ScopeAssignment> ScopeAssignments
+		private Role _role;
+		public virtual Role Role
 		{
 			get
 			{
-				return this._scopeAssignments;
+				return this._role;
 			}
-		}
-		
-		private IList<Permission> _permissions = new List<Permission>();
-		public virtual IList<Permission> Permissions
-		{
-			get
+			set
 			{
-				return this._permissions;
-			}
-		}
-		
-		private IList<NewUserMapping> _newUserMappings = new List<NewUserMapping>();
-		public virtual IList<NewUserMapping> NewUserMappings
-		{
-			get
-			{
-				return this._newUserMappings;
+				this._role = value;
 			}
 		}
 		

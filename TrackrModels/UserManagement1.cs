@@ -122,6 +122,14 @@ namespace TrackrModels
 			}
 		}
 		
+		public IQueryable<NewUserMapping> NewUserMappings 
+		{
+			get
+			{
+				return this.GetAll<NewUserMapping>();
+			}
+		}
+		
 		public static BackendConfiguration GetBackendConfiguration()
 		{
 			BackendConfiguration backend = new BackendConfiguration();
@@ -176,6 +184,10 @@ namespace TrackrModels
 			get;
 		}
 		IQueryable<Glyphicon> Glyphicons
+		{
+			get;
+		}
+		IQueryable<NewUserMapping> NewUserMappings
 		{
 			get;
 		}

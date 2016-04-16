@@ -20,6 +20,9 @@
         <orm:field name="_password" property="Password" behavior="readwrite" uniqueId="efd012c3-79fc-4e8a-aa83-bed54291e8cb" type="System.String">
           <orm:column name="Password" sql-type="nvarchar" nullable="false" length="128" scale="0" ado-type="UnicodeStringVariableLength" />
         </orm:field>
+        <orm:field name="_clubID" property="ClubID" behavior="readwrite" uniqueId="c9fdfa6e-7060-4a74-a0c5-2162d8d85542" type="System.Int32">
+          <orm:column name="ClubID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
         <orm:field name="_scopeAssignments" property="ScopeAssignments" behavior="readwrite" uniqueId="5f013196-918a-47d6-9235-d616983dff06" type="TrackrModels.ScopeAssignment">
           <orm:collection element-class="TrackrModels.ScopeAssignment" inverse-field="_webUser" order-by="" uniqueId="f3bde9fa-95cd-4b6c-b1d2-62aed54621c2" />
         </orm:field>
@@ -118,6 +121,9 @@
         </orm:field>
         <orm:field name="_permissions" property="Permissions" behavior="readwrite" uniqueId="6cb6bcf7-2864-45ff-8071-96790bacb514" type="TrackrModels.Permission">
           <orm:collection element-class="TrackrModels.Permission" inverse-field="_roles" order-by="" uniqueId="405aa91c-7478-4e4d-a176-731a2e8ec99f" />
+        </orm:field>
+        <orm:field name="_newUserMappings" property="NewUserMappings" behavior="readwrite" uniqueId="45e6fa8f-15b8-4bb0-a211-d82d93cde78d" type="TrackrModels.NewUserMapping">
+          <orm:collection element-class="TrackrModels.NewUserMapping" inverse-field="_role" order-by="" uniqueId="99437ed3-de60-47b4-bfb1-ec6d0219712b" />
         </orm:field>
       </orm:class>
       <orm:class name="Permission" uniqueId="0a6dcf76-05ea-43d8-b87f-a291e8d7bfb6">
@@ -302,12 +308,38 @@
           <orm:collection element-class="TrackrModels.LinkGroup" inverse-field="_glyphicon" order-by="" uniqueId="b8962f26-1ce4-439f-b03a-e38d176ab727" />
         </orm:field>
       </orm:class>
+      <orm:class name="NewUserMapping" uniqueId="9b99b310-9538-4bc6-8bbe-e7d978e6f887">
+        <orm:table name="NewUserMapping" />
+        <orm:identity>
+          <orm:key-generator name="autoinc">
+            <orm:key-generator-member property-name="NewUserMappingID" />
+          </orm:key-generator>
+          <orm:single-field field-name="_newUserMappingID" />
+        </orm:identity>
+        <orm:concurrency strategy="changed" />
+        <orm:field name="_newUserMappingID" property="NewUserMappingID" behavior="readwrite" uniqueId="3c45b41d-125b-4dae-a667-389c490e5e0e" type="System.Int32">
+          <orm:column name="NewUserMappingID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_roleID" property="RoleID" behavior="readwrite" uniqueId="d15abf3f-ed76-4b96-b039-b8b3074f0b09" type="System.Int32">
+          <orm:column name="RoleID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_clubID" property="ClubID" behavior="readwrite" uniqueId="06e4c712-36e3-4253-a7ca-22961691535f" type="System.Int32">
+          <orm:column name="ClubID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_role" property="Role" behavior="readwrite" uniqueId="e201eba2-08e9-408b-9d01-2a6bcc90e77b" type="TrackrModels.Role">
+          <orm:reference uniqueId="99437ed3-de60-47b4-bfb1-ec6d0219712b" association-name="NewUserMappingHasRole">
+            <orm:sharedfield name="_roleID" target-class="TrackrModels.Role" target-field="_roleID" />
+            <orm:constraint name="FK_NewUserMapping_Roles" delete-action="dbdefaultrule" destination-table="Roles" />
+          </orm:reference>
+        </orm:field>
+      </orm:class>
     </orm:namespace>
     <orm:schema schema="">
       <orm:table name="WebUsers">
         <orm:column name="UserID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
         <orm:column name="Email" sql-type="nvarchar" nullable="false" length="200" scale="0" ado-type="UnicodeStringVariableLength" />
         <orm:column name="Password" sql-type="nvarchar" nullable="false" length="128" scale="0" ado-type="UnicodeStringVariableLength" />
+        <orm:column name="ClubID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
       </orm:table>
       <orm:table name="Scopes">
         <orm:column name="ScopeID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
@@ -396,6 +428,14 @@
         <orm:column name="GlyphiconID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
         <orm:column name="Glyphicon" sql-type="varchar" nullable="false" length="70" scale="0" ado-type="StringVariableLength" />
       </orm:table>
+      <orm:table name="NewUserMapping">
+        <orm:column name="NewUserMappingID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        <orm:column name="RoleID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        <orm:column name="ClubID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        <orm:constraint name="FK_NewUserMapping_Roles" delete-action="dbdefaultrule" destination-table="Roles">
+          <orm:column name="RoleID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:constraint>
+      </orm:table>
     </orm:schema>
     <orm:relational-naming-settings>
       <orm:source-strategy>Property</orm:source-strategy>
@@ -436,6 +476,7 @@
       <Property Id="aa9e5bdd-89b4-4716-85c3-94c6f6a6716f" name="UserID" type="Int32" label="UserID : Int32" kind="Persistent" identity="true" fieldName="_userID" />
       <Property Id="717729c4-62e8-4eb9-83c7-878b74acac36" name="Email" label="Email : String" kind="Persistent" fieldName="_email" />
       <Property Id="efd012c3-79fc-4e8a-aa83-bed54291e8cb" name="Password" label="Password : String" kind="Persistent" fieldName="_password" />
+      <Property Id="c9fdfa6e-7060-4a74-a0c5-2162d8d85542" name="ClubID" type="Int32" label="ClubID : Int32" kind="Persistent" fieldName="_clubID" />
       <navigationalProperties>
         <classHasNavigationalProperties Id="11bc889f-6326-480c-b769-1463f46e37c9">
           <NavigationalProperty Id="5f013196-918a-47d6-9235-d616983dff06" name="ScopeAssignments" type="IList&lt;ScopeAssignment&gt;" label="ScopeAssignments : IList&lt;ScopeAssignment&gt;" nullable="true" kind="Persistent" fieldName="_scopeAssignments" isDependent="false" isManaged="false" />
@@ -537,6 +578,9 @@
         </classHasNavigationalProperties>
         <classHasNavigationalProperties Id="19cd63ed-bcf0-4ea4-a6a9-775601dc60d3">
           <NavigationalProperty Id="6cb6bcf7-2864-45ff-8071-96790bacb514" name="Permissions" type="IList&lt;Permission&gt;" label="Permissions : IList&lt;Permission&gt;" nullable="true" kind="Persistent" fieldName="_permissions" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+        <classHasNavigationalProperties Id="c4a11dff-45e1-45b2-a465-bcb96a153338">
+          <NavigationalProperty Id="45e6fa8f-15b8-4bb0-a211-d82d93cde78d" name="NewUserMappings" type="IList&lt;NewUserMapping&gt;" label="NewUserMappings : IList&lt;NewUserMapping&gt;" nullable="true" kind="Persistent" fieldName="_newUserMappings" isDependent="false" isManaged="false" />
         </classHasNavigationalProperties>
       </navigationalProperties>
     </DomainClass>
@@ -705,6 +749,31 @@
         </classHasNavigationalProperties>
       </navigationalProperties>
     </DomainClass>
+    <DomainClass Id="9b99b310-9538-4bc6-8bbe-e7d978e6f887" name="NewUserMapping" namespace="TrackrModels" showPropertiesCompartment="true" identityMechanism="DatabaseServerCalculated" concurrencyMode="Changed" showNavigationCompartment="true" showImplementationCompartment="true" identityMechanismMember="NewUserMappingID">
+      <Property Id="3c45b41d-125b-4dae-a667-389c490e5e0e" name="NewUserMappingID" type="Int32" label="NewUserMappingID : Int32" kind="Persistent" identity="true" fieldName="_newUserMappingID" />
+      <Property Id="06e4c712-36e3-4253-a7ca-22961691535f" name="ClubID" type="Int32" label="ClubID : Int32" kind="Persistent" fieldName="_clubID" />
+      <Property Id="d15abf3f-ed76-4b96-b039-b8b3074f0b09" name="RoleID" type="Int32" label="RoleID : Int32" kind="Persistent" fieldName="_roleID" />
+      <AssociationTargets>
+        <Association Id="99437ed3-de60-47b4-bfb1-ec6d0219712b" SourceMultiplicity="One" name="NewUserMappingHasRole">
+          <DomainClassMoniker name="/UserManagement/Role" />
+          <targetNavigationalProperty>
+            <associationDefinesTargetProperty Id="630c159a-7537-4172-ac59-eca74d05ed68">
+              <NavigationalPropertyMoniker name="/UserManagement/Role/NewUserMappings" />
+            </associationDefinesTargetProperty>
+          </targetNavigationalProperty>
+          <sourceNavigationalProperty>
+            <associationDefinesSourceProperty Id="9946b243-d77e-485c-8724-3c0b155b4f33">
+              <NavigationalPropertyMoniker name="/UserManagement/NewUserMapping/Role" />
+            </associationDefinesSourceProperty>
+          </sourceNavigationalProperty>
+        </Association>
+      </AssociationTargets>
+      <navigationalProperties>
+        <classHasNavigationalProperties Id="86c8988a-c3eb-4b27-a769-d2a502c612ae">
+          <NavigationalProperty Id="e201eba2-08e9-408b-9d01-2a6bcc90e77b" name="Role" type="Role" label="Role : Role" nullable="true" kind="Persistent" fieldName="_role" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+      </navigationalProperties>
+    </DomainClass>
   </Types>
   <domainContext>
     <domainModelHasDomainContext Id="c6dd559c-9940-444f-ad43-e37bbf671b13">
@@ -718,6 +787,7 @@
         <entitySetProperty name="LinkPermissions" namespace="TrackrModels" type="LinkPermission" label="LinkPermissions : IQueryable&lt;TrackrModels.LinkPermission&gt;" />
         <entitySetProperty name="LinkGroups" namespace="TrackrModels" type="LinkGroup" label="LinkGroups : IQueryable&lt;TrackrModels.LinkGroup&gt;" />
         <entitySetProperty name="Glyphicons" namespace="TrackrModels" type="Glyphicon" label="Glyphicons : IQueryable&lt;TrackrModels.Glyphicon&gt;" />
+        <entitySetProperty name="NewUserMappings" namespace="TrackrModels" type="NewUserMapping" label="NewUserMappings : IQueryable&lt;TrackrModels.NewUserMapping&gt;" />
       </domainContainer>
     </domainModelHasDomainContext>
   </domainContext>

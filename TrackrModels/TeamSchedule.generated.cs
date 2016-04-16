@@ -194,19 +194,6 @@ namespace TrackrModels
 			}
 		}
 		
-		private WebUserInfo _webUserInfo;
-		public virtual WebUserInfo WebUserInfo
-		{
-			get
-			{
-				return this._webUserInfo;
-			}
-			set
-			{
-				this._webUserInfo = value;
-			}
-		}
-		
 		private Team _team;
 		public virtual Team Team
 		{
@@ -217,32 +204,6 @@ namespace TrackrModels
 			set
 			{
 				this._team = value;
-			}
-		}
-		
-		private WebUserInfo _webUserInfo1;
-		public virtual WebUserInfo WebUserInfo1
-		{
-			get
-			{
-				return this._webUserInfo1;
-			}
-			set
-			{
-				this._webUserInfo1 = value;
-			}
-		}
-		
-		private WebUserInfo _webUserInfo2;
-		public virtual WebUserInfo WebUserInfo2
-		{
-			get
-			{
-				return this._webUserInfo2;
-			}
-			set
-			{
-				this._webUserInfo2 = value;
 			}
 		}
 		

@@ -13,6 +13,15 @@ namespace Trackr.UI {
     public partial class AlertBox {
         
         /// <summary>
+        /// AlertContainer control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel AlertContainer;
+        
+        /// <summary>
         /// pnlAlertContainer control.
         /// </summary>
         /// <remarks>

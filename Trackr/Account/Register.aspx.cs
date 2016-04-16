@@ -30,6 +30,32 @@ namespace Trackr.Account
             if (user != null)
             {
                 UserID = (int)user.ProviderUserKey;
+
+                using (WebUsersController wuc = new WebUsersController())
+                using(NewUserMappingsController numc = new NewUserMappingsController())
+                using(ScopeAssignmentsController sac = new ScopeAssignmentsController())
+                {
+                    WebUser webUser = wuc.Get((int)user.ProviderUserKey);
+                    webUser.ClubID = 1;
+                    wuc.Update(webUser);
+
+                    // map the new user to roles
+                    var roleIDs = numc.GetWhere(i => i.ClubID == webUser.ClubID).Select(i => i.RoleID).Distinct().ToList();
+
+                    foreach (int roleID in roleIDs)
+                    {
+                        ScopeAssignment assignment = new ScopeAssignment()
+                        {
+                            IsDeny = false,
+                            ScopeID = 5,
+                            UserID = UserID.Value,
+                            ResourceID = UserID.Value,
+                            RoleID = roleID
+                        };
+
+                        sac.AddNew(assignment);
+                    }
+                }
             }
         }
 
@@ -75,6 +101,13 @@ namespace Trackr.Account
         {
             MembershipUser user = Membership.GetUser(CreateWizard.UserName);
             FormsAuthentication.SetAuthCookie(user.ProviderUserKey.ToString(), true);
+
+            string redirect = FormsAuthentication.GetRedirectUrl(user.ProviderUserKey.ToString(), true);
+
+            dhlContinue.NavigateUrl = redirect;
+            pFinish.Visible = !string.IsNullOrWhiteSpace(redirect);
+            pRedirect.Visible = string.IsNullOrWhiteSpace(redirect);
+            
         }
     }
 }

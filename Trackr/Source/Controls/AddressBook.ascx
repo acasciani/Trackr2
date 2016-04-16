@@ -6,10 +6,14 @@
 
 <div class="row">
     <div class="col-sm-12">
-        <asp:GridView runat="server" ID="gvAddressBook" SelectMethod="gvAddressBook_GetData" EmptyDataText="There are no addresses associated to this person." CssClass="table" DataKeyNames="AddressID" AutoGenerateColumns="false" 
+        <asp:GridView runat="server" ID="gvAddressBook" SelectMethod="gvAddressBook_GetData" EmptyDataText="There are no addresses associated to this person." CssClass="table" DataKeyNames="EditToken" AutoGenerateColumns="false" 
             DeleteMethod="gvAddressBook_DeleteItem" OnRowCancelingEdit="gvAddressBook_RowCancelingEdit" OnRowEditing="gvAddressBook_RowEditing">
             <Columns>
-                <asp:BoundField DataField="Address" ReadOnly="true" />
+                <asp:TemplateField>
+                    <ItemTemplate>
+                        <%#Eval("Street1") %>, <%# Eval("City") %>
+                    </ItemTemplate>
+                </asp:TemplateField>
 
                 <asp:TemplateField>
                     <ItemTemplate>

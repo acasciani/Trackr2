@@ -10,23 +10,29 @@ namespace Trackr.Source.Controls
 {
     public partial class AddressBook : UserControl
     {
-        [Serializable]
-        private class AddressResult
+        public delegate IList<Address> GetAddresses(Guid personEditToken);
+
+        public Guid? PersonEditToken
         {
-            public string Address { get; set; }
-            public int AddressID { get; set; }
+            get { return ViewState["PersonEditToken"] as Guid?; }
+            set { ViewState["PersonEditToken"] = value; }
         }
 
-        public int? PersonID
-        {
-            get { return ViewState["AddressBookPersonID"] as int?; }
-            set { ViewState["AddressBookPersonID"] = value; }
-        }
+        public GetAddresses GetData { get; set; }
 
-        private List<AddressResult> AddressResults
+        private IList<Address> Addresses
         {
-            get { return ViewState["AddressResults"] as List<AddressResult>; }
-            set { ViewState["AddressResults"] = value; }
+            get
+            {
+                if (PersonEditToken.HasValue)
+                {
+                    return GetData(PersonEditToken.Value);
+                }
+                else
+                {
+                    return new List<Address>();
+                }
+            }
         }
 
         private void ClearForm()
@@ -41,13 +47,19 @@ namespace Trackr.Source.Controls
         protected void Page_Load(object sender, EventArgs e)
         {
             AlertBox.HideStatus();
+
+            if (IsPostBack)
+            {
+                return;
+            }
+
+            gvAddressBook.DataBind();
         }
 
         public void Reset()
         {
             ClearForm();
             divEdit.Visible = false;
-            PersonID = null;
         }
 
         public void HideForm()
@@ -58,41 +70,28 @@ namespace Trackr.Source.Controls
 
         protected void lnkSaveAddress_Click(object sender, EventArgs e)
         {
-            if (!PersonID.HasValue)
+            Guid editToken = gvAddressBook.EditIndex == -1 ? Guid.NewGuid() : (Guid)gvAddressBook.DataKeys[gvAddressBook.EditIndex].Value;
+
+            Address address = Addresses.FirstOrDefault(i => i.EditToken == editToken) ?? new Address() { EditToken = Guid.NewGuid() };
+
+            address.Street1 = string.IsNullOrWhiteSpace(txtAddress1.Text) ? null : txtAddress1.Text.Trim();
+            address.Street2 = string.IsNullOrWhiteSpace(txtAddress2.Text) ? null : txtAddress2.Text.Trim();
+            address.City = string.IsNullOrWhiteSpace(txtCity.Text) ? null : txtCity.Text.Trim();
+            address.State = string.IsNullOrWhiteSpace(txtState.Text) ? null : txtState.Text.Trim();
+            address.ZipCode = string.IsNullOrWhiteSpace(txtZipCode.Text) ? null : txtZipCode.Text.Trim();
+            address.WasModified = true;
+
+            if (Addresses.FirstOrDefault(i => i.EditToken == editToken) == null)
             {
-                throw new Exception("Address book does not have a person ID.");
+                address.SortOrder = Convert.ToByte(Addresses.Count());
+                Addresses.Add(address);
             }
 
-            int? addressID = gvAddressBook.EditIndex == -1 ? (int?)null : (int)gvAddressBook.DataKeys[gvAddressBook.EditIndex].Value;
-
-            using (AddressesController ac = new AddressesController())
-            {
-                Address address = addressID.HasValue ? ac.Get(addressID.Value) : new Address();
-
-                address.Street1 = string.IsNullOrWhiteSpace(txtAddress1.Text) ? null : txtAddress1.Text.Trim();
-                address.Street2 = string.IsNullOrWhiteSpace(txtAddress2.Text) ? null : txtAddress2.Text.Trim();
-                address.City = string.IsNullOrWhiteSpace(txtCity.Text) ? null : txtCity.Text.Trim();
-                address.State = string.IsNullOrWhiteSpace(txtState.Text) ? null : txtState.Text.Trim();
-                address.ZipCode = string.IsNullOrWhiteSpace(txtZipCode.Text) ? null : txtZipCode.Text.Trim();
-
-                if (addressID.HasValue)
-                {
-                    // edit
-                    ac.Update(address);
-                }
-                else
-                {
-                    // add
-                    address.PersonID = PersonID.Value;
-                    address.SortOrder = Convert.ToByte(ac.GetWhere(i => i.PersonID == PersonID).Count());
-                    ac.AddNew(address);
-                }
-            }
-
-            gvAddressBook.DataBind();
             divEdit.Visible = false;
             ClearForm();
-            AlertBox.SetStatus("Successfully saved address.");
+            AlertBox.AddAlert(string.Format("Successfully {0} address. Your settings will be saved when you complete this wizard.", gvAddressBook.EditIndex == -1 ? "added" : "edited"), false, UI.AlertBoxType.Warning);
+            gvAddressBook.EditIndex = -1;
+            gvAddressBook.DataBind();
         }
 
         protected void lnkAddAddress_Click(object sender, EventArgs e)
@@ -103,30 +102,17 @@ namespace Trackr.Source.Controls
 
         public IQueryable gvAddressBook_GetData()
         {
-            using (AddressesController ac = new AddressesController())
-            {
-                AddressResults = ac.GetWhere(i => i.PersonID == PersonID).OrderBy(i => i.SortOrder).Select(i => new AddressResult()
-                {
-                    Address = i.Street1,
-                    AddressID = i.AddressID
-                }).ToList();
-
-                return AddressResults.AsQueryable();
-            }
+            return (Addresses ?? new List<Address>()).AsQueryable();
         }
 
-        public void gvAddressBook_DeleteItem(int AddressID)
+        public void gvAddressBook_DeleteItem(Guid EditToken)
         {
-            using (AddressesController ac = new AddressesController())
-            {
-                ac.Delete(AddressID);
-                gvAddressBook.DataBind();
+            Address address = Addresses.First(i => i.EditToken == EditToken);
+            Addresses.Remove(address);
+            gvAddressBook.DataBind();
 
-                ClearForm();
-                divEdit.Visible = false;
-
-                AlertBox.SetStatus("Successfully removed address.");
-            }
+            ClearForm();
+            divEdit.Visible = false;
         }
 
         protected void gvAddressBook_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
@@ -140,26 +126,23 @@ namespace Trackr.Source.Controls
 
         protected void gvAddressBook_RowEditing(object sender, GridViewEditEventArgs e)
         {
-            int addressID = (int)gvAddressBook.DataKeys[e.NewEditIndex].Value;
-            Populate_AddressEdit(addressID);
+            Guid editToken = (Guid)gvAddressBook.DataKeys[e.NewEditIndex].Value;
+            Populate_AddressEdit(editToken);
             gvAddressBook.EditIndex = e.NewEditIndex;
             gvAddressBook.DataBind();
         }
 
-        private void Populate_AddressEdit(int addressID)
+        private void Populate_AddressEdit(Guid editToken)
         {
-            using (AddressesController ac = new AddressesController())
-            {
-                Address address = ac.Get(addressID);
+            Address address = Addresses.First(i => i.EditToken == editToken);
 
-                txtAddress1.Text = address.Street1;
-                txtAddress2.Text = address.Street2;
-                txtCity.Text = address.City;
-                txtState.Text = address.State;
-                txtZipCode.Text = address.ZipCode;
+            txtAddress1.Text = address.Street1;
+            txtAddress2.Text = address.Street2;
+            txtCity.Text = address.City;
+            txtState.Text = address.State;
+            txtZipCode.Text = address.ZipCode;
 
-                divEdit.Visible = true;
-            }
+            divEdit.Visible = true;
         }
     }
 }

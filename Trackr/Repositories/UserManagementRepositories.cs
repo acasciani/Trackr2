@@ -30,6 +30,11 @@ namespace Trackr
 
     }
 
+    public partial class NewUserMappingRepository : OpenAccessBaseRepository<TrackrModels.NewUserMapping, TrackrModels.UserManagement>
+    {
+
+    }
+
 	public partial class PermissionRepository : OpenAccessBaseRepository<TrackrModels.Permission, TrackrModels.UserManagement>
     {
 	

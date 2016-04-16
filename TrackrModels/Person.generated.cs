@@ -116,6 +116,45 @@ namespace TrackrModels
 			}
 		}
 		
+		private int? _userID;
+		public virtual int? UserID
+		{
+			get
+			{
+				return this._userID;
+			}
+			set
+			{
+				this._userID = value;
+			}
+		}
+		
+		private int _lastModifiedBy;
+		public virtual int LastModifiedBy
+		{
+			get
+			{
+				return this._lastModifiedBy;
+			}
+			set
+			{
+				this._lastModifiedBy = value;
+			}
+		}
+		
+		private DateTime _lastModifiedAt;
+		public virtual DateTime LastModifiedAt
+		{
+			get
+			{
+				return this._lastModifiedAt;
+			}
+			set
+			{
+				this._lastModifiedAt = value;
+			}
+		}
+		
 		private Club _club;
 		public virtual Club Club
 		{
@@ -180,6 +219,9 @@ namespace TrackrModels
 			this.DateOfBirth = (DateTime?)info.GetValue("DateOfBirth", typeof(DateTime?));
 			this.Gender = (byte?)info.GetValue("Gender", typeof(byte?));
 			this.ClubID = info.GetInt32("ClubID");
+			this.UserID = (int?)info.GetValue("UserID", typeof(int?));
+			this.LastModifiedBy = info.GetInt32("LastModifiedBy");
+			this.LastModifiedAt = (DateTime)info.GetValue("LastModifiedAt", typeof(DateTime));
 			CustomizeDeserializationProcess(info, context);
 		}
 		
@@ -192,6 +234,9 @@ namespace TrackrModels
 			info.AddValue("DateOfBirth", this.DateOfBirth, typeof(DateTime?));
 			info.AddValue("Gender", this.Gender, typeof(byte?));
 			info.AddValue("ClubID", this.ClubID, typeof(int));
+			info.AddValue("UserID", this.UserID, typeof(int?));
+			info.AddValue("LastModifiedBy", this.LastModifiedBy, typeof(int));
+			info.AddValue("LastModifiedAt", this.LastModifiedAt, typeof(DateTime));
 			CustomizeSerializationProcess(info, context);
 		}
 		

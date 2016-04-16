@@ -63,6 +63,19 @@ namespace TrackrModels
 			}
 		}
 		
+		private int _clubID;
+		public virtual int ClubID
+		{
+			get
+			{
+				return this._clubID;
+			}
+			set
+			{
+				this._clubID = value;
+			}
+		}
+		
 		private IList<ScopeAssignment> _scopeAssignments = new List<ScopeAssignment>();
 		public virtual IList<ScopeAssignment> ScopeAssignments
 		{

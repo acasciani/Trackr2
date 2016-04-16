@@ -50,5 +50,10 @@ namespace Trackr
                 MasterPageFile = "~/Site.Mobile.Master";
             }
         }
+
+        public void HandleException(Exception ex)
+        {
+            Master.HandleException(ex);
+        }
     }
 }

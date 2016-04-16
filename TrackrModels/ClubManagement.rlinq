@@ -20,27 +20,6 @@
         <orm:field name="_lName" property="LName" behavior="readwrite" uniqueId="31e70c1f-da03-426d-828b-76f4c92822b7" type="System.String">
           <orm:column name="LName" sql-type="nvarchar" nullable="false" length="30" scale="0" ado-type="UnicodeStringVariableLength" />
         </orm:field>
-        <orm:field name="_transactions" property="Transactions" behavior="readwrite" uniqueId="46a32d7b-7bdc-4e6a-b4cb-7d45d3182162" type="TrackrModels.Transaction">
-          <orm:collection element-class="TrackrModels.Transaction" inverse-field="_webUserInfo" order-by="" uniqueId="fbb16b7e-a286-49e2-9748-7bb628179a62" />
-        </orm:field>
-        <orm:field name="_transactions1" property="Transactions1" behavior="readwrite" uniqueId="b0a73827-7e08-4440-8e6d-ae6740e27842" type="TrackrModels.Transaction">
-          <orm:collection element-class="TrackrModels.Transaction" inverse-field="_webUserInfo1" order-by="" uniqueId="a7abd31b-08df-4819-8b77-3c286dde6fa8" />
-        </orm:field>
-        <orm:field name="_teamSchedules" property="TeamSchedules" behavior="readwrite" uniqueId="3d871107-13cb-40fd-ac36-01631eb77ef9" type="TrackrModels.TeamSchedule">
-          <orm:collection element-class="TrackrModels.TeamSchedule" inverse-field="_webUserInfo" order-by="" uniqueId="fa1235f6-3a6d-4c3c-a7db-10fee3fccf37" />
-        </orm:field>
-        <orm:field name="_teamSchedules1" property="TeamSchedules1" behavior="readwrite" uniqueId="0d9f9d75-fac6-48cd-be91-e9cb91b3e51e" type="TrackrModels.TeamSchedule">
-          <orm:collection element-class="TrackrModels.TeamSchedule" inverse-field="_webUserInfo1" order-by="" uniqueId="012d22ac-a1a4-49a3-9245-a4b8c81ec29f" />
-        </orm:field>
-        <orm:field name="_teamSchedules2" property="TeamSchedules2" behavior="readwrite" uniqueId="3c2be8df-b263-488d-83ef-611a21db9519" type="TrackrModels.TeamSchedule">
-          <orm:collection element-class="TrackrModels.TeamSchedule" inverse-field="_webUserInfo2" order-by="" uniqueId="6b9d8011-e7d4-44ce-bf6d-fcfae57d8c5c" />
-        </orm:field>
-        <orm:field name="_attendances" property="Attendances" behavior="readwrite" uniqueId="b08e036f-7964-48fe-bb7a-baf20f418f8d" type="TrackrModels.Attendance">
-          <orm:collection element-class="TrackrModels.Attendance" inverse-field="_webUserInfo" order-by="" uniqueId="0d112646-a243-471d-b557-7db95d2e2d14" />
-        </orm:field>
-        <orm:field name="_attendances1" property="Attendances1" behavior="readwrite" uniqueId="1a7d97d5-1e66-4add-91ca-0dbc3741bd61" type="TrackrModels.Attendance">
-          <orm:collection element-class="TrackrModels.Attendance" inverse-field="_webUserInfo1" order-by="" uniqueId="8e7ff775-f34b-4390-ae76-3df802821daf" />
-        </orm:field>
       </orm:class>
       <orm:class name="TransactionType" uniqueId="d60e9c75-9e4e-4a9e-a1f6-46e74117d59c">
         <orm:table name="TransactionTypes" />
@@ -130,13 +109,13 @@
             <orm:constraint name="FK_Transactions_TransactionTypes" delete-action="dbdefaultrule" destination-table="TransactionTypes" />
           </orm:reference>
         </orm:field>
-        <orm:field name="_webUserInfo" property="WebUserInfo" behavior="readwrite" uniqueId="83f4d5d7-f4f2-4c47-abaa-522c7775c515" type="TrackrModels.WebUserInfo">
+        <orm:field name="_webUserInfo" property="CreateUser" behavior="readwrite" uniqueId="83f4d5d7-f4f2-4c47-abaa-522c7775c515" type="TrackrModels.WebUserInfo">
           <orm:reference uniqueId="fbb16b7e-a286-49e2-9748-7bb628179a62" association-name="TransactionHasWebUserInfo">
             <orm:sharedfield name="_createUserID" target-class="TrackrModels.WebUserInfo" target-field="_userID" />
             <orm:constraint name="FK_Transactions_WebUserData" delete-action="dbdefaultrule" destination-table="WebUserInfo" />
           </orm:reference>
         </orm:field>
-        <orm:field name="_webUserInfo1" property="WebUserInfo1" behavior="readwrite" uniqueId="0b2d0d24-f8fe-44a9-ac97-dda1e342da1c" type="TrackrModels.WebUserInfo">
+        <orm:field name="_webUserInfo1" property="ModifyUser" behavior="readwrite" uniqueId="0b2d0d24-f8fe-44a9-ac97-dda1e342da1c" type="TrackrModels.WebUserInfo">
           <orm:reference uniqueId="a7abd31b-08df-4819-8b77-3c286dde6fa8" association-name="TransactionHasWebUserInfo1">
             <orm:sharedfield name="_modifyUserID" target-class="TrackrModels.WebUserInfo" target-field="_userID" />
             <orm:constraint name="FK_Transactions_WebUserData1" delete-action="dbdefaultrule" destination-table="WebUserInfo" />
@@ -357,14 +336,6 @@
             <orm:constraint name="FK_TeamPlayers_Players" delete-action="dbdefaultrule" destination-table="Players" />
           </orm:reference>
         </orm:field>
-        <orm:index name="PlayerOnSameTeamOnlyOnce" unique="true">
-          <orm:columnMapping>
-            <orm:column name="PlayerPassID" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
-          </orm:columnMapping>
-          <orm:columnMapping>
-            <orm:column name="TeamID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
-          </orm:columnMapping>
-        </orm:index>
       </orm:class>
       <orm:class name="Person" uniqueId="2d068340-0893-47ec-9942-1e5e5780edf8">
         <orm:table name="People" />
@@ -396,6 +367,21 @@
         <orm:field name="_clubID" property="ClubID" behavior="readwrite" uniqueId="321a0ba3-5a3c-4851-8c23-37a81bdb49c1" type="System.Int32">
           <orm:column name="ClubID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
         </orm:field>
+        <orm:field name="_userID" property="UserID" behavior="readwrite" uniqueId="72ccad61-d034-43f2-82ad-b4365cbc14ad" type="System.Nullable`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
+          <orm:column name="UserID" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_lastModifiedBy" property="LastModifiedBy" behavior="readwrite" uniqueId="70010dd8-efee-434d-8df2-70abb78e85d3" type="System.Int32">
+          <orm:column name="LastModifiedBy" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_lastModifiedAt" property="LastModifiedAt" behavior="readwrite" uniqueId="043e04b7-835a-4140-bd5d-896aac5336bf" type="System.DateTime">
+          <orm:column name="LastModifiedAt" sql-type="datetime" nullable="false" length="0" scale="0" ado-type="DateTime" />
+        </orm:field>
+        <orm:field name="_club" property="Club" behavior="readwrite" uniqueId="1a7aac61-adb1-4273-bf7c-bc7820719bb5" type="TrackrModels.Club">
+          <orm:reference uniqueId="6847fabc-e976-4203-9b4c-0867fd06fb0a" association-name="PersonHasClub">
+            <orm:sharedfield name="_clubID" target-class="TrackrModels.Club" target-field="_clubID" />
+            <orm:constraint name="FK_People_Clubs" delete-action="dbdefaultrule" destination-table="Clubs" />
+          </orm:reference>
+        </orm:field>
         <orm:field name="_guardians" property="Guardians" behavior="readwrite" uniqueId="7c0c4a12-add5-4dd4-86fc-b0e87244139e" type="TrackrModels.Guardian">
           <orm:collection element-class="TrackrModels.Guardian" inverse-field="_person" order-by="" uniqueId="e7bc19ce-a67f-418d-9eb6-91f4ccba29ea" />
         </orm:field>
@@ -407,12 +393,6 @@
         </orm:field>
         <orm:field name="_emailAddresses" property="EmailAddresses" behavior="readwrite" uniqueId="60571906-d0d6-4fd5-8542-97d00e384408" type="TrackrModels.EmailAddress">
           <orm:collection element-class="TrackrModels.EmailAddress" inverse-field="_person" order-by="" uniqueId="2f6a5adb-ad23-4683-949f-224f037f7df5" />
-        </orm:field>
-        <orm:field name="_club" property="Club" behavior="readwrite" uniqueId="1a7aac61-adb1-4273-bf7c-bc7820719bb5" type="TrackrModels.Club">
-          <orm:reference uniqueId="6847fabc-e976-4203-9b4c-0867fd06fb0a" association-name="PersonHasClub">
-            <orm:sharedfield name="_clubID" target-class="TrackrModels.Club" target-field="_clubID" />
-            <orm:constraint name="FK_People_Clubs" delete-action="dbdefaultrule" destination-table="Clubs" />
-          </orm:reference>
         </orm:field>
       </orm:class>
       <orm:class name="Guardian" uniqueId="f9e226b5-203b-494d-b033-ac05193b8e60">
@@ -435,6 +415,15 @@
         </orm:field>
         <orm:field name="_sortOrder" property="SortOrder" behavior="readwrite" uniqueId="8c5c62b7-48c6-4c8a-b829-5bf95c2990bb" type="System.Byte">
           <orm:column name="SortOrder" sql-type="tinyint" nullable="false" length="0" scale="0" ado-type="Byte" />
+        </orm:field>
+        <orm:field name="_lastModifiedBy" property="LastModifiedBy" behavior="readwrite" uniqueId="e5137c4d-2fcb-48dd-8e23-8257585be944" type="System.Int32">
+          <orm:column name="LastModifiedBy" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_lastModifiedAt" property="LastModifiedAt" behavior="readwrite" uniqueId="115fc51e-6b06-405e-ae98-0a600fecd3bb" type="System.DateTime">
+          <orm:column name="LastModifiedAt" sql-type="datetime" nullable="false" length="0" scale="0" ado-type="DateTime" />
+        </orm:field>
+        <orm:field name="_active" property="Active" behavior="readwrite" uniqueId="3f3afa27-7431-4304-842e-f59c65ab7bd5" type="System.Boolean">
+          <orm:column name="Active" sql-type="bit" nullable="false" length="0" scale="0" ado-type="Bit" />
         </orm:field>
         <orm:field name="_player" property="Player" behavior="readwrite" uniqueId="3f75e32a-50b4-4aa9-b5dd-2a7689606c0c" type="TrackrModels.Player">
           <orm:reference uniqueId="a4fc5df8-3b5a-43e7-85e6-36e47fb42b5a" association-name="GuardianHasPlayer">
@@ -482,6 +471,12 @@
         <orm:field name="_sortOrder" property="SortOrder" behavior="readwrite" uniqueId="e2b4ac69-f9b6-4e33-b4d0-b0a97d7944de" type="System.Byte">
           <orm:column name="SortOrder" sql-type="tinyint" nullable="false" length="0" scale="0" has-default-value="true" ado-type="Byte" />
         </orm:field>
+        <orm:field name="_lastModifiedBy" property="LastModifiedBy" behavior="readwrite" uniqueId="13bce4db-7ae9-46f1-81be-8a397edcfe82" type="System.Int32">
+          <orm:column name="LastModifiedBy" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_lastModifiedAt" property="LastModifiedAt" behavior="readwrite" uniqueId="b277c909-71d5-4bec-bc3b-4747fa4d2c50" type="System.DateTime">
+          <orm:column name="LastModifiedAt" sql-type="datetime" nullable="false" length="0" scale="0" ado-type="DateTime" />
+        </orm:field>
         <orm:field name="_person" property="Person" behavior="readwrite" uniqueId="1145475e-6fdf-41c4-8654-3a48ccbe7efe" type="TrackrModels.Person">
           <orm:reference uniqueId="8bc6d170-c00d-4cba-8e04-dc75f6fdb867" association-name="AddressHasPerson">
             <orm:sharedfield name="_personID" target-class="TrackrModels.Person" target-field="_personID" />
@@ -513,6 +508,12 @@
         <orm:field name="_sortOrder" property="SortOrder" behavior="readwrite" uniqueId="3528f4d6-990f-4838-8cb0-b2bb37fa58aa" type="System.Byte">
           <orm:column name="SortOrder" sql-type="tinyint" nullable="false" length="0" scale="0" has-default-value="true" ado-type="Byte" />
         </orm:field>
+        <orm:field name="_lastModifiedBy" property="LastModifiedBy" behavior="readwrite" uniqueId="e73f8611-fc41-4dfc-9f25-678723915095" type="System.Int32">
+          <orm:column name="LastModifiedBy" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_lastModifiedAt" property="LastModifiedAt" behavior="readwrite" uniqueId="e22d2510-a6e7-4d1d-8ca6-931f5f34964a" type="System.DateTime">
+          <orm:column name="LastModifiedAt" sql-type="datetime" nullable="false" length="0" scale="0" ado-type="DateTime" />
+        </orm:field>
         <orm:field name="_person" property="Person" behavior="readwrite" uniqueId="0013b660-22b8-4262-b79b-3d96690cb7eb" type="TrackrModels.Person">
           <orm:reference uniqueId="96902e80-5796-4daf-b263-4c633056e479" association-name="PhoneNumberHasPerson">
             <orm:sharedfield name="_personID" target-class="TrackrModels.Person" target-field="_personID" />
@@ -532,9 +533,6 @@
         <orm:field name="_emailAddressID" property="EmailAddressID" behavior="readwrite" uniqueId="69cdd4da-2267-4ea6-b396-f5eff9b25826" type="System.Int32">
           <orm:column name="EmailAddressID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
         </orm:field>
-        <orm:field name="_emailAddress1" property="EmailAddress1" behavior="readwrite" uniqueId="eb20c1dd-d129-48d2-942d-84f8be14defd" type="System.String">
-          <orm:column name="EmailAddress" sql-type="nvarchar" nullable="false" length="100" scale="0" ado-type="UnicodeStringVariableLength" />
-        </orm:field>
         <orm:field name="_isHTML" property="IsHTML" behavior="readwrite" uniqueId="87e39ee6-210e-4164-ba6d-1b5b15d34f27" type="System.Boolean">
           <orm:column name="IsHTML" sql-type="bit" nullable="false" length="0" scale="0" has-default-value="true" ado-type="Bit" />
         </orm:field>
@@ -543,6 +541,15 @@
         </orm:field>
         <orm:field name="_sortOrder" property="SortOrder" behavior="readwrite" uniqueId="8f733b2c-1a9f-4631-ac2c-cb9c11f0d21e" type="System.Byte">
           <orm:column name="SortOrder" sql-type="tinyint" nullable="false" length="0" scale="0" has-default-value="true" ado-type="Byte" />
+        </orm:field>
+        <orm:field name="_email" property="Email" behavior="readwrite" uniqueId="a901dc56-0430-4305-a1df-0e6357d6871e" type="System.String">
+          <orm:column name="Email" sql-type="nvarchar" nullable="false" length="100" scale="0" ado-type="UnicodeStringVariableLength" />
+        </orm:field>
+        <orm:field name="_lastModifiedBy" property="LastModifiedBy" behavior="readwrite" uniqueId="28f4c187-6e3e-4c4c-9c04-ef6b025a4da7" type="System.Int32">
+          <orm:column name="LastModifiedBy" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_lastModifiedAt" property="LastModifiedAt" behavior="readwrite" uniqueId="6054a4e9-5137-452e-96e4-2d639c6bd456" type="System.DateTime">
+          <orm:column name="LastModifiedAt" sql-type="datetime" nullable="false" length="0" scale="0" ado-type="DateTime" />
         </orm:field>
         <orm:field name="_person" property="Person" behavior="readwrite" uniqueId="dac71d92-89ec-4d41-896f-573f8a1b4155" type="TrackrModels.Person">
           <orm:reference uniqueId="2f6a5adb-ad23-4683-949f-224f037f7df5" association-name="EmailAddressHasPerson">
@@ -599,28 +606,10 @@
         <orm:field name="_deleteDate" property="DeleteDate" behavior="readwrite" uniqueId="9d492765-573e-4736-870e-201ab34d0f95" type="System.Nullable`1[[System.DateTime, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
           <orm:column name="DeleteDate" sql-type="datetime" nullable="true" length="0" scale="0" ado-type="DateTime" />
         </orm:field>
-        <orm:field name="_webUserInfo" property="WebUserInfo" behavior="readwrite" uniqueId="feb95dce-a8e1-4c8e-a158-9bf92d1ac1c2" type="TrackrModels.WebUserInfo">
-          <orm:reference uniqueId="fa1235f6-3a6d-4c3c-a7db-10fee3fccf37" association-name="TeamScheduleHasWebUserInfo">
-            <orm:sharedfield name="_deleteUserID" target-class="TrackrModels.WebUserInfo" target-field="_userID" />
-            <orm:constraint name="FK_TeamSchedules_WebUserInfo" delete-action="dbdefaultrule" destination-table="WebUserInfo" />
-          </orm:reference>
-        </orm:field>
         <orm:field name="_team" property="Team" behavior="readwrite" uniqueId="474759eb-c2f1-4b16-b32b-6f9752f075de" type="TrackrModels.Team">
           <orm:reference uniqueId="6f87fc3d-dda8-4f19-8ad6-f9aa8a096ab1" association-name="TeamScheduleHasTeam">
             <orm:sharedfield name="_teamID" target-class="TrackrModels.Team" target-field="_teamID" />
             <orm:constraint name="FK_TeamSchedules_TeamSchedules" delete-action="dbdefaultrule" destination-table="Teams" />
-          </orm:reference>
-        </orm:field>
-        <orm:field name="_webUserInfo1" property="WebUserInfo1" behavior="readwrite" uniqueId="b9188dcf-9314-45c2-811e-1b68802568ed" type="TrackrModels.WebUserInfo">
-          <orm:reference uniqueId="012d22ac-a1a4-49a3-9245-a4b8c81ec29f" association-name="TeamScheduleHasWebUserInfo1">
-            <orm:sharedfield name="_modifyUserID" target-class="TrackrModels.WebUserInfo" target-field="_userID" />
-            <orm:constraint name="FK_TeamSchedules_ModifyUser" delete-action="dbdefaultrule" destination-table="WebUserInfo" />
-          </orm:reference>
-        </orm:field>
-        <orm:field name="_webUserInfo2" property="WebUserInfo2" behavior="readwrite" uniqueId="c3ca1fe6-d58c-4d83-84c0-bb57329f8b49" type="TrackrModels.WebUserInfo">
-          <orm:reference uniqueId="6b9d8011-e7d4-44ce-bf6d-fcfae57d8c5c" association-name="TeamScheduleHasWebUserInfo2">
-            <orm:sharedfield name="_createUserID" target-class="TrackrModels.WebUserInfo" target-field="_userID" />
-            <orm:constraint name="FK_TeamSchedules_CreateUser" delete-action="dbdefaultrule" destination-table="WebUserInfo" />
           </orm:reference>
         </orm:field>
         <orm:field name="_attendances" property="Attendances" behavior="readwrite" uniqueId="0edff679-be0e-4ca3-950f-bf535e4c3a93" type="TrackrModels.Attendance">
@@ -673,18 +662,6 @@
           <orm:reference uniqueId="f66f4ade-9696-4e0f-859b-98c1040d4404" association-name="AttendanceHasPlayer">
             <orm:sharedfield name="_playerID" target-class="TrackrModels.Player" target-field="_playerID" />
             <orm:constraint name="FK_Attendances_Players" delete-action="dbdefaultrule" destination-table="Players" />
-          </orm:reference>
-        </orm:field>
-        <orm:field name="_webUserInfo" property="WebUserInfo" behavior="readwrite" uniqueId="f1498dd7-5503-41b2-a3f8-0632d9c2cf22" type="TrackrModels.WebUserInfo">
-          <orm:reference uniqueId="0d112646-a243-471d-b557-7db95d2e2d14" association-name="AttendanceHasWebUserInfo">
-            <orm:sharedfield name="_modifyUserID" target-class="TrackrModels.WebUserInfo" target-field="_userID" />
-            <orm:constraint name="FK_Attendances_ModifyUser" delete-action="dbdefaultrule" destination-table="WebUserInfo" />
-          </orm:reference>
-        </orm:field>
-        <orm:field name="_webUserInfo1" property="WebUserInfo1" behavior="readwrite" uniqueId="42cb0a07-d2d9-474d-850e-f63c6b0c49e7" type="TrackrModels.WebUserInfo">
-          <orm:reference uniqueId="8e7ff775-f34b-4390-ae76-3df802821daf" association-name="AttendanceHasWebUserInfo1">
-            <orm:sharedfield name="_createUserID" target-class="TrackrModels.WebUserInfo" target-field="_userID" />
-            <orm:constraint name="FK_Attendances_CreateUser" delete-action="dbdefaultrule" destination-table="WebUserInfo" />
           </orm:reference>
         </orm:field>
       </orm:class>
@@ -785,14 +762,6 @@
         <orm:column name="PlayerPassID" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
         <orm:column name="IsSecondary" sql-type="bit" nullable="false" length="0" scale="0" has-default-value="true" ado-type="Bit" />
         <orm:column name="PlayerID" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
-        <orm:index name="PlayerOnSameTeamOnlyOnce" unique="true">
-          <orm:columnMapping>
-            <orm:column name="PlayerPassID" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
-          </orm:columnMapping>
-          <orm:columnMapping>
-            <orm:column name="TeamID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
-          </orm:columnMapping>
-        </orm:index>
         <orm:constraint name="FK_TeamPlayers_Teams" delete-action="dbdefaultrule" destination-table="Teams">
           <orm:column name="TeamID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
         </orm:constraint>
@@ -811,8 +780,17 @@
         <orm:column name="DateOfBirth" sql-type="date" nullable="true" length="0" scale="0" ado-type="Date" />
         <orm:column name="Gender" sql-type="tinyint" nullable="true" length="0" scale="0" ado-type="Byte" />
         <orm:column name="ClubID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        <orm:column name="UserID" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        <orm:column name="LastModifiedBy" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        <orm:column name="LastModifiedAt" sql-type="datetime" nullable="false" length="0" scale="0" ado-type="DateTime" />
         <orm:constraint name="FK_People_Clubs" delete-action="dbdefaultrule" destination-table="Clubs">
           <orm:column name="ClubID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:constraint>
+        <orm:constraint name="FK_People_WebUserInfoModifiedBy" delete-action="dbdefaultrule" destination-table="WebUserInfo">
+          <orm:column name="LastModifiedBy" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:constraint>
+        <orm:constraint name="FK_People_WebUserInfo" delete-action="dbdefaultrule" destination-table="WebUserInfo">
+          <orm:column name="UserID" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
         </orm:constraint>
       </orm:table>
       <orm:table name="Guardians">
@@ -820,11 +798,17 @@
         <orm:column name="PersonID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
         <orm:column name="PlayerID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
         <orm:column name="SortOrder" sql-type="tinyint" nullable="false" length="0" scale="0" ado-type="Byte" />
+        <orm:column name="LastModifiedBy" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        <orm:column name="LastModifiedAt" sql-type="datetime" nullable="false" length="0" scale="0" ado-type="DateTime" />
+        <orm:column name="Active" sql-type="bit" nullable="false" length="0" scale="0" ado-type="Bit" />
         <orm:constraint name="FK_Guardians_Players" delete-action="dbdefaultrule" destination-table="Players">
           <orm:column name="PlayerID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
         </orm:constraint>
         <orm:constraint name="FK_Guardians_People" delete-action="dbdefaultrule" destination-table="People">
           <orm:column name="PersonID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:constraint>
+        <orm:constraint name="FK_Guardians_WebUserInfo" delete-action="dbdefaultrule" destination-table="WebUserInfo">
+          <orm:column name="LastModifiedBy" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
         </orm:constraint>
       </orm:table>
       <orm:table name="Addresses">
@@ -836,8 +820,13 @@
         <orm:column name="ZipCode" sql-type="nvarchar" nullable="true" length="5" scale="0" ado-type="UnicodeStringVariableLength" />
         <orm:column name="PersonID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
         <orm:column name="SortOrder" sql-type="tinyint" nullable="false" length="0" scale="0" has-default-value="true" ado-type="Byte" />
+        <orm:column name="LastModifiedBy" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        <orm:column name="LastModifiedAt" sql-type="datetime" nullable="false" length="0" scale="0" ado-type="DateTime" />
         <orm:constraint name="FK_Addresses_Addresses" delete-action="dbdefaultrule" destination-table="People">
           <orm:column name="PersonID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:constraint>
+        <orm:constraint name="FK_Addresses_WebUserInfo" delete-action="dbdefaultrule" destination-table="WebUserInfo">
+          <orm:column name="LastModifiedBy" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
         </orm:constraint>
       </orm:table>
       <orm:table name="PhoneNumbers">
@@ -846,18 +835,28 @@
         <orm:column name="Extension" sql-type="nvarchar" nullable="true" length="10" scale="0" ado-type="UnicodeStringVariableLength" />
         <orm:column name="PersonID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
         <orm:column name="SortOrder" sql-type="tinyint" nullable="false" length="0" scale="0" has-default-value="true" ado-type="Byte" />
+        <orm:column name="LastModifiedBy" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        <orm:column name="LastModifiedAt" sql-type="datetime" nullable="false" length="0" scale="0" ado-type="DateTime" />
         <orm:constraint name="FK_PhoneNumbers_People" delete-action="dbdefaultrule" destination-table="People">
           <orm:column name="PersonID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:constraint>
+        <orm:constraint name="FK_PhoneNumbers_WebUserInfo" delete-action="dbdefaultrule" destination-table="WebUserInfo">
+          <orm:column name="LastModifiedBy" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
         </orm:constraint>
       </orm:table>
       <orm:table name="EmailAddresses">
         <orm:column name="EmailAddressID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
-        <orm:column name="EmailAddress" sql-type="nvarchar" nullable="false" length="100" scale="0" ado-type="UnicodeStringVariableLength" />
         <orm:column name="IsHTML" sql-type="bit" nullable="false" length="0" scale="0" has-default-value="true" ado-type="Bit" />
         <orm:column name="PersonID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
         <orm:column name="SortOrder" sql-type="tinyint" nullable="false" length="0" scale="0" has-default-value="true" ado-type="Byte" />
+        <orm:column name="Email" sql-type="nvarchar" nullable="false" length="100" scale="0" ado-type="UnicodeStringVariableLength" />
+        <orm:column name="LastModifiedBy" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        <orm:column name="LastModifiedAt" sql-type="datetime" nullable="false" length="0" scale="0" ado-type="DateTime" />
         <orm:constraint name="FK_EmailAddresses_People" delete-action="dbdefaultrule" destination-table="People">
           <orm:column name="PersonID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:constraint>
+        <orm:constraint name="FK_EmailAddresses_WebUserInfo" delete-action="dbdefaultrule" destination-table="WebUserInfo">
+          <orm:column name="LastModifiedBy" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
         </orm:constraint>
       </orm:table>
       <orm:table name="TeamSchedules">
@@ -964,29 +963,6 @@
       <Property Id="fce7fb20-3f09-49ea-b14c-4aad0850e093" name="FName" label="FName : String" kind="Persistent" fieldName="_fName" />
       <Property Id="31e70c1f-da03-426d-828b-76f4c92822b7" name="LName" label="LName : String" kind="Persistent" fieldName="_lName" />
       <Property Id="a912378c-f851-44fa-b5b2-8bed1cd75551" name="MInitial" type="Char" label="MInitial : Char" nullable="true" kind="Persistent" fieldName="_mInitial" />
-      <navigationalProperties>
-        <classHasNavigationalProperties Id="7c22f1e7-3c67-4f83-a34f-e2f6eedbd43c">
-          <NavigationalProperty Id="46a32d7b-7bdc-4e6a-b4cb-7d45d3182162" name="Transactions" type="IList&lt;Transaction&gt;" label="Transactions : IList&lt;Transaction&gt;" nullable="true" kind="Persistent" fieldName="_transactions" isDependent="false" isManaged="false" />
-        </classHasNavigationalProperties>
-        <classHasNavigationalProperties Id="8f726068-2283-4029-9d0c-3fa301f13882">
-          <NavigationalProperty Id="b0a73827-7e08-4440-8e6d-ae6740e27842" name="Transactions1" type="IList&lt;Transaction&gt;" label="Transactions1 : IList&lt;Transaction&gt;" nullable="true" kind="Persistent" fieldName="_transactions1" isDependent="false" isManaged="false" />
-        </classHasNavigationalProperties>
-        <classHasNavigationalProperties Id="4eee2744-c6b1-46e3-8c09-c838bb220b01">
-          <NavigationalProperty Id="3d871107-13cb-40fd-ac36-01631eb77ef9" name="TeamSchedules" type="IList&lt;TeamSchedule&gt;" label="TeamSchedules : IList&lt;TeamSchedule&gt;" nullable="true" kind="Persistent" fieldName="_teamSchedules" isDependent="false" isManaged="false" />
-        </classHasNavigationalProperties>
-        <classHasNavigationalProperties Id="ac75cfe5-4b17-4268-b666-b0bf2f8b00b7">
-          <NavigationalProperty Id="0d9f9d75-fac6-48cd-be91-e9cb91b3e51e" name="TeamSchedules1" type="IList&lt;TeamSchedule&gt;" label="TeamSchedules1 : IList&lt;TeamSchedule&gt;" nullable="true" kind="Persistent" fieldName="_teamSchedules1" isDependent="false" isManaged="false" />
-        </classHasNavigationalProperties>
-        <classHasNavigationalProperties Id="8bdae593-bd49-437a-b5ef-7d07781057dd">
-          <NavigationalProperty Id="3c2be8df-b263-488d-83ef-611a21db9519" name="TeamSchedules2" type="IList&lt;TeamSchedule&gt;" label="TeamSchedules2 : IList&lt;TeamSchedule&gt;" nullable="true" kind="Persistent" fieldName="_teamSchedules2" isDependent="false" isManaged="false" />
-        </classHasNavigationalProperties>
-        <classHasNavigationalProperties Id="83eb0857-2ced-4639-a03b-067c34b12a75">
-          <NavigationalProperty Id="b08e036f-7964-48fe-bb7a-baf20f418f8d" name="Attendances" type="IList&lt;Attendance&gt;" label="Attendances : IList&lt;Attendance&gt;" nullable="true" kind="Persistent" fieldName="_attendances" isDependent="false" isManaged="false" />
-        </classHasNavigationalProperties>
-        <classHasNavigationalProperties Id="01e23e7e-9605-4824-9eac-6e3484d4bb95">
-          <NavigationalProperty Id="1a7d97d5-1e66-4add-91ca-0dbc3741bd61" name="Attendances1" type="IList&lt;Attendance&gt;" label="Attendances1 : IList&lt;Attendance&gt;" nullable="true" kind="Persistent" fieldName="_attendances1" isDependent="false" isManaged="false" />
-        </classHasNavigationalProperties>
-      </navigationalProperties>
     </DomainClass>
     <DomainClass Id="d60e9c75-9e4e-4a9e-a1f6-46e74117d59c" name="TransactionType" namespace="TrackrModels" showPropertiesCompartment="true" identityMechanism="DatabaseServerCalculated" concurrencyMode="Changed" showNavigationCompartment="true" showImplementationCompartment="true" identityMechanismMember="TransactionTypeID">
       <Property Id="ffb6efd0-1b97-4a3c-96a6-551f47bf79c7" name="TransactionTypeID" type="Int32" label="TransactionTypeID : Int32" kind="Persistent" identity="true" fieldName="_transactionTypeID" />
@@ -1043,27 +1019,17 @@
         </Association>
         <Association Id="fbb16b7e-a286-49e2-9748-7bb628179a62" SourceMultiplicity="One" name="TransactionHasWebUserInfo">
           <DomainClassMoniker name="/ClubManagement/WebUserInfo" />
-          <targetNavigationalProperty>
-            <associationDefinesTargetProperty Id="5399a506-35a5-4b4c-977b-63a8a3b6d1f6">
-              <NavigationalPropertyMoniker name="/ClubManagement/WebUserInfo/Transactions" />
-            </associationDefinesTargetProperty>
-          </targetNavigationalProperty>
           <sourceNavigationalProperty>
             <associationDefinesSourceProperty Id="66e48724-e9d4-4d9b-b8ff-7e8659215539">
-              <NavigationalPropertyMoniker name="/ClubManagement/Transaction/WebUserInfo" />
+              <NavigationalPropertyMoniker name="/ClubManagement/Transaction/CreateUser" />
             </associationDefinesSourceProperty>
           </sourceNavigationalProperty>
         </Association>
         <Association Id="a7abd31b-08df-4819-8b77-3c286dde6fa8" SourceMultiplicity="ZeroOne" name="TransactionHasWebUserInfo1">
           <DomainClassMoniker name="/ClubManagement/WebUserInfo" />
-          <targetNavigationalProperty>
-            <associationDefinesTargetProperty Id="83e41fbd-7284-4b8b-a602-4809cf61aa51">
-              <NavigationalPropertyMoniker name="/ClubManagement/WebUserInfo/Transactions1" />
-            </associationDefinesTargetProperty>
-          </targetNavigationalProperty>
           <sourceNavigationalProperty>
             <associationDefinesSourceProperty Id="97bba0cd-85f7-4f87-a0fc-b9ef1d3acae0">
-              <NavigationalPropertyMoniker name="/ClubManagement/Transaction/WebUserInfo1" />
+              <NavigationalPropertyMoniker name="/ClubManagement/Transaction/ModifyUser" />
             </associationDefinesSourceProperty>
           </sourceNavigationalProperty>
         </Association>
@@ -1076,10 +1042,10 @@
           <NavigationalProperty Id="5b804d4b-c291-4643-82a7-6567ff990ebd" name="TransactionType" type="TransactionType" label="TransactionType : TransactionType" nullable="true" kind="Persistent" fieldName="_transactionType" isDependent="false" isManaged="false" />
         </classHasNavigationalProperties>
         <classHasNavigationalProperties Id="a1a441e6-09ea-4dca-9288-7b30f5446c9e">
-          <NavigationalProperty Id="83f4d5d7-f4f2-4c47-abaa-522c7775c515" name="WebUserInfo" type="WebUserInfo" label="WebUserInfo : WebUserInfo" nullable="true" kind="Persistent" fieldName="_webUserInfo" isDependent="false" isManaged="false" />
+          <NavigationalProperty Id="83f4d5d7-f4f2-4c47-abaa-522c7775c515" name="CreateUser" type="WebUserInfo" label="CreateUser : WebUserInfo" nullable="true" kind="Persistent" fieldName="_webUserInfo" isDependent="false" isManaged="false" />
         </classHasNavigationalProperties>
         <classHasNavigationalProperties Id="b28a40a1-9003-4e4b-9637-cd3816be8e47">
-          <NavigationalProperty Id="0b2d0d24-f8fe-44a9-ac97-dda1e342da1c" name="WebUserInfo1" type="WebUserInfo" label="WebUserInfo1 : WebUserInfo" nullable="true" kind="Persistent" fieldName="_webUserInfo1" isDependent="false" isManaged="false" />
+          <NavigationalProperty Id="0b2d0d24-f8fe-44a9-ac97-dda1e342da1c" name="ModifyUser" type="WebUserInfo" label="ModifyUser : WebUserInfo" nullable="true" kind="Persistent" fieldName="_webUserInfo1" isDependent="false" isManaged="false" />
         </classHasNavigationalProperties>
       </navigationalProperties>
     </DomainClass>
@@ -1289,6 +1255,9 @@
       <Property Id="d3a24ebe-7170-4685-a450-bb909e48517f" name="LName" label="LName : String" kind="Persistent" fieldName="_lName" />
       <Property Id="6f76d842-b3ed-4865-a982-970b2a1fb01e" name="MInitial" type="Char" label="MInitial : Char" nullable="true" kind="Persistent" fieldName="_mInitial" />
       <Property Id="321a0ba3-5a3c-4851-8c23-37a81bdb49c1" name="ClubID" type="Int32" label="ClubID : Int32" kind="Persistent" fieldName="_clubID" />
+      <Property Id="72ccad61-d034-43f2-82ad-b4365cbc14ad" name="UserID" type="Int32" label="UserID : Int32" nullable="true" kind="Persistent" fieldName="_userID" />
+      <Property Id="70010dd8-efee-434d-8df2-70abb78e85d3" name="LastModifiedBy" type="Int32" label="LastModifiedBy : Int32" kind="Persistent" fieldName="_lastModifiedBy" />
+      <Property Id="043e04b7-835a-4140-bd5d-896aac5336bf" name="LastModifiedAt" type="DateTime" label="LastModifiedAt : DateTime" kind="Persistent" fieldName="_lastModifiedAt" />
       <AssociationTargets>
         <Association Id="6847fabc-e976-4203-9b4c-0867fd06fb0a" SourceMultiplicity="One" name="PersonHasClub">
           <DomainClassMoniker name="/ClubManagement/Club" />
@@ -1327,6 +1296,9 @@
       <Property Id="2e97959b-2be8-406f-8ca4-d346b1825c99" name="PersonID" type="Int32" label="PersonID : Int32" kind="Persistent" fieldName="_personID" />
       <Property Id="872bc558-da62-4ffe-a830-27ba4fc85633" name="PlayerID" type="Int32" label="PlayerID : Int32" kind="Persistent" fieldName="_playerID" />
       <Property Id="8c5c62b7-48c6-4c8a-b829-5bf95c2990bb" name="SortOrder" type="Byte" label="SortOrder : Byte" kind="Persistent" fieldName="_sortOrder" />
+      <Property Id="e5137c4d-2fcb-48dd-8e23-8257585be944" name="LastModifiedBy" type="Int32" label="LastModifiedBy : Int32" kind="Persistent" fieldName="_lastModifiedBy" />
+      <Property Id="115fc51e-6b06-405e-ae98-0a600fecd3bb" name="LastModifiedAt" type="DateTime" label="LastModifiedAt : DateTime" kind="Persistent" fieldName="_lastModifiedAt" />
+      <Property Id="3f3afa27-7431-4304-842e-f59c65ab7bd5" name="Active" type="Boolean" label="Active : Boolean" kind="Persistent" fieldName="_active" />
       <AssociationTargets>
         <Association Id="a4fc5df8-3b5a-43e7-85e6-36e47fb42b5a" SourceMultiplicity="One" name="GuardianHasPlayer">
           <DomainClassMoniker name="/ClubManagement/Player" />
@@ -1373,6 +1345,8 @@
       <Property Id="69c568d5-2d4c-4499-8ec1-51f3e7d2819a" name="Street1" label="Street1 : String" kind="Persistent" fieldName="_street1" />
       <Property Id="a9e4f0ce-29e3-4091-a32b-20ae50792ecc" name="Street2" label="Street2 : String" kind="Persistent" fieldName="_street2" />
       <Property Id="a5064988-69cb-40be-a681-56cf4bc9713e" name="ZipCode" label="ZipCode : String" kind="Persistent" fieldName="_zipCode" />
+      <Property Id="13bce4db-7ae9-46f1-81be-8a397edcfe82" name="LastModifiedBy" type="Int32" label="LastModifiedBy : Int32" kind="Persistent" fieldName="_lastModifiedBy" />
+      <Property Id="b277c909-71d5-4bec-bc3b-4747fa4d2c50" name="LastModifiedAt" type="DateTime" label="LastModifiedAt : DateTime" kind="Persistent" fieldName="_lastModifiedAt" />
       <AssociationTargets>
         <Association Id="8bc6d170-c00d-4cba-8e04-dc75f6fdb867" SourceMultiplicity="One" name="AddressHasPerson">
           <DomainClassMoniker name="/ClubManagement/Person" />
@@ -1400,6 +1374,8 @@
       <Property Id="8fde1c3d-6a6d-4b44-9a32-4c5e42a108e9" name="PersonID" type="Int32" label="PersonID : Int32" kind="Persistent" fieldName="_personID" />
       <Property Id="3528f4d6-990f-4838-8cb0-b2bb37fa58aa" name="SortOrder" type="Byte" label="SortOrder : Byte" kind="Persistent" fieldName="_sortOrder" />
       <Property Id="fbeeefb9-7375-458e-a751-7df7f01eca5b" name="TenDigit" label="TenDigit : String" kind="Persistent" fieldName="_tenDigit" />
+      <Property Id="e73f8611-fc41-4dfc-9f25-678723915095" name="LastModifiedBy" type="Int32" label="LastModifiedBy : Int32" kind="Persistent" fieldName="_lastModifiedBy" />
+      <Property Id="e22d2510-a6e7-4d1d-8ca6-931f5f34964a" name="LastModifiedAt" type="DateTime" label="LastModifiedAt : DateTime" kind="Persistent" fieldName="_lastModifiedAt" />
       <AssociationTargets>
         <Association Id="96902e80-5796-4daf-b263-4c633056e479" SourceMultiplicity="One" name="PhoneNumberHasPerson">
           <DomainClassMoniker name="/ClubManagement/Person" />
@@ -1423,10 +1399,12 @@
     </DomainClass>
     <DomainClass Id="a67f6ff4-18e9-4ccf-80d3-daf4c281323e" name="EmailAddress" namespace="TrackrModels" showPropertiesCompartment="true" identityMechanism="DatabaseServerCalculated" concurrencyMode="Changed" showNavigationCompartment="true" showImplementationCompartment="true" identityMechanismMember="EmailAddressID">
       <Property Id="69cdd4da-2267-4ea6-b396-f5eff9b25826" name="EmailAddressID" type="Int32" label="EmailAddressID : Int32" kind="Persistent" identity="true" fieldName="_emailAddressID" />
-      <Property Id="eb20c1dd-d129-48d2-942d-84f8be14defd" name="EmailAddress1" label="EmailAddress1 : String" kind="Persistent" fieldName="_emailAddress1" />
       <Property Id="87e39ee6-210e-4164-ba6d-1b5b15d34f27" name="IsHTML" type="Boolean" label="IsHTML : Boolean" kind="Persistent" fieldName="_isHTML" />
       <Property Id="ad8bbec2-1aa6-4ae5-823d-0ebe639a54de" name="PersonID" type="Int32" label="PersonID : Int32" kind="Persistent" fieldName="_personID" />
       <Property Id="8f733b2c-1a9f-4631-ac2c-cb9c11f0d21e" name="SortOrder" type="Byte" label="SortOrder : Byte" kind="Persistent" fieldName="_sortOrder" />
+      <Property Id="a901dc56-0430-4305-a1df-0e6357d6871e" name="Email" label="Email : String" kind="Persistent" fieldName="_email" />
+      <Property Id="28f4c187-6e3e-4c4c-9c04-ef6b025a4da7" name="LastModifiedBy" type="Int32" label="LastModifiedBy : Int32" kind="Persistent" fieldName="_lastModifiedBy" />
+      <Property Id="6054a4e9-5137-452e-96e4-2d639c6bd456" name="LastModifiedAt" type="DateTime" label="LastModifiedAt : DateTime" kind="Persistent" fieldName="_lastModifiedAt" />
       <AssociationTargets>
         <Association Id="2f6a5adb-ad23-4683-949f-224f037f7df5" SourceMultiplicity="One" name="EmailAddressHasPerson">
           <DomainClassMoniker name="/ClubManagement/Person" />
@@ -1463,19 +1441,6 @@
       <Property Id="46888954-48e6-494f-81b1-d3a3e0bab4c1" name="StartDate" type="DateTime" label="StartDate : DateTime" kind="Persistent" fieldName="_startDate" />
       <Property Id="b07779b6-1db7-41f1-8052-8a3645af09e0" name="TeamID" type="Int32" label="TeamID : Int32" kind="Persistent" fieldName="_teamID" />
       <AssociationTargets>
-        <Association Id="fa1235f6-3a6d-4c3c-a7db-10fee3fccf37" SourceMultiplicity="ZeroOne" name="TeamScheduleHasWebUserInfo">
-          <DomainClassMoniker name="/ClubManagement/WebUserInfo" />
-          <targetNavigationalProperty>
-            <associationDefinesTargetProperty Id="8bd60eb9-99d7-4f0e-816b-99c0b51b226e">
-              <NavigationalPropertyMoniker name="/ClubManagement/WebUserInfo/TeamSchedules" />
-            </associationDefinesTargetProperty>
-          </targetNavigationalProperty>
-          <sourceNavigationalProperty>
-            <associationDefinesSourceProperty Id="da7bef1c-0ae6-44bd-a623-bf418b3f65fc">
-              <NavigationalPropertyMoniker name="/ClubManagement/TeamSchedule/WebUserInfo" />
-            </associationDefinesSourceProperty>
-          </sourceNavigationalProperty>
-        </Association>
         <Association Id="6f87fc3d-dda8-4f19-8ad6-f9aa8a096ab1" SourceMultiplicity="One" name="TeamScheduleHasTeam">
           <DomainClassMoniker name="/ClubManagement/Team" />
           <targetNavigationalProperty>
@@ -1489,45 +1454,10 @@
             </associationDefinesSourceProperty>
           </sourceNavigationalProperty>
         </Association>
-        <Association Id="012d22ac-a1a4-49a3-9245-a4b8c81ec29f" SourceMultiplicity="ZeroOne" name="TeamScheduleHasWebUserInfo1">
-          <DomainClassMoniker name="/ClubManagement/WebUserInfo" />
-          <targetNavigationalProperty>
-            <associationDefinesTargetProperty Id="5d8771c4-c75f-4951-904f-23b32b1b7e77">
-              <NavigationalPropertyMoniker name="/ClubManagement/WebUserInfo/TeamSchedules1" />
-            </associationDefinesTargetProperty>
-          </targetNavigationalProperty>
-          <sourceNavigationalProperty>
-            <associationDefinesSourceProperty Id="25ff5a9e-3b5b-421b-9da7-b1050e1d0088">
-              <NavigationalPropertyMoniker name="/ClubManagement/TeamSchedule/WebUserInfo1" />
-            </associationDefinesSourceProperty>
-          </sourceNavigationalProperty>
-        </Association>
-        <Association Id="6b9d8011-e7d4-44ce-bf6d-fcfae57d8c5c" SourceMultiplicity="One" name="TeamScheduleHasWebUserInfo2">
-          <DomainClassMoniker name="/ClubManagement/WebUserInfo" />
-          <targetNavigationalProperty>
-            <associationDefinesTargetProperty Id="95c579cb-8d05-4811-9644-11f075ce7ee3">
-              <NavigationalPropertyMoniker name="/ClubManagement/WebUserInfo/TeamSchedules2" />
-            </associationDefinesTargetProperty>
-          </targetNavigationalProperty>
-          <sourceNavigationalProperty>
-            <associationDefinesSourceProperty Id="ca78bcf7-9f88-45cd-ac37-7d63437c57b6">
-              <NavigationalPropertyMoniker name="/ClubManagement/TeamSchedule/WebUserInfo2" />
-            </associationDefinesSourceProperty>
-          </sourceNavigationalProperty>
-        </Association>
       </AssociationTargets>
       <navigationalProperties>
-        <classHasNavigationalProperties Id="39e1c4de-2c20-46d4-a5d5-bb4087128b39">
-          <NavigationalProperty Id="feb95dce-a8e1-4c8e-a158-9bf92d1ac1c2" name="WebUserInfo" type="WebUserInfo" label="WebUserInfo : WebUserInfo" nullable="true" kind="Persistent" fieldName="_webUserInfo" isDependent="false" isManaged="false" />
-        </classHasNavigationalProperties>
         <classHasNavigationalProperties Id="4739041e-c8d0-49a5-86eb-6624e6d454bb">
           <NavigationalProperty Id="474759eb-c2f1-4b16-b32b-6f9752f075de" name="Team" type="Team" label="Team : Team" nullable="true" kind="Persistent" fieldName="_team" isDependent="false" isManaged="false" />
-        </classHasNavigationalProperties>
-        <classHasNavigationalProperties Id="68abe82c-e9a1-4acc-a55c-b09f0425c789">
-          <NavigationalProperty Id="b9188dcf-9314-45c2-811e-1b68802568ed" name="WebUserInfo1" type="WebUserInfo" label="WebUserInfo1 : WebUserInfo" nullable="true" kind="Persistent" fieldName="_webUserInfo1" isDependent="false" isManaged="false" />
-        </classHasNavigationalProperties>
-        <classHasNavigationalProperties Id="5f46a06b-52af-4053-aa4f-90ea8127597a">
-          <NavigationalProperty Id="c3ca1fe6-d58c-4d83-84c0-bb57329f8b49" name="WebUserInfo2" type="WebUserInfo" label="WebUserInfo2 : WebUserInfo" nullable="true" kind="Persistent" fieldName="_webUserInfo2" isDependent="false" isManaged="false" />
         </classHasNavigationalProperties>
         <classHasNavigationalProperties Id="84f1c818-76c2-46b3-826c-3656c9f155be">
           <NavigationalProperty Id="0edff679-be0e-4ca3-950f-bf535e4c3a93" name="Attendances" type="IList&lt;Attendance&gt;" label="Attendances : IList&lt;Attendance&gt;" nullable="true" kind="Persistent" fieldName="_attendances" isDependent="false" isManaged="false" />
@@ -1571,32 +1501,6 @@
             </associationDefinesSourceProperty>
           </sourceNavigationalProperty>
         </Association>
-        <Association Id="0d112646-a243-471d-b557-7db95d2e2d14" SourceMultiplicity="ZeroOne" name="AttendanceHasWebUserInfo">
-          <DomainClassMoniker name="/ClubManagement/WebUserInfo" />
-          <targetNavigationalProperty>
-            <associationDefinesTargetProperty Id="538c5222-4568-4fca-85c9-f81b085ba807">
-              <NavigationalPropertyMoniker name="/ClubManagement/WebUserInfo/Attendances" />
-            </associationDefinesTargetProperty>
-          </targetNavigationalProperty>
-          <sourceNavigationalProperty>
-            <associationDefinesSourceProperty Id="5beaa00c-8834-429c-847d-d585f0a93325">
-              <NavigationalPropertyMoniker name="/ClubManagement/Attendance/WebUserInfo" />
-            </associationDefinesSourceProperty>
-          </sourceNavigationalProperty>
-        </Association>
-        <Association Id="8e7ff775-f34b-4390-ae76-3df802821daf" SourceMultiplicity="One" name="AttendanceHasWebUserInfo1">
-          <DomainClassMoniker name="/ClubManagement/WebUserInfo" />
-          <targetNavigationalProperty>
-            <associationDefinesTargetProperty Id="0cb19978-6038-4838-b2a8-04715b97c8a9">
-              <NavigationalPropertyMoniker name="/ClubManagement/WebUserInfo/Attendances1" />
-            </associationDefinesTargetProperty>
-          </targetNavigationalProperty>
-          <sourceNavigationalProperty>
-            <associationDefinesSourceProperty Id="348d23c4-b102-44d6-b8af-aa33e7b235f8">
-              <NavigationalPropertyMoniker name="/ClubManagement/Attendance/WebUserInfo1" />
-            </associationDefinesSourceProperty>
-          </sourceNavigationalProperty>
-        </Association>
       </AssociationTargets>
       <navigationalProperties>
         <classHasNavigationalProperties Id="ea3dba54-a8a4-45f2-8144-879c44b3ce3b">
@@ -1604,12 +1508,6 @@
         </classHasNavigationalProperties>
         <classHasNavigationalProperties Id="89a11930-b65d-4236-95f0-7249538ea921">
           <NavigationalProperty Id="b04f30bb-a163-48f3-8a8f-98f420ffc32a" name="Player" type="Player" label="Player : Player" nullable="true" kind="Persistent" fieldName="_player" isDependent="false" isManaged="false" />
-        </classHasNavigationalProperties>
-        <classHasNavigationalProperties Id="30c39422-b257-443f-b679-771d30af8ef8">
-          <NavigationalProperty Id="f1498dd7-5503-41b2-a3f8-0632d9c2cf22" name="WebUserInfo" type="WebUserInfo" label="WebUserInfo : WebUserInfo" nullable="true" kind="Persistent" fieldName="_webUserInfo" isDependent="false" isManaged="false" />
-        </classHasNavigationalProperties>
-        <classHasNavigationalProperties Id="d91a2ffd-61b1-48c7-8913-b34edf183081">
-          <NavigationalProperty Id="42cb0a07-d2d9-474d-850e-f63c6b0c49e7" name="WebUserInfo1" type="WebUserInfo" label="WebUserInfo1 : WebUserInfo" nullable="true" kind="Persistent" fieldName="_webUserInfo1" isDependent="false" isManaged="false" />
         </classHasNavigationalProperties>
       </navigationalProperties>
     </DomainClass>

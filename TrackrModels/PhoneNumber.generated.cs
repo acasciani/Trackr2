@@ -90,6 +90,32 @@ namespace TrackrModels
 			}
 		}
 		
+		private int _lastModifiedBy;
+		public virtual int LastModifiedBy
+		{
+			get
+			{
+				return this._lastModifiedBy;
+			}
+			set
+			{
+				this._lastModifiedBy = value;
+			}
+		}
+		
+		private DateTime _lastModifiedAt;
+		public virtual DateTime LastModifiedAt
+		{
+			get
+			{
+				return this._lastModifiedAt;
+			}
+			set
+			{
+				this._lastModifiedAt = value;
+			}
+		}
+		
 		private Person _person;
 		public virtual Person Person
 		{
@@ -116,6 +142,8 @@ namespace TrackrModels
 			this.Extension = info.GetString("Extension");
 			this.PersonID = info.GetInt32("PersonID");
 			this.SortOrder = info.GetByte("SortOrder");
+			this.LastModifiedBy = info.GetInt32("LastModifiedBy");
+			this.LastModifiedAt = (DateTime)info.GetValue("LastModifiedAt", typeof(DateTime));
 			CustomizeDeserializationProcess(info, context);
 		}
 		
@@ -126,6 +154,8 @@ namespace TrackrModels
 			info.AddValue("Extension", this.Extension, typeof(string));
 			info.AddValue("PersonID", this.PersonID, typeof(int));
 			info.AddValue("SortOrder", this.SortOrder, typeof(byte));
+			info.AddValue("LastModifiedBy", this.LastModifiedBy, typeof(int));
+			info.AddValue("LastModifiedAt", this.LastModifiedAt, typeof(DateTime));
 			CustomizeSerializationProcess(info, context);
 		}
 		

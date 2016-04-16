@@ -1,4 +1,4 @@
-﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="SiteNotLoggedIn.master.cs" Inherits="Trackr.SiteNotLoggedIn" %>
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="SiteNoNavigation.master.cs" Inherits="Trackr.SiteNoNavigation" %>
 
 <!DOCTYPE html>
 
@@ -46,34 +46,12 @@
         </asp:ScriptManager>
 
         <!-- top nav -->
-        <nav class="navbar navbar-default">
-            <div class="container-fluid">
-                <!-- Brand and toggle get grouped for better mobile display -->
-                <div class="navbar-header">
-                    <div class="pull-left">
-                        <a class="navbar-brand" href="/">Gananda Bandits</a>
-                    </div>
-
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                </div>
-
-                <!-- Collect the nav links, forms, and other content for toggling -->
-                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                    <ul class="nav navbar-nav navbar-right">
-                        <li><a href="/Account/Register">Register</a></li>
-                        <li><a href="/Account/Login">Login</a></li>
-                    </ul>
-                </div>
-                <!-- /.navbar-collapse -->
+        <div class="navbar navbar-blue navbar-static-top" style="width:100%">
+            <div class="navbar-header">
+                <a href="/" class="navbar-brand logo">Gananda Bandits</a>
             </div>
-            <!-- /.container-fluid -->
-        </nav>
-
+        </div>
+        <!-- /top nav -->
 
         <div class="padding">
             <div class="full col-sm-12">

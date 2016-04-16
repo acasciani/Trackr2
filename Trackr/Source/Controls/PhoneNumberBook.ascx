@@ -6,10 +6,14 @@
 
 <div class="row">
     <div class="col-sm-12">
-        <asp:GridView runat="server" ID="gvPhoneNumberBook" SelectMethod="gvPhoneNumberBook_GetData" EmptyDataText="There are no phone numbers associated to this person." CssClass="table" DataKeyNames="PhoneNumberID" AutoGenerateColumns="false" 
+        <asp:GridView runat="server" ID="gvPhoneNumberBook" SelectMethod="gvPhoneNumberBook_GetData" EmptyDataText="There are no phone numbers associated to this person." CssClass="table" DataKeyNames="EditToken" AutoGenerateColumns="false" 
             DeleteMethod="gvPhoneNumberBook_DeleteItem" OnRowCancelingEdit="gvPhoneNumberBook_RowCancelingEdit" OnRowEditing="gvPhoneNumberBook_RowEditing">
             <Columns>
-                <asp:BoundField DataField="PhoneNumber" ReadOnly="true" />
+                <asp:TemplateField>
+                    <ItemTemplate>
+                        <%# Trackr.Utils.UserInputUtils.FormatTenDigitNumber(Eval("TenDigit").ToString()).ToString() %>
+                    </ItemTemplate>
+                </asp:TemplateField>
 
                 <asp:TemplateField>
                     <ItemTemplate>

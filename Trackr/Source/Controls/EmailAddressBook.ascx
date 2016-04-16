@@ -6,10 +6,10 @@
 
 <div class="row">
     <div class="col-sm-12">
-        <asp:GridView runat="server" ID="gvEmailAddressBook" SelectMethod="gvEmailAddressBook_GetData" EmptyDataText="There are no email addresses associated to this person." CssClass="table" DataKeyNames="EmailAddressID" AutoGenerateColumns="false" 
+        <asp:GridView runat="server" ID="gvEmailAddressBook" SelectMethod="gvEmailAddressBook_GetData" EmptyDataText="There are no email addresses associated to this person." CssClass="table" DataKeyNames="EditToken" AutoGenerateColumns="false" 
             DeleteMethod="gvEmailAddressBook_DeleteItem" OnRowCancelingEdit="gvEmailAddressBook_RowCancelingEdit" OnRowEditing="gvEmailAddressBook_RowEditing">
             <Columns>
-                <asp:BoundField DataField="EmailAddress" ReadOnly="true" />
+                <asp:BoundField DataField="Email" ReadOnly="true" />
 
                 <asp:TemplateField>
                     <ItemTemplate>

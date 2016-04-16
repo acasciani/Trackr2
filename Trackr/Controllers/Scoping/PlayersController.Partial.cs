@@ -47,6 +47,10 @@ namespace Trackr
                         case "Team":
                             //IDs.AddRange(cm.TeamPlayers.Where(i => i.TeamID == scopeAssignment.ResourceID).Select(i => i.TeamPlayerID).Distinct());
                             break;
+
+                        case "Player":
+                            IDs.Add(scopeAssignment.ResourceID);
+                            break;
                     }
 
                     //throw new Exception("DONT USE THIS CONTROLLER, use teamplayers");

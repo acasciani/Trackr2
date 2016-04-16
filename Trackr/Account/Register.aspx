@@ -109,7 +109,8 @@
 
                             <asp:WizardStep runat="server" AllowReturn="false" StepType="Complete" ID="Step3_Completed" OnActivate="Step3_Completed_Activate" Title="Completed">
                                 <p>Your account has been successfully created. You are now logged in. Please check your email for more information.</p>
-                                <p><strong><a href="/Default.aspx">Click here to continue to the intranet.</a></strong></p>
+                                <p runat="server" id="pRedirect" visible="false"><strong><a href="/Default.aspx">Click here to continue to the intranet.</a></strong></p>
+                                <p runat="server" id="pFinish" visible="false"><strong><asp:DynamicHyperLink runat="server" ID="dhlContinue" Text="Click here to continue." /></strong></p>
                             </asp:WizardStep>
                         </WizardSteps>
                     </asp:CreateUserWizard>

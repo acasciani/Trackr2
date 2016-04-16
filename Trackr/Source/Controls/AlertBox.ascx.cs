@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Trackr.Controls;
 
 namespace Trackr.UI
 {
@@ -77,6 +78,21 @@ namespace Trackr.UI
             {
                 pnlAlertContainer.Visible = false;
             }
+        }
+
+        public void AddAlert(string content)
+        {
+            AddAlert(content, false, AlertBoxType.Success);
+        }
+
+        public void AddAlert(string content, bool isHTML, AlertBoxType alertType)
+        {
+            Alert alert = (Alert)LoadControl("~/Source/Controls/Alert.ascx");
+            alert.AlertType = alertType;
+            alert.Id = new Guid();
+
+            alert.SetStatus(content, isHTML, alertType);
+            AlertContainer.Controls.Add(alert);
         }
     }
 }

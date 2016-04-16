@@ -11,6 +11,11 @@ namespace Trackr.Source.Wizards
 {
     public partial class PlayerManagement : WizardBase<int>
     {
+        private int ClubID = 1;
+
+        public string CreatePermission { get; set; }
+        public string EditPermission { get; set; }
+
         private byte[] OldPlayerPicture
         {
             get { return Session["OldPlayerPicture"] as byte[]; }
@@ -20,21 +25,6 @@ namespace Trackr.Source.Wizards
         {
             get { return Session["NewPlayerPicture"] as byte[]; }
             set { Session["NewPlayerPicture"] = value; }
-        }
-        private List<PlayerPass> PlayerPasses
-        {
-            get { return ViewState["PlayerPasses"] as List<PlayerPass>; }
-            set { ViewState["PlayerPasses"] = value; }
-        }
-        private List<TeamPlayer> TeamPlayers
-        {
-            get { return ViewState["TeamPlayers"] as List<TeamPlayer>; }
-            set { ViewState["TeamPlayers"] = value; }
-        }
-        private List<Guardian> Guardians
-        {
-            get { return ViewState["Guardians"] as List<Guardian>; }
-            set { ViewState["Guardians"] = value; }
         }
 
         protected void Page_Init(object sender, EventArgs e)
@@ -49,14 +39,14 @@ namespace Trackr.Source.Wizards
             {
                 if (IsNew)
                 {
-                    if (!wuc.IsAllowed(CurrentUser.UserID, Permissions.PlayerManagement.CreatePlayer))
+                    if (!wuc.IsAllowed(CurrentUser.UserID, string.IsNullOrWhiteSpace(CreatePermission) ? Permissions.PlayerManagement.CreatePlayer : CreatePermission))
                     {
                         throw new UserUnauthorizedException("You do not have permission to create a new player.");
                     }
                 }
                 else
                 {
-                    if (pc.GetScopedEntity(CurrentUser.UserID, Permissions.PlayerManagement.EditPlayer, PrimaryKey.Value) == null)
+                    if (pc.GetScopedEntity(CurrentUser.UserID, string.IsNullOrWhiteSpace(EditPermission) ? Permissions.PlayerManagement.EditPlayer : EditPermission, PrimaryKey.Value) == null)
                     {
                         throw new UserNotScopedException("You are not allowed to edit the selected player.");
                     }
@@ -68,10 +58,31 @@ namespace Trackr.Source.Wizards
         {
             AlertBox.HideStatus();
 
+            AddressBook_Player.GetData = GetPlayerAddresses;
+            AddressBook.GetData = GetGuardianAddresses;
+
+            PhoneNumberBook_Player.GetData = GetPlayerPhoneNumberes;
+            PhoneNumberBook.GetData = GetGuardianPhoneNumberes;
+
+            EmailAddressBook_Player.GetData = GetPlayerEmailAddresses;
+            EmailBook.GetData = GetGuardianEmailAddresses;
+
             if (IsPostBack)
             {
                 return;
             }
+
+            // Anything that needs to get run on page load (not postback), place in the Reload method
+            Reload();
+        }
+
+
+
+        public void Reload()
+        {
+            AlertBox.HideStatus();
+
+            WasNew = IsNew;
 
             if (IsNew)
             {
@@ -84,28 +95,37 @@ namespace Trackr.Source.Wizards
                 UpdatePlayerTabs();
             }
 
-            // update dropdownlists
-            //ddlRole.Populate(DropDownType.Role);
+            Player player = PlayerManager.Player;
+
+            // populate player's contact books
+            AddressBook_Player.Reset();
+            AddressBook_Player.PersonEditToken = player.Person.EditToken;
+
+            EmailAddressBook_Player.Reset();
+            EmailAddressBook_Player.PersonEditToken = player.Person.EditToken;
+
+            PhoneNumberBook_Player.Reset();
+            PhoneNumberBook_Player.PersonEditToken = player.Person.EditToken;
         }
 
         private void Populate_Create()
         {
+            PlayerManager.CreatePlayer(ClubID);
+
             OldPlayerPicture = null;
             NewPlayerPicture = null;
             pnlPossiblePlayerMatches.Visible = false;
+            PlayerWizard.ActiveStepIndex = 0;
         }
 
         private void Populate_Edit()
         {
             using (PlayersController pc = new PlayersController())
             {
-                FetchStrategy fetch = new FetchStrategy();
-                fetch.LoadWith<Player>(i => i.PlayerPasses);
-                fetch.LoadWith<PlayerPass>(i => i.TeamPlayers);
-                fetch.LoadWith<TeamPlayer>(i => i.Team);
-                fetch.LoadWith<PlayerPass>(i => i.Photo);
+                PlayerManager.EditPlayer(pc.GetScopedEntity(CurrentUser.UserID, (WasNew ? (string.IsNullOrWhiteSpace(CreatePermission) ? Permissions.PlayerManagement.CreatePlayer : CreatePermission) : (string.IsNullOrWhiteSpace(EditPermission) ? Permissions.PlayerManagement.EditPlayer : EditPermission)), PrimaryKey.Value).PlayerID);
 
-                Player player = pc.GetScopedEntity(CurrentUser.UserID, (WasNew ? Permissions.PlayerManagement.CreatePlayer : Permissions.PlayerManagement.EditPlayer), PrimaryKey.Value, fetch);
+                Player player = PlayerManager.Player;
+
                 txtFirstName.Text = player.Person.FName;
                 txtLastName.Text = player.Person.LName;
                 txtMiddleInitial.Text = player.Person.MInitial.HasValue ? player.Person.MInitial.Value.ToString() : "";
@@ -117,20 +137,10 @@ namespace Trackr.Source.Wizards
 
                 divPreview.Visible = false;
 
-                // populate player's contact books
-                AddressBook_Player.Reset();
-                AddressBook_Player.PersonID = player.PersonID;
-                AddressBook_Player.DataBind();
-
-                EmailAddressBook_Player.Reset();
-                EmailAddressBook_Player.PersonID = player.PersonID;
-                EmailAddressBook_Player.DataBind();
-
-                PhoneNumberBook_Player.Reset();
-                PhoneNumberBook_Player.PersonID = player.PersonID;
-                PhoneNumberBook_Player.DataBind();
-
                 pnlPossiblePlayerMatches.Visible = false;
+
+                // Reset views
+                PlayerWizard.ActiveStepIndex = 0;
             }
         }
 
@@ -141,34 +151,7 @@ namespace Trackr.Source.Wizards
 
         private void Save_Step1()
         {
-            using (PlayersController pc = new PlayersController())
-            {
-                Player player = IsNew ? new Player() : pc.Get(PrimaryKey.Value);
-
-                if (IsNew)
-                {
-                    player.Person = new Person();
-                    player.Person.ClubID = 1;
-                }
-
-                player.Person.DateOfBirth = DateTime.Parse(txtDateOfBirth.Text);
-                player.Person.FName = txtFirstName.Text;
-                player.Person.MInitial = string.IsNullOrWhiteSpace(txtMiddleInitial.Text) ? (char?)null : txtMiddleInitial.Text.ToCharArray()[0];
-                player.Person.LName = txtLastName.Text;
-
-                if (IsNew)
-                {
-                    Player inserted = pc.AddNew(player);
-                    PrimaryKey = inserted.PlayerID;
-                    Populate_Edit();
-                    AlertBox.SetStatus("Successfully created new player.");
-                }
-                else
-                {
-                    pc.Update(player);
-                    AlertBox.SetStatus("Successfully saved player information.");
-                }
-            }
+            PlayerManager.UpdatePerson(PlayerManager.Player.Person.EditToken, txtFirstName.Text, txtLastName.Text, DateTime.Parse(txtDateOfBirth.Text));
         }
 
         protected void lnkPlayerTab_Click(object sender, EventArgs e)
@@ -185,10 +168,14 @@ namespace Trackr.Source.Wizards
 
         private void UpdatePlayerTabs()
         {
+            Player player = PlayerManager.Player;
+
+            bool canAdvance = player.Person.FName != null && player.Person.LName != null && player.Person.DateOfBirth.HasValue;
+
             lnkPlayerGeneral.Enabled = mvPlayerInfoTabs.ActiveViewIndex != 0;
-            lnkPlayerAddress.Enabled = PrimaryKey.HasValue && mvPlayerInfoTabs.ActiveViewIndex != 1;
-            lnkPlayerEmails.Enabled = PrimaryKey.HasValue && mvPlayerInfoTabs.ActiveViewIndex != 2;
-            lnkPlayerPhones.Enabled = PrimaryKey.HasValue && mvPlayerInfoTabs.ActiveViewIndex != 3;
+            lnkPlayerAddress.Enabled = canAdvance && mvPlayerInfoTabs.ActiveViewIndex != 1;
+            lnkPlayerEmails.Enabled = canAdvance && mvPlayerInfoTabs.ActiveViewIndex != 2;
+            lnkPlayerPhones.Enabled = canAdvance && mvPlayerInfoTabs.ActiveViewIndex != 3;
         }
 
         protected void Step1_Info_Activate(object sender, EventArgs e)
@@ -260,6 +247,8 @@ namespace Trackr.Source.Wizards
                 e.Cancel = true;
                 return;
             }
+
+            PlayerManager.SaveData();
         }
 
         private bool HasPlayerMatches()
@@ -304,6 +293,7 @@ namespace Trackr.Source.Wizards
         #region Team Administration
         public IQueryable gvTeamAssignments_GetData()
         {
+            /*
             using (TeamPlayersController tpc = new TeamPlayersController())
             {
                 FetchStrategy fetch = new FetchStrategy();
@@ -324,7 +314,8 @@ namespace Trackr.Source.Wizards
                     PlayerPassNumber = i.PlayerPassID.HasValue && !string.IsNullOrWhiteSpace(i.PlayerPass.PassNumber) ? i.PlayerPass.PassNumber : "",
                     TeamPlayerID = i.TeamPlayerID
                 }).OrderByDescending(i => i.StartYear).ThenBy(i => i.ProgramName).ThenBy(i => i.TeamName).AsQueryable();
-            }
+            }*/
+            return null;
         }
 
         private void ClearTeamPlayerForm()
@@ -339,7 +330,7 @@ namespace Trackr.Source.Wizards
 
         protected void gvTeamAssignments_RowEditing(object sender, GridViewEditEventArgs e)
         {
-            Populate_TeamPlayerEdit(TeamPlayers[e.NewEditIndex].TeamPlayerID);
+           // Populate_TeamPlayerEdit(TeamPlayers[e.NewEditIndex].TeamPlayerID);
             gvTeamAssignments.EditIndex = e.NewEditIndex;
             gvTeamAssignments.DataBind();
         }
@@ -424,8 +415,8 @@ namespace Trackr.Source.Wizards
                 return;
             }
 
-            int? teamPlayerID = gvTeamAssignments.EditIndex != -1 ? TeamPlayers[gvTeamAssignments.EditIndex].TeamPlayerID : (int?)null;
-            SaveTeamPlayer(teamPlayerID);
+           // int? teamPlayerID = gvTeamAssignments.EditIndex != -1 ? TeamPlayers[gvTeamAssignments.EditIndex].TeamPlayerID : (int?)null;
+           // SaveTeamPlayer(teamPlayerID);
         }
 
         protected void lnkAddTeamPlayer_Click(object sender, EventArgs e)
@@ -518,7 +509,7 @@ namespace Trackr.Source.Wizards
         }
 
         public IQueryable gvPlayerPasses_GetData()
-        {
+        {/*
             using (PlayerPassesController ppc = new PlayerPassesController())
             {
                 PlayerPasses = ppc.GetWhere(i => i.PlayerID == PrimaryKey.Value).OrderByDescending(i => i.Expires).ToList();
@@ -530,12 +521,13 @@ namespace Trackr.Source.Wizards
                     PlayerPassID = i.PlayerPassID,
                     Editable = DateTime.Today.ToUniversalTime() < i.Expires,
                 }).AsQueryable();
-            }
+            }*/
+            return null;
         }
 
         protected void gvPlayerPasses_RowEditing(object sender, GridViewEditEventArgs e)
         {
-            Populate_PlayerPassEdit(PlayerPasses[e.NewEditIndex].PlayerPassID);
+            //Populate_PlayerPassEdit(PlayerPasses[e.NewEditIndex].PlayerPassID);
             gvPlayerPasses.EditIndex = e.NewEditIndex;
             gvPlayerPasses.DataBind();
         }
@@ -610,8 +602,8 @@ namespace Trackr.Source.Wizards
                 return;
             }
 
-            int? playerPassID = gvPlayerPasses.EditIndex != -1 ? PlayerPasses[gvPlayerPasses.EditIndex].PlayerPassID : (int?)null;
-            SavePlayerPass(playerPassID);
+            //int? playerPassID = gvPlayerPasses.EditIndex != -1 ? PlayerPasses[gvPlayerPasses.EditIndex].PlayerPassID : (int?)null;
+            //SavePlayerPass(playerPassID);
         }
 
         protected void lnkAddPlayerPass_Click(object sender, EventArgs e)
@@ -637,7 +629,7 @@ namespace Trackr.Source.Wizards
         }
 
         protected void validatorPlayerPassExpiresDuplicate_ServerValidate(object source, ServerValidateEventArgs args)
-        {
+        {/*
             DateTime exp;
             if (DateTime.TryParse(args.Value, out exp))
             {
@@ -650,7 +642,7 @@ namespace Trackr.Source.Wizards
                 {
                     args.IsValid = PlayerPasses.Count(i => i.PlayerID == PrimaryKey.Value && i.Expires == exp && i.PlayerPassID != playerPassID.Value) == 0;
                 }
-            }
+            }*/
         }
 
         // The id parameter name should match the DataKeyNames value set on the control
@@ -676,21 +668,14 @@ namespace Trackr.Source.Wizards
         #region Guardian Administration
         public IQueryable gvGuardians_GetData()
         {
-            using (GuardiansController gc = new GuardiansController())
+            return PlayerManager.Player.Guardians.Select(i => new
             {
-                FetchStrategy fetch = new FetchStrategy();
-                fetch.LoadWith<Guardian>(i => i.Person);
-
-                Guardians = gc.GetWhere(i => i.PlayerID == PrimaryKey.Value, fetch).ToList();
-
-                return Guardians.Select(i => new
-                {
-
-                    Guardian = i.Person.FName + " " + i.Person.LName,
-                    IsRemovable = true,
-                    GuardianID = i.GuardianID
-                }).OrderByDescending(i => i.Guardian).AsQueryable();
-            }
+                Guardian = i.Person.FName + " " + i.Person.LName,
+                IsRemovable = true,
+                GuardianID = i.GuardianID,
+                EditToken = i.EditToken,
+                PersonEditToken = i.Person.EditToken
+            }).OrderByDescending(i => i.Guardian).AsQueryable();
         }
 
         private void ClearGuardianForm()
@@ -706,83 +691,56 @@ namespace Trackr.Source.Wizards
             UpdateGuardianTabs();
         }
 
-        private void SaveGuardian(int? guardianID)
+        private void SaveGuardian(Guid? editToken)
         {
-            using (GuardiansController gc = new GuardiansController())
+            if (!editToken.HasValue)
             {
-                FetchStrategy fetch = new FetchStrategy();
-                fetch.LoadWith<Guardian>(i => i.Person);
-
-                Guardian guardian = guardianID.HasValue ? gc.GetWhere(i => i.GuardianID == guardianID.Value, fetch).First() : new Guardian();
-
-                if (!guardianID.HasValue)
-                {
-                    guardian.Person = new Person();
-                    guardian.Person.ClubID = 1;
-                }
-
-                guardian.Person.FName = txtGuardianFirstName.Text;
-                guardian.Person.MInitial = string.IsNullOrWhiteSpace(txtGuardianMiddleInitial.Text) ? (char?)null : txtGuardianMiddleInitial.Text.Trim().ToCharArray()[0];
-                guardian.Person.LName = txtGuardianLastName.Text;
-
-                if (!guardianID.HasValue)
-                {
-                    guardian.PlayerID = PrimaryKey.Value;
-                    Guardian newGuardian = gc.AddNew(guardian);
-                    AlertBox.SetStatus("Successfully saved new guardian.");
-                }
-                else
-                {
-                    gc.Update(guardian);
-                    AlertBox.SetStatus("Successfully saved existing guardian.");
-                }
+                editToken = PlayerManager.AddGuardian(ClubID);
             }
+
+            Guid playerEditToken = PlayerManager.Player.Guardians.First(i => i.EditToken == editToken.Value).Person.EditToken;
+
+            PlayerManager.UpdatePerson(playerEditToken, txtGuardianFirstName.Text, txtGuardianLastName.Text, null);
         }
 
-        private void Populate_GuardianEdit(int guardianID)
+        private void Populate_GuardianEdit(Guid guardianEditToken)
         {
-            using (GuardiansController gc = new GuardiansController())
-            {
-                FetchStrategy fetch = new FetchStrategy();
-                fetch.LoadWith<Guardian>(i => i.Person);
+            ClearGuardianForm();
 
-                Guardian guardian = gc.GetWhere(i => i.GuardianID == guardianID, fetch).First();
-                ClearGuardianForm();
+            // populate
+            Guardian guardian = PlayerManager.Player.Guardians.First(i => i.EditToken == guardianEditToken);
+            txtGuardianFirstName.Text = guardian.Person.FName;
+            txtGuardianMiddleInitial.Text = guardian.Person.MInitial.HasValue ? guardian.Person.MInitial.Value.ToString() : "";
+            txtGuardianLastName.Text = guardian.Person.LName;
 
-                // populate
-                txtGuardianFirstName.Text = guardian.Person.FName;
-                txtGuardianMiddleInitial.Text = guardian.Person.MInitial.HasValue ? guardian.Person.MInitial.Value.ToString() : "";
-                txtGuardianLastName.Text = guardian.Person.LName;
-
-                pnlAddGuardian.Visible = true;
-            }
+            pnlAddGuardian.Visible = true;
         }
 
-        private void Populate_AddressBook(int personID)
+        private void Populate_AddressBook(Guid personEditToken)
         {
             AddressBook.Reset();
-            AddressBook.PersonID = personID;
+            AddressBook.PersonEditToken = personEditToken;
             AddressBook.DataBind();
         }
 
-        private void Populate_PhoneNumberBook(int personID)
+        private void Populate_PhoneNumberBook(Guid personEditToken)
         {
             PhoneNumberBook.Reset();
-            PhoneNumberBook.PersonID = personID;
+            PhoneNumberBook.PersonEditToken = personEditToken;
             PhoneNumberBook.DataBind();
         }
 
-        private void Populate_EmailBook(int personID)
+        private void Populate_EmailBook(Guid personEditToken)
         {
             EmailBook.Reset();
-            EmailBook.PersonID = personID;
+            EmailBook.PersonEditToken = personEditToken;
             EmailBook.DataBind();
         }
 
         protected void gvGuardians_RowEditing(object sender, GridViewEditEventArgs e)
         {
-            int guardianID = (int)gvGuardians.DataKeys[e.NewEditIndex].Value;
-            Populate_GuardianEdit(guardianID);
+            Guid editToken = (Guid)gvGuardians.DataKeys[e.NewEditIndex].Value;
+            Populate_GuardianEdit(editToken);
             gvGuardians.EditIndex = e.NewEditIndex;
             gvGuardians.DataBind();
             UpdateGuardianTabs();
@@ -795,20 +753,10 @@ namespace Trackr.Source.Wizards
             UpdateGuardianTabs();
         }
 
-        public void gvGuardians_DeleteItem(int? GuardianID)
+        public void gvGuardians_DeleteItem(Guid editToken)
         {
             ClearGuardianForm();
-
-            if (!GuardianID.HasValue)
-            {
-                return;
-            }
-            using (GuardiansController gc = new GuardiansController())
-            {
-                gc.Delete(GuardianID.Value);
-                AlertBox.SetStatus("Successfully deleted player's guardian.");
-            }
-
+            PlayerManager.DeleteGuardian(editToken);
             gvGuardians.DataBind();
         }
 
@@ -828,11 +776,11 @@ namespace Trackr.Source.Wizards
                 return;
             }
 
-            int? guardianID = gvGuardians.EditIndex != -1 ? (int)gvGuardians.DataKeys[gvGuardians.EditIndex].Value : (int?)null;
-            SaveGuardian(guardianID);
+            Guid? editToken = gvGuardians.EditIndex != -1 ? (Guid)gvGuardians.DataKeys[gvGuardians.EditIndex].Value : (Guid?)null;
+            SaveGuardian(editToken);
             gvGuardians.DataBind();
 
-            if (!guardianID.HasValue)
+            if (!editToken.HasValue)
             {
                 ClearGuardianForm();
             }
@@ -853,20 +801,20 @@ namespace Trackr.Source.Wizards
                 UpdateGuardianTabs();
                 AddressBook.Reset();
 
-                int personID = Guardians.First(i => i.GuardianID == (int)gvGuardians.DataKeys[gvGuardians.EditIndex].Value).PersonID;
+                Guardian guardian = PlayerManager.Player.Guardians.First(i => i.EditToken == (Guid)gvGuardians.DataKeys[gvGuardians.EditIndex].Value);
 
                 switch(selectedTabIndex)
                 {
                     case 1: // populate address book
-                        Populate_AddressBook(personID);
+                        Populate_AddressBook(guardian.Person.EditToken);
                         break;
 
                     case 2: // populate email book
-                        Populate_EmailBook(personID);
+                        Populate_EmailBook(guardian.Person.EditToken);
                         break;
 
                     case 3: // populate phone book
-                        Populate_PhoneNumberBook(personID);
+                        Populate_PhoneNumberBook(guardian.Person.EditToken);
                         break;
 
                     default: break;
@@ -890,6 +838,44 @@ namespace Trackr.Source.Wizards
             gvGuardians.EditIndex = -1;
             gvGuardians.DataBind();
             UpdateGuardianTabs();
+        }
+        #endregion
+
+
+
+
+        #region Get Sub-widget Data Values
+        public IList<Address> GetPlayerAddresses(Guid personEditToken)
+        {
+            return PlayerManager.Player.Person.Addresses;
+        }
+
+        public IList<Address> GetGuardianAddresses(Guid personEditToken)
+        {
+            Guardian guardian = PlayerManager.Player.Guardians.First(i => i.Person.EditToken == personEditToken);
+            return guardian.Person.Addresses;
+        }
+
+        public IList<PhoneNumber> GetPlayerPhoneNumberes(Guid personEditToken)
+        {
+            return PlayerManager.Player.Person.PhoneNumbers;
+        }
+
+        public IList<PhoneNumber> GetGuardianPhoneNumberes(Guid personEditToken)
+        {
+            Guardian guardian = PlayerManager.Player.Guardians.First(i => i.Person.EditToken == personEditToken);
+            return guardian.Person.PhoneNumbers;
+        }
+
+        public IList<EmailAddress> GetPlayerEmailAddresses(Guid personEditToken)
+        {
+            return PlayerManager.Player.Person.EmailAddresses;
+        }
+
+        public IList<EmailAddress> GetGuardianEmailAddresses(Guid personEditToken)
+        {
+            Guardian guardian = PlayerManager.Player.Guardians.First(i => i.Person.EditToken == personEditToken);
+            return guardian.Person.EmailAddresses;
         }
         #endregion
     }

@@ -31,7 +31,6 @@
         </div>
     </FinishNavigationTemplate>
 
-
     <SideBarTemplate>
         <asp:ListView runat="server" ID="sideBarList">
             <LayoutTemplate>
@@ -169,7 +168,7 @@
 
         <asp:WizardStep runat="server" ID="Step2_Guardian" StepType="Step" Title="Guardians">
             <asp:GridView runat="server" ID="gvGuardians" AutoGenerateColumns="false" SelectMethod="gvGuardians_GetData" EmptyDataText="This player does not have any guardians." CssClass="table table-striped table-hover" 
-                OnRowEditing="gvGuardians_RowEditing" OnRowCancelingEdit="gvGuardians_RowCancelingEdit" DeleteMethod="gvGuardians_DeleteItem" DataKeyNames="GuardianID">
+                OnRowEditing="gvGuardians_RowEditing" OnRowCancelingEdit="gvGuardians_RowCancelingEdit" DeleteMethod="gvGuardians_DeleteItem" DataKeyNames="EditToken">
                 <Columns>
                     <asp:BoundField DataField="Guardian" HeaderText="Guardian" ReadOnly="true" />
 

@@ -10,7 +10,7 @@
 namespace Trackr {
     
     
-    public partial class SiteNotLoggedIn {
+    public partial class SiteNoNavigation {
         
         /// <summary>
         /// ExceptionAlerts control.

@@ -168,32 +168,6 @@ namespace TrackrModels
 			}
 		}
 		
-		private WebUserInfo _webUserInfo;
-		public virtual WebUserInfo WebUserInfo
-		{
-			get
-			{
-				return this._webUserInfo;
-			}
-			set
-			{
-				this._webUserInfo = value;
-			}
-		}
-		
-		private WebUserInfo _webUserInfo1;
-		public virtual WebUserInfo WebUserInfo1
-		{
-			get
-			{
-				return this._webUserInfo1;
-			}
-			set
-			{
-				this._webUserInfo1 = value;
-			}
-		}
-		
 		#region ISerializable Implementation
 		
 		public Attendance()

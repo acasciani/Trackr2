@@ -47,6 +47,10 @@
     <Reference Include="ImageResizer.Storage">
       <HintPath>..\packages\ImageResizer.Storage.4.0.4\lib\net45\ImageResizer.Storage.dll</HintPath>
     </Reference>
+    <Reference Include="itextsharp, Version=5.5.9.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\packages\iTextSharp.5.5.9\lib\itextsharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Owin, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Owin.3.0.1\lib\net45\Microsoft.Owin.dll</HintPath>
@@ -206,17 +210,20 @@
     <Compile Include="Controllers\LinkGroupsController.cs" />
     <Compile Include="Controllers\LinkPermissionsController.cs" />
     <Compile Include="Controllers\LinksController.cs" />
+    <Compile Include="Controllers\NewUserMappingsController.cs" />
     <Content Include="Account\Login.aspx" />
     <Content Include="Account\Register.aspx" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\Calendar.css" />
     <Content Include="Content\images\arrow.png" />
+    <Content Include="Content\images\ganandalogo.png" />
     <Content Include="Content\images\highlight.png" />
     <Content Include="Content\menu\left-full.css" />
     <Content Include="Content\Site.css" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
+    <Content Include="Modules\Registration\Default.aspx" />
     <Content Include="Modules\Scheduler\ManageEvent.aspx" />
     <Content Include="Modules\Scheduler\Default.aspx" />
     <Content Include="Modules\PlayerManagement\Default.aspx" />
@@ -272,6 +279,7 @@
     <Content Include="favicon.ico" />
     <Content Include="Site.Master" />
     <Content Include="Source\Controls\AddressBook.ascx" />
+    <Content Include="Source\Controls\Alert.ascx" />
     <Content Include="Source\Controls\AlertBox.ascx" />
     <Content Include="Source\Controls\AttendanceTrackingWidget.ascx" />
     <Content Include="Source\Controls\EmailAddressBook.ascx" />
@@ -287,6 +295,7 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
     <Content Include="SiteNotLoggedIn.Master" />
     <Content Include="Scripts\Web.config" />
+    <Content Include="SiteNoNavigation.Master" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -318,6 +327,13 @@
     <Compile Include="Controllers\Scoping\ProgramsController.Partial.cs" />
     <Compile Include="Controllers\GuardiansController.cs" />
     <Compile Include="Controllers\EmailAddressesController.cs" />
+    <Compile Include="Modules\Registration\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Registration\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Modules\Scheduler\ManageEvent.aspx.cs">
       <DependentUpon>ManageEvent.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -411,6 +427,13 @@
     <Compile Include="Site.Master.designer.cs">
       <DependentUpon>Site.Master</DependentUpon>
     </Compile>
+    <Compile Include="SiteNoNavigation.Master.cs">
+      <DependentUpon>SiteNoNavigation.Master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SiteNoNavigation.Master.designer.cs">
+      <DependentUpon>SiteNoNavigation.Master</DependentUpon>
+    </Compile>
     <Compile Include="SiteNotLoggedIn.Master.cs">
       <DependentUpon>SiteNotLoggedIn.Master</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -424,6 +447,13 @@
     </Compile>
     <Compile Include="Source\Controls\AddressBook.ascx.designer.cs">
       <DependentUpon>AddressBook.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Controls\Alert.ascx.cs">
+      <DependentUpon>Alert.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Source\Controls\Alert.ascx.designer.cs">
+      <DependentUpon>Alert.ascx</DependentUpon>
     </Compile>
     <Compile Include="Source\Controls\AlertBox.ascx.cs">
       <DependentUpon>AlertBox.ascx</DependentUpon>
@@ -481,6 +511,7 @@
     <Compile Include="Source\Exceptions\UserNotScopedException.cs" />
     <Compile Include="Source\Utils\ConverterUtils.cs" />
     <Compile Include="Source\Utils\DBUtils.cs" />
+    <Compile Include="Source\Utils\ExceptionHandler.cs" />
     <Compile Include="Source\Utils\PageExtensions.cs" />
     <Compile Include="Source\Utils\UserInputUtils.cs" />
     <Compile Include="Source\Wizards\PlayerManagement.ascx.cs">
@@ -490,6 +521,7 @@
     <Compile Include="Source\Wizards\PlayerManagement.ascx.designer.cs">
       <DependentUpon>PlayerManagement.ascx</DependentUpon>
     </Compile>
+    <Compile Include="Source\Wizards\PlayerManager.cs" />
     <Compile Include="Source\Wizards\UserManagement.ascx.cs">
       <DependentUpon>UserManagement.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

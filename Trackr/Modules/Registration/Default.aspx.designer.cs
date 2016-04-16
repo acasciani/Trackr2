@@ -7,10 +7,28 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Trackr.Account {
+namespace Trackr.Modules.Registration {
     
     
-    public partial class Register {
+    public partial class Default {
+        
+        /// <summary>
+        /// mvRegister control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.MultiView mvRegister;
+        
+        /// <summary>
+        /// vPreviouslyPlayed control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.View vPreviouslyPlayed;
         
         /// <summary>
         /// AlertBox control.
@@ -22,102 +40,75 @@ namespace Trackr.Account {
         protected global::Trackr.UI.AlertBox AlertBox;
         
         /// <summary>
-        /// CreateWizard control.
+        /// divPlayersFoundMessage control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CreateUserWizard CreateWizard;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl divPlayersFoundMessage;
         
         /// <summary>
-        /// Step2_Personal control.
+        /// divNoPlayersFoundMessage control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.WizardStep Step2_Personal;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl divNoPlayersFoundMessage;
         
         /// <summary>
-        /// txtFirstName control.
+        /// gvPossiblePlayerMatches control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtFirstName;
+        protected global::System.Web.UI.WebControls.GridView gvPossiblePlayerMatches;
         
         /// <summary>
-        /// validatorFirstNameRequired control.
+        /// vWizardNewPlayer control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator validatorFirstNameRequired;
+        protected global::System.Web.UI.WebControls.View vWizardNewPlayer;
         
         /// <summary>
-        /// txtMiddleInitial control.
+        /// widgetPlayerManagement control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtMiddleInitial;
+        protected global::Trackr.Source.Wizards.PlayerManagement widgetPlayerManagement;
         
         /// <summary>
-        /// txtLastName control.
+        /// divNavigation control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtLastName;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl divNavigation;
         
         /// <summary>
-        /// validatorLastNameRequired control.
+        /// lnkBackStep control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator validatorLastNameRequired;
+        protected global::System.Web.UI.WebControls.LinkButton lnkBackStep;
         
         /// <summary>
-        /// Step3_Completed control.
+        /// lnkContinueStep control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.WizardStep Step3_Completed;
-        
-        /// <summary>
-        /// pRedirect control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl pRedirect;
-        
-        /// <summary>
-        /// pFinish control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl pFinish;
-        
-        /// <summary>
-        /// dhlContinue control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.DynamicData.DynamicHyperLink dhlContinue;
+        protected global::System.Web.UI.WebControls.LinkButton lnkContinueStep;
     }
 }

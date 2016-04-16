@@ -10,23 +10,28 @@ namespace Trackr.Source.Controls
 {
     public partial class EmailAddressBook : UserControl
     {
-        [Serializable]
-        private class EmailResult
+        public delegate IList<EmailAddress> GetEmailAddresses(Guid personEditToken);
+
+        public Guid? PersonEditToken
         {
-            public string EmailAddress { get; set; }
-            public int EmailAddressID { get; set; }
+            get { return ViewState["PersonEditToken"] as Guid?; }
+            set { ViewState["PersonEditToken"] = value; }
         }
 
-        public int? PersonID
-        {
-            get { return ViewState["EmailAddressBookPersonID"] as int?; }
-            set { ViewState["EmailAddressBookPersonID"] = value; }
-        }
+        public GetEmailAddresses GetData { get; set; }
 
-        private List<EmailResult> EmailResults
-        {
-            get { return ViewState["EmailResults"] as List<EmailResult>; }
-            set { ViewState["EmailResults"] = value; }
+        private IList<EmailAddress> EmailAddresses {
+            get
+            {
+                if (PersonEditToken.HasValue)
+                {
+                    return GetData(PersonEditToken.Value);
+                }
+                else
+                {
+                    return new List<EmailAddress>();
+                }
+            }
         }
 
         private void ClearForm()
@@ -38,13 +43,19 @@ namespace Trackr.Source.Controls
         protected void Page_Load(object sender, EventArgs e)
         {
             AlertBox.HideStatus();
+
+            if (IsPostBack)
+            {
+                return;
+            }
+
+            gvEmailAddressBook.DataBind();
         }
 
         public void Reset()
         {
             ClearForm();
             divEdit.Visible = false;
-            PersonID = null;
         }
 
         public void HideForm()
@@ -55,38 +66,25 @@ namespace Trackr.Source.Controls
 
         protected void lnkSaveEmailAddress_Click(object sender, EventArgs e)
         {
-            if (!PersonID.HasValue)
+            Guid editToken = gvEmailAddressBook.EditIndex == -1 ? Guid.NewGuid() : (Guid)gvEmailAddressBook.DataKeys[gvEmailAddressBook.EditIndex].Value;
+
+            EmailAddress emailAddress = EmailAddresses.FirstOrDefault(i => i.EditToken == editToken) ?? new EmailAddress() { EditToken = Guid.NewGuid() };
+
+            emailAddress.Email = string.IsNullOrWhiteSpace(txtEmailAddress.Text) ? null : txtEmailAddress.Text.Trim();
+            emailAddress.IsHTML = chkIsHTML.Checked;
+            emailAddress.WasModified = true;
+
+            if (EmailAddresses.FirstOrDefault(i => i.EditToken == editToken) == null)
             {
-                throw new Exception("Email address book does not have a person ID.");
+                emailAddress.SortOrder = Convert.ToByte(EmailAddresses.Count());
+                EmailAddresses.Add(emailAddress);
             }
 
-            int? emailAddressID = gvEmailAddressBook.EditIndex == -1 ? (int?)null : (int)gvEmailAddressBook.DataKeys[gvEmailAddressBook.EditIndex].Value;
-
-            using (EmailAddressesController eac = new EmailAddressesController())
-            {
-                EmailAddress emailAddress = emailAddressID.HasValue ? eac.Get(emailAddressID.Value) : new EmailAddress();
-
-                emailAddress.EmailAddress1 = string.IsNullOrWhiteSpace(txtEmailAddress.Text) ? null : txtEmailAddress.Text.Trim();
-                emailAddress.IsHTML = chkIsHTML.Checked;
-
-                if (emailAddressID.HasValue)
-                {
-                    // edit
-                    eac.Update(emailAddress);
-                }
-                else
-                {
-                    // add
-                    emailAddress.PersonID = PersonID.Value;
-                    emailAddress.SortOrder = Convert.ToByte(eac.GetWhere(i => i.PersonID == PersonID).Count());
-                    eac.AddNew(emailAddress);
-                }
-            }
-
-            gvEmailAddressBook.DataBind();
             divEdit.Visible = false;
             ClearForm();
-            AlertBox.SetStatus("Successfully saved email address.");
+            AlertBox.AddAlert(string.Format("Successfully {0} email address. Your settings will be saved when you complete this wizard.", gvEmailAddressBook.EditIndex == -1 ? "added" : "edited"), false, UI.AlertBoxType.Warning);
+            gvEmailAddressBook.EditIndex = -1;
+            gvEmailAddressBook.DataBind();
         }
 
         protected void lnkAddEmailAddress_Click(object sender, EventArgs e)
@@ -97,30 +95,17 @@ namespace Trackr.Source.Controls
 
         public IQueryable gvEmailAddressBook_GetData()
         {
-            using (EmailAddressesController eac = new EmailAddressesController())
-            {
-                EmailResults = eac.GetWhere(i => i.PersonID == PersonID).OrderBy(i => i.SortOrder).Select(i => new EmailResult()
-                {
-                    EmailAddress = i.EmailAddress1,
-                    EmailAddressID = i.EmailAddressID
-                }).ToList();
-
-                return EmailResults.AsQueryable();
-            }
+            return (EmailAddresses ?? new List<EmailAddress>()).AsQueryable();
         }
 
-        public void gvEmailAddressBook_DeleteItem(int EmailAddressID)
+        public void gvEmailAddressBook_DeleteItem(Guid EditToken)
         {
-            using (EmailAddressesController eac = new EmailAddressesController())
-            {
-                eac.Delete(EmailAddressID);
-                gvEmailAddressBook.DataBind();
+            EmailAddress emailAddress = EmailAddresses.First(i => i.EditToken == EditToken);
+            EmailAddresses.Remove(emailAddress);
+            gvEmailAddressBook.DataBind();
 
-                ClearForm();
-                divEdit.Visible = false;
-
-                AlertBox.SetStatus("Successfully removed email address.");
-            }
+            ClearForm();
+            divEdit.Visible = false;
         }
 
         protected void gvEmailAddressBook_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
@@ -134,23 +119,19 @@ namespace Trackr.Source.Controls
 
         protected void gvEmailAddressBook_RowEditing(object sender, GridViewEditEventArgs e)
         {
-            int emailAddressID = (int)gvEmailAddressBook.DataKeys[e.NewEditIndex].Value;
-            Populate_EmailAddressEdit(emailAddressID);
+            Guid editToken = (Guid)gvEmailAddressBook.DataKeys[e.NewEditIndex].Value;
+            Populate_EmailAddressEdit(editToken);
             gvEmailAddressBook.EditIndex = e.NewEditIndex;
             gvEmailAddressBook.DataBind();
         }
 
-        private void Populate_EmailAddressEdit(int emailAddressID)
+        private void Populate_EmailAddressEdit(Guid editToken)
         {
-            using (EmailAddressesController eac = new EmailAddressesController())
-            {
-                EmailAddress emailAddress = eac.Get(emailAddressID);
+            EmailAddress emailAddress = EmailAddresses.First(i => i.EditToken == editToken);
 
-                txtEmailAddress.Text = emailAddress.EmailAddress1;
-                chkIsHTML.Checked = emailAddress.IsHTML;
-
-                divEdit.Visible = true;
-            }
+            txtEmailAddress.Text = emailAddress.Email;
+            chkIsHTML.Checked = emailAddress.IsHTML;
+            divEdit.Visible = true;
         }
     }
 }

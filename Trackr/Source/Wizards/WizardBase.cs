@@ -41,9 +41,17 @@ namespace Trackr.Source.Wizards
                 // If no primary key set then it is new and therefore was new
                 if (!PrimaryKey.HasValue) { return true; }
 
+                bool? wasNew = ViewState["WasNew"] as bool?;
+                if (wasNew.HasValue) { return wasNew.Value; }
+
                 // If primary key set, need to make sure query string did not parse to a valid K type
                 K? converted = Request.QueryString["id"].TryParse<K>();
                 return !converted.HasValue;
+            }
+
+            protected set
+            {
+                ViewState["WasNew"] = value;
             }
         }
     }

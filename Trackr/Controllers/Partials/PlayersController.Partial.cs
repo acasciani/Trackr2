@@ -72,7 +72,7 @@ namespace Trackr
             }
         }
 
-        public List<PlayerMatch> GetPossibleMatches(int clubID, string firstName, string lastName, char? gender, DateTime? dob)
+        public List<PlayerMatch> GetPossibleMatches(int clubID, string firstName, string lastName, char? gender, DateTime? dob, double? firstNamePrecision = null, double? lastNamePrecision = null, int? dobPrecision = null)
         {
             try
             {
@@ -85,6 +85,9 @@ namespace Trackr
                     cmd.Parameters.AddWithValue("@LastName", lastName);
                     cmd.Parameters.AddWithValue("@Gender", gender);
                     cmd.Parameters.AddWithValue("@DOB", dob);
+                    cmd.Parameters.AddWithValue("@FirstNamePrecision", firstNamePrecision);
+                    cmd.Parameters.AddWithValue("@LastNamePrecision", lastNamePrecision);
+                    cmd.Parameters.AddWithValue("@DOBPrecision", dobPrecision);
 
                     conn.Open();
 

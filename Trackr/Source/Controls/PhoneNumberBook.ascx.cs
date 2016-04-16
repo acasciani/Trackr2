@@ -5,48 +5,60 @@ using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using TrackrModels;
 using Trackr.Utils;
+using TrackrModels;
 
 namespace Trackr.Source.Controls
 {
     public partial class PhoneNumberBook : UserControl
     {
-        [Serializable]
-        private class PhoneNumberResult
+        public delegate IList<PhoneNumber> GetPhoneNumbers(Guid personEditToken);
+
+        public Guid? PersonEditToken
         {
-            public string PhoneNumber { get; set; }
-            public int PhoneNumberID { get; set; }
+            get { return ViewState["PersonEditToken"] as Guid?; }
+            set { ViewState["PersonEditToken"] = value; }
         }
 
-        public int? PersonID
-        {
-            get { return ViewState["PhoneNumberBookPersonID"] as int?; }
-            set { ViewState["PhoneNumberBookPersonID"] = value; }
-        }
+        public GetPhoneNumbers GetData { get; set; }
 
-        private List<PhoneNumberResult> PhoneNumberResults
+        private IList<PhoneNumber> PhoneNumbers
         {
-            get { return ViewState["PhoneNumberResults"] as List<PhoneNumberResult>; }
-            set { ViewState["PhoneNumberResults"] = value; }
+            get
+            {
+                if (PersonEditToken.HasValue)
+                {
+                    return GetData(PersonEditToken.Value);
+                }
+                else
+                {
+                    return new List<PhoneNumber>();
+                }
+            }
         }
 
         private void ClearForm()
         {
-            txtPhoneNumber.Text = "";
             txtExtension.Text = "";
+            txtPhoneNumber.Text = "";
         }
 
         protected void Page_Load(object sender, EventArgs e)
         {
             AlertBox.HideStatus();
+
+            if (IsPostBack)
+            {
+                return;
+            }
+
+            gvPhoneNumberBook.DataBind();
         }
 
         public void Reset()
         {
             ClearForm();
             divEdit.Visible = false;
-            PersonID = null;
         }
 
         public void HideForm()
@@ -57,43 +69,24 @@ namespace Trackr.Source.Controls
 
         protected void lnkSavePhoneNumber_Click(object sender, EventArgs e)
         {
-            if (!Page.IsValid)
+            Guid editToken = gvPhoneNumberBook.EditIndex == -1 ? Guid.NewGuid() : (Guid)gvPhoneNumberBook.DataKeys[gvPhoneNumberBook.EditIndex].Value;
+
+            PhoneNumber phoneNumber = PhoneNumbers.FirstOrDefault(i => i.EditToken == editToken) ?? new PhoneNumber() { EditToken = Guid.NewGuid() };
+
+            phoneNumber.TenDigit = string.IsNullOrWhiteSpace(txtPhoneNumber.Text) ? null : UserInputUtils.GetTenDigitNumber(txtPhoneNumber.Text);
+            phoneNumber.Extension = string.IsNullOrWhiteSpace(txtExtension.Text) ? null : txtExtension.Text.Trim();
+            phoneNumber.WasModified = true;
+
+            if (PhoneNumbers.FirstOrDefault(i => i.EditToken == editToken) == null)
             {
-                return;
+                phoneNumber.SortOrder = Convert.ToByte(PhoneNumbers.Count());
+                PhoneNumbers.Add(phoneNumber);
             }
 
-            if (!PersonID.HasValue)
-            {
-                throw new Exception("Phone number book does not have a person ID.");
-            }
-
-            int? phoneNumberID = gvPhoneNumberBook.EditIndex == -1 ? (int?)null : (int)gvPhoneNumberBook.DataKeys[gvPhoneNumberBook.EditIndex].Value;
-
-            using (PhoneNumbersController pnc = new PhoneNumbersController())
-            {
-                PhoneNumber phoneNumber = phoneNumberID.HasValue ? pnc.Get(phoneNumberID.Value) : new PhoneNumber();
-
-                phoneNumber.TenDigit = string.IsNullOrWhiteSpace(txtPhoneNumber.Text) ? null : UserInputUtils.GetTenDigitNumber(txtPhoneNumber.Text);
-                phoneNumber.Extension = string.IsNullOrWhiteSpace(txtExtension.Text) ? null : txtExtension.Text.Trim();
-
-                if (phoneNumberID.HasValue)
-                {
-                    // edit
-                    pnc.Update(phoneNumber);
-                }
-                else
-                {
-                    // add
-                    phoneNumber.PersonID = PersonID.Value;
-                    phoneNumber.SortOrder = Convert.ToByte(pnc.GetWhere(i => i.PersonID == PersonID).Count());
-                    pnc.AddNew(phoneNumber);
-                }
-            }
-            
-            gvPhoneNumberBook.DataBind();
             divEdit.Visible = false;
             ClearForm();
-            AlertBox.SetStatus("Successfully saved phone number.");
+            gvPhoneNumberBook.EditIndex = -1;
+            gvPhoneNumberBook.DataBind();
         }
 
         protected void lnkAddPhoneNumber_Click(object sender, EventArgs e)
@@ -104,30 +97,17 @@ namespace Trackr.Source.Controls
 
         public IQueryable gvPhoneNumberBook_GetData()
         {
-            using (PhoneNumbersController pnc = new PhoneNumbersController())
-            {
-                PhoneNumberResults = pnc.GetWhere(i => i.PersonID == PersonID).OrderBy(i => i.SortOrder).Select(i => new PhoneNumberResult()
-                {
-                    PhoneNumber = Utils.UserInputUtils.FormatTenDigitNumber(i.TenDigit),
-                    PhoneNumberID = i.PhoneNumberID
-                }).ToList();
-
-                return PhoneNumberResults.AsQueryable();
-            }
+            return (PhoneNumbers ?? new List<PhoneNumber>()).AsQueryable();
         }
 
-        public void gvPhoneNumberBook_DeleteItem(int PhoneNumberID)
+        public void gvPhoneNumberBook_DeleteItem(Guid EditToken)
         {
-            using (PhoneNumbersController pnc = new PhoneNumbersController())
-            {
-                pnc.Delete(PhoneNumberID);
-                gvPhoneNumberBook.DataBind();
+            PhoneNumber phoneNumber = PhoneNumbers.First(i => i.EditToken == EditToken);
+            PhoneNumbers.Remove(phoneNumber);
+            gvPhoneNumberBook.DataBind();
 
-                ClearForm();
-                divEdit.Visible = false;
-
-                AlertBox.SetStatus("Successfully removed phone number.");
-            }
+            ClearForm();
+            divEdit.Visible = false;
         }
 
         protected void gvPhoneNumberBook_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
@@ -141,23 +121,19 @@ namespace Trackr.Source.Controls
 
         protected void gvPhoneNumberBook_RowEditing(object sender, GridViewEditEventArgs e)
         {
-            int phoneNumberID = (int)gvPhoneNumberBook.DataKeys[e.NewEditIndex].Value;
-            Populate_PhoneNumberEdit(phoneNumberID);
+            Guid editToken = (Guid)gvPhoneNumberBook.DataKeys[e.NewEditIndex].Value;
+            Populate_PhoneNumberEdit(editToken);
             gvPhoneNumberBook.EditIndex = e.NewEditIndex;
             gvPhoneNumberBook.DataBind();
         }
 
-        private void Populate_PhoneNumberEdit(int phoneNumberID)
+        private void Populate_PhoneNumberEdit(Guid editToken)
         {
-            using (PhoneNumbersController pnc = new PhoneNumbersController())
-            {
-                PhoneNumber phoneNumber = pnc.Get(phoneNumberID);
+            PhoneNumber phoneNumber = PhoneNumbers.First(i => i.EditToken == editToken);
 
-                txtExtension.Text = phoneNumber.Extension;
-                txtPhoneNumber.Text = Utils.UserInputUtils.FormatTenDigitNumber(phoneNumber.TenDigit);
-
-                divEdit.Visible = true;
-            }
+            txtExtension.Text = phoneNumber.Extension;
+            txtPhoneNumber.Text = Utils.UserInputUtils.FormatTenDigitNumber(phoneNumber.TenDigit);
+            divEdit.Visible = true;
         }
 
         protected void valFormatPhoneNumber_ServerValidate(object source, ServerValidateEventArgs args)

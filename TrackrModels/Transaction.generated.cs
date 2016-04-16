@@ -208,7 +208,7 @@ namespace TrackrModels
 		}
 		
 		private WebUserInfo _webUserInfo;
-		public virtual WebUserInfo WebUserInfo
+		public virtual WebUserInfo CreateUser
 		{
 			get
 			{
@@ -221,7 +221,7 @@ namespace TrackrModels
 		}
 		
 		private WebUserInfo _webUserInfo1;
-		public virtual WebUserInfo WebUserInfo1
+		public virtual WebUserInfo ModifyUser
 		{
 			get
 			{
