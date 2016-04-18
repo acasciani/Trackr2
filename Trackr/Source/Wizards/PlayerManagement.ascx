@@ -261,7 +261,7 @@
 
         <asp:WizardStep runat="server" ID="Step3_Picture" StepType="Step" Title="Player Passes">
             <asp:GridView runat="server" ID="gvPlayerPasses" AutoGenerateColumns="false" SelectMethod="gvPlayerPasses_GetData" EmptyDataText="This player does not have any player passes." CssClass="table table-striped table-hover" 
-                OnRowEditing="gvPlayerPasses_RowEditing" OnRowCancelingEdit="gvPlayerPasses_RowCancelingEdit" DeleteMethod="gvPlayerPasses_DeleteItem" DataKeyNames="PlayerPassID">
+                OnRowEditing="gvPlayerPasses_RowEditing" OnRowCancelingEdit="gvPlayerPasses_RowCancelingEdit" DeleteMethod="gvPlayerPasses_DeleteItem" DataKeyNames="EditToken">
                 <Columns>
                     <asp:BoundField DataField="Expiration" HeaderText="Expiration" DataFormatString="{0:MM/dd/yyyy}" ReadOnly="true" />
                     <asp:BoundField DataField="PassNumber" HeaderText="Pass Number" ReadOnly="true" />
@@ -270,7 +270,7 @@
                         <ItemTemplate>
                             <asp:LinkButton runat="server" ID="lnkRemovePlayerPass" Visible='<%# (bool)Eval("Editable") %>' CommandName="Delete" ToolTip="Remove player pass" CssClass="glyphicon glyphicon-trash" CausesValidation="false"></asp:LinkButton> <span runat="server" visible='<%# (bool)Eval("Editable") %>'>&nbsp;&nbsp;</span>
                             <asp:LinkButton runat="server" ID="lnkEditPlayerPass" Visible='<%# (bool)Eval("Editable") %>' CommandName="Edit" ToolTip="Edit player pass" CssClass="glyphicon glyphicon-edit" CausesValidation="false"></asp:LinkButton>
-                            <asp:LinkButton runat="server" ID="lnkViewPlayerPass" Visible='<%# !(bool)Eval("Editable") %>' CommandArgument='<%# Eval("PlayerPassID") %>' OnClick="lnkViewPlayerPass_Click" CausesValidation="false" ToolTip="View player pass" CssClass="glyphicon glyphicon-eye-open"></asp:LinkButton>
+                            <asp:LinkButton runat="server" ID="lnkViewPlayerPass" Visible='<%# !(bool)Eval("Editable") %>' CommandArgument='<%# Eval("EditToken") %>' OnClick="lnkViewPlayerPass_Click" CausesValidation="false" ToolTip="View player pass" CssClass="glyphicon glyphicon-eye-open"></asp:LinkButton>
                         </ItemTemplate>
                     </asp:TemplateField>
                 </Columns>

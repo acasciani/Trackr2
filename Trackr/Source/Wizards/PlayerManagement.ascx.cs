@@ -133,11 +133,7 @@ namespace Trackr.Source.Wizards
 
                 txtDateOfBirth.Text = player.Person.DateOfBirth.HasValue ? player.Person.DateOfBirth.Value.ToString("yyyy-MM-dd") : "";
 
-                // Load player pass info, note there should only be one there should be a constraint on the player id and expiration date
-                PlayerPass playerPass = player.PlayerPasses.Where(i => DateTime.Today.ToUniversalTime() <= i.Expires).FirstOrDefault();
-
                 divPreview.Visible = false;
-
                 pnlPossiblePlayerMatches.Visible = false;
 
                 // Reset views
@@ -523,20 +519,14 @@ namespace Trackr.Source.Wizards
         }
 
         public IQueryable gvPlayerPasses_GetData()
-        {/*
-            using (PlayerPassesController ppc = new PlayerPassesController())
+        {
+            return PlayerManager.Player.PlayerPasses.Where(i => i.Active).Select(i => new
             {
-                PlayerPasses = ppc.GetWhere(i => i.PlayerID == PrimaryKey.Value).OrderByDescending(i => i.Expires).ToList();
-
-                return PlayerPasses.Select(i => new
-                {
-                    Expiration = i.Expires,
-                    PassNumber = i.PassNumber,
-                    PlayerPassID = i.PlayerPassID,
-                    Editable = DateTime.Today.ToUniversalTime() < i.Expires,
-                }).AsQueryable();
-            }*/
-            return null;
+                Expiration = i.Expires,
+                PassNumber = i.PassNumber,
+                PlayerPassID = i.PlayerPassID,
+                Editable = DateTime.Today.ToUniversalTime() < i.Expires,
+            }).OrderByDescending(i => i.Expiration).AsQueryable();
         }
 
         protected void gvPlayerPasses_RowEditing(object sender, GridViewEditEventArgs e)
@@ -552,61 +542,43 @@ namespace Trackr.Source.Wizards
             gvPlayerPasses.DataBind();
         }
 
-        private void SavePlayerPass(int? playerPassID)
+        private Guid SavePlayerPass(Guid? editToken)
         {
-            using (PlayerPassesController ppc = new PlayerPassesController())
+            if (!editToken.HasValue)
             {
-                PlayerPass playerPass = playerPassID.HasValue ? ppc.Get(playerPassID.Value) : new PlayerPass();
-
-                playerPass.Photo = NewPlayerPicture == null || NewPlayerPicture.Length == 0 ? null : NewPlayerPicture;
-                playerPass.Expires = DateTime.Parse(txtPassExpires.Text);
-                playerPass.PassNumber = string.IsNullOrWhiteSpace(txtPassNumber.Text) ? null : txtPassNumber.Text;
-
-                if (!playerPassID.HasValue)
-                {
-                    playerPass.PlayerID = PrimaryKey.Value;
-
-                    PlayerPass inserted = ppc.AddNew(playerPass);
-                    playerPassID = inserted.PlayerPassID;
-                    AlertBox.SetStatus("Successfully saved new player pass.");
-                }
-                else
-                {
-                    ppc.Update(playerPass);
-                    AlertBox.SetStatus("Successfully saved existing player pass.");
-                }
-
-                NewPlayerPicture = null;
-                OldPlayerPicture = null;
-                pnlAddEditPass.Visible = false;
-                gvPlayerPasses.EditIndex = -1;
-                gvPlayerPasses.DataBind();
+                editToken = PlayerManager.AddPlayerPass();
             }
+
+            PlayerManager.UpdatePlayerPass(editToken.Value, (string.IsNullOrWhiteSpace(txtPassNumber.Text) ? null : txtPassNumber.Text), DateTime.Parse(txtPassExpires.Text));
+            PlayerManager.UpdatePlayerPassPhoto(editToken.Value, (NewPlayerPicture == null || NewPlayerPicture.Length == 0 ? null : NewPlayerPicture));
+
+            NewPlayerPicture = null;
+            OldPlayerPicture = null;
+            pnlAddEditPass.Visible = false;
+            gvPlayerPasses.EditIndex = -1;
+            gvPlayerPasses.DataBind();
+
+            return editToken.Value;
         }
 
-        private void Populate_PlayerPassEdit(int playerPassID)
+        private void Populate_PlayerPassEdit(Guid editToken)
         {
-            using (PlayerPassesController ppc = new PlayerPassesController())
+            ClearPlayerPassForm();
+
+            // populate
+            PlayerPass playerPass = PlayerManager.Player.PlayerPasses.First(i => i.EditToken == editToken);
+
+            txtPassExpires.Text = playerPass.Expires.ToString("yyyy-MM-dd");
+            txtPassNumber.Text = playerPass.PassNumber;
+            OldPlayerPicture = playerPass.Photo;
+            NewPlayerPicture = playerPass.Photo;
+
+            if (playerPass.Photo != null && playerPass.Photo.Count() > 0)
             {
-                FetchStrategy fetch = new FetchStrategy();
-                fetch.LoadWith<PlayerPass>(i => i.Photo);
-
-                PlayerPass pass = ppc.GetWhere(i => i.PlayerPassID == playerPassID, fetch).First();
-                ClearPlayerPassForm();
-
-                // populate
-                txtPassExpires.Text = pass.Expires.ToString("yyyy-MM-dd");
-                txtPassNumber.Text = pass.PassNumber;
-                OldPlayerPicture = pass.Photo;
-                NewPlayerPicture = pass.Photo;
-
-                if (pass.Photo != null && pass.Photo.Count() > 0)
-                {
-                    SetPreviewImage(pass.Photo);
-                }
-
-                pnlAddEditPass.Visible = true;
+                SetPreviewImage(playerPass.Photo);
             }
+
+            pnlAddEditPass.Visible = true;
         }
 
         protected void lnkSavePlayerPass_Click(object sender, EventArgs e)
@@ -616,8 +588,9 @@ namespace Trackr.Source.Wizards
                 return;
             }
 
-            //int? playerPassID = gvPlayerPasses.EditIndex != -1 ? PlayerPasses[gvPlayerPasses.EditIndex].PlayerPassID : (int?)null;
-            //SavePlayerPass(playerPassID);
+            Guid? editToken = gvPlayerPasses.EditIndex != -1 ? (Guid)gvPlayerPasses.DataKeys[gvPlayerPasses.EditIndex].Value : (Guid?)null;
+            editToken = SavePlayerPass(editToken);
+            gvPlayerPasses.DataBind();
         }
 
         protected void lnkAddPlayerPass_Click(object sender, EventArgs e)
@@ -630,9 +603,10 @@ namespace Trackr.Source.Wizards
 
         protected void lnkViewPlayerPass_Click(object sender, EventArgs e)
         {
-            int playerPassID;
-            if(int.TryParse(((LinkButton)sender).CommandArgument, out playerPassID)){
-                Populate_PlayerPassEdit(playerPassID);
+            Guid playerPassEditToken;
+            if (Guid.TryParse(((LinkButton)sender).CommandArgument, out playerPassEditToken))
+            {
+                Populate_PlayerPassEdit(playerPassEditToken);
                 txtPassExpires.ReadOnly = true;
                 txtPassNumber.ReadOnly = true;
                 pnlPhotoUpload.Visible = false;
@@ -643,37 +617,28 @@ namespace Trackr.Source.Wizards
         }
 
         protected void validatorPlayerPassExpiresDuplicate_ServerValidate(object source, ServerValidateEventArgs args)
-        {/*
+        {
             DateTime exp;
             if (DateTime.TryParse(args.Value, out exp))
             {
-                int? playerPassID = gvPlayerPasses.EditIndex != -1 ? PlayerPasses[gvPlayerPasses.EditIndex].PlayerPassID : (int?)null;
-                if (!playerPassID.HasValue)
+                Guid? editToken = gvPlayerPasses.EditIndex != -1 ? (Guid)gvPlayerPasses.DataKeys[gvPlayerPasses.EditIndex].Value : (Guid?)null;
+
+                if (!editToken.HasValue)
                 {
-                    args.IsValid = PlayerPasses.Count(i => i.PlayerID == PrimaryKey.Value && i.Expires == exp) == 0;
+                    args.IsValid = PlayerManager.Player.PlayerPasses.Count(i => i.Expires == exp) == 0;
                 }
                 else
                 {
-                    args.IsValid = PlayerPasses.Count(i => i.PlayerID == PrimaryKey.Value && i.Expires == exp && i.PlayerPassID != playerPassID.Value) == 0;
+                    args.IsValid = PlayerManager.Player.PlayerPasses.Count(i => i.Expires == exp && i.EditToken != editToken.Value) == 0;
                 }
-            }*/
+            }
         }
 
         // The id parameter name should match the DataKeyNames value set on the control
-        public void gvPlayerPasses_DeleteItem(int? PlayerPassID)
+        public void gvPlayerPasses_DeleteItem(Guid editToken)
         {
             ClearPlayerPassForm();
-
-            if (!PlayerPassID.HasValue)
-            {
-                return;
-            }
-            using (PlayerPassesController ppc = new PlayerPassesController())
-            {
-                ppc.Delete(PlayerPassID.Value);
-                AlertBox.SetStatus("Successfully deleted player pass and all team assignments with that player pass.");
-            }
-
+            PlayerManager.DeletePlayerPass(editToken);
             gvPlayerPasses.DataBind();
         }
         #endregion

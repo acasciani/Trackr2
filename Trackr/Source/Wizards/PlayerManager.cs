@@ -401,12 +401,39 @@ namespace Trackr.Source.Wizards
                     }
                 }
 
+                IList<TeamPlayer> _freshTeamPlayers = freshCopy.TeamPlayers;
+                Copy(_freshTeamPlayers, _Player.TeamPlayers);
+
+                foreach (PlayerPass playerPass in _Player.PlayerPasses)
+                {
+                    PlayerPass _freshCopy = playerPass.PlayerPassID == 0 ? new PlayerPass() : freshCopy.PlayerPasses.First(i => i.PlayerPassID == playerPass.PlayerPassID);
+
+                    if (playerPass.PlayerPassID == 0 || playerPass.WasModified)
+                    {
+                        _freshCopy.Active = playerPass.Active;
+                        _freshCopy.Expires = playerPass.Expires;
+                        _freshCopy.PassNumber = playerPass.PassNumber;
+                        _freshCopy.Photo = playerPass.Photo;
+                    }
+
+                    IList<TeamPlayer> _freshPlayerPassTeamPlayers = _freshCopy.TeamPlayers;
+                    Copy(_freshPlayerPassTeamPlayers, playerPass.TeamPlayers);
+
+                    if (_freshCopy.PlayerPassID == 0)
+                    {
+                        freshCopy.PlayerPasses.Add(_freshCopy);
+                    }
+                }
+
                 freshCopy.Person.LastModifiedAt = modifiedAt;
                 freshCopy.Guardians.ToList().ForEach(i => { i.LastModifiedAt = modifiedAt; i.LastModifiedBy = modifiedByUser; });
                 freshCopy.Guardians.Select(i => i.Person).ToList().ForEach(i => { i.LastModifiedAt = modifiedAt; i.LastModifiedBy = modifiedByUser; });
                 freshCopy.Person.EmailAddresses.Union(freshCopy.Guardians.Select(i => i.Person).SelectMany(i => i.EmailAddresses)).ToList().ForEach(i => { i.LastModifiedAt = modifiedAt; i.LastModifiedBy = modifiedByUser; });
                 freshCopy.Person.PhoneNumbers.Union(freshCopy.Guardians.Select(i => i.Person).SelectMany(i => i.PhoneNumbers)).ToList().ForEach(i => { i.LastModifiedAt = modifiedAt; i.LastModifiedBy = modifiedByUser; });
                 freshCopy.Person.Addresses.Union(freshCopy.Guardians.Select(i => i.Person).SelectMany(i => i.Addresses)).ToList().ForEach(i => { i.LastModifiedAt = modifiedAt; i.LastModifiedBy = modifiedByUser; });
+
+                freshCopy.PlayerPasses.ToList().ForEach(i => { i.LastModifiedAt = modifiedAt; i.LastModifiedBy = modifiedByUser; });
+                freshCopy.TeamPlayers.Union(freshCopy.PlayerPasses.SelectMany(i => i.TeamPlayers)).ToList().ForEach(i => { i.LastModifiedAt = modifiedAt; i.LastModifiedBy = modifiedByUser; });
 
                 if (freshCopy.PlayerID == 0)
                 {
