@@ -155,6 +155,19 @@ namespace TrackrModels
 			}
 		}
 		
+		private bool _active;
+		public virtual bool Active
+		{
+			get
+			{
+				return this._active;
+			}
+			set
+			{
+				this._active = value;
+			}
+		}
+		
 		private Person _person;
 		public virtual Person Person
 		{
@@ -186,6 +199,7 @@ namespace TrackrModels
 			this.SortOrder = info.GetByte("SortOrder");
 			this.LastModifiedBy = info.GetInt32("LastModifiedBy");
 			this.LastModifiedAt = (DateTime)info.GetValue("LastModifiedAt", typeof(DateTime));
+			this.Active = info.GetBoolean("Active");
 			CustomizeDeserializationProcess(info, context);
 		}
 		
@@ -201,6 +215,7 @@ namespace TrackrModels
 			info.AddValue("SortOrder", this.SortOrder, typeof(byte));
 			info.AddValue("LastModifiedBy", this.LastModifiedBy, typeof(int));
 			info.AddValue("LastModifiedAt", this.LastModifiedAt, typeof(DateTime));
+			info.AddValue("Active", this.Active, typeof(bool));
 			CustomizeSerializationProcess(info, context);
 		}
 		

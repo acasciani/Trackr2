@@ -76,10 +76,12 @@ namespace Trackr.Source.Controls
 
             if (EmailAddresses.FirstOrDefault(i => i.EditToken == editToken) == null)
             {
+                emailAddress.Active = true;
                 emailAddress.SortOrder = Convert.ToByte(EmailAddresses.Count());
                 EmailAddresses.Add(emailAddress);
             }
 
+            lnkAddEmailAddress.Visible = true;
             divEdit.Visible = false;
             ClearForm();
             AlertBox.AddAlert(string.Format("Successfully {0} email address. Your settings will be saved when you complete this wizard.", gvEmailAddressBook.EditIndex == -1 ? "added" : "edited"), false, UI.AlertBoxType.Warning);
@@ -89,19 +91,30 @@ namespace Trackr.Source.Controls
 
         protected void lnkAddEmailAddress_Click(object sender, EventArgs e)
         {
+            lnkAddEmailAddress.Visible = false;
             divEdit.Visible = true;
             ClearForm();
         }
 
         public IQueryable gvEmailAddressBook_GetData()
         {
-            return (EmailAddresses ?? new List<EmailAddress>()).AsQueryable();
+            return (EmailAddresses ?? new List<EmailAddress>()).Where(i => i.Active).AsQueryable();
         }
 
         public void gvEmailAddressBook_DeleteItem(Guid EditToken)
         {
             EmailAddress emailAddress = EmailAddresses.First(i => i.EditToken == EditToken);
-            EmailAddresses.Remove(emailAddress);
+
+            if (emailAddress.EmailAddressID > 0)
+            {
+                emailAddress.Active = false;
+                emailAddress.WasModified = true;
+            }
+            else
+            {
+                EmailAddresses.Remove(emailAddress);
+            }
+
             gvEmailAddressBook.DataBind();
 
             ClearForm();
@@ -115,6 +128,7 @@ namespace Trackr.Source.Controls
 
             ClearForm();
             divEdit.Visible = false;
+            lnkAddEmailAddress.Visible = true;
         }
 
         protected void gvEmailAddressBook_RowEditing(object sender, GridViewEditEventArgs e)
@@ -132,6 +146,11 @@ namespace Trackr.Source.Controls
             txtEmailAddress.Text = emailAddress.Email;
             chkIsHTML.Checked = emailAddress.IsHTML;
             divEdit.Visible = true;
+        }
+
+        protected void lnkCancel_Click(object sender, EventArgs e)
+        {
+            gvEmailAddressBook_RowCancelingEdit(null, null);
         }
     }
 }

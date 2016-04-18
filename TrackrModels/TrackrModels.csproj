@@ -123,6 +123,8 @@
     <Compile Include="ModelPartials\IEditable.cs" />
     <Compile Include="ModelPartials\Person.Partial.cs" />
     <Compile Include="ModelPartials\PhoneNumber.Partial.cs" />
+    <Compile Include="ModelPartials\PlayerPass.Partial.cs" />
+    <Compile Include="ModelPartials\TeamPlayer.Partial.cs" />
     <Compile Include="NewUserMapping.generated.cs">
       <DependentUpon>UserManagement.rlinq</DependentUpon>
     </Compile>

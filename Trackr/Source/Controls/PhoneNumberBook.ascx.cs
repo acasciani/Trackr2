@@ -79,10 +79,12 @@ namespace Trackr.Source.Controls
 
             if (PhoneNumbers.FirstOrDefault(i => i.EditToken == editToken) == null)
             {
+                phoneNumber.Active = true;
                 phoneNumber.SortOrder = Convert.ToByte(PhoneNumbers.Count());
                 PhoneNumbers.Add(phoneNumber);
             }
 
+            lnkAddPhoneNumber.Visible = true;
             divEdit.Visible = false;
             ClearForm();
             gvPhoneNumberBook.EditIndex = -1;
@@ -91,19 +93,30 @@ namespace Trackr.Source.Controls
 
         protected void lnkAddPhoneNumber_Click(object sender, EventArgs e)
         {
+            lnkAddPhoneNumber.Visible = false;
             divEdit.Visible = true;
             ClearForm();
         }
 
         public IQueryable gvPhoneNumberBook_GetData()
         {
-            return (PhoneNumbers ?? new List<PhoneNumber>()).AsQueryable();
+            return (PhoneNumbers ?? new List<PhoneNumber>()).Where(i => i.Active).AsQueryable();
         }
 
         public void gvPhoneNumberBook_DeleteItem(Guid EditToken)
         {
             PhoneNumber phoneNumber = PhoneNumbers.First(i => i.EditToken == EditToken);
-            PhoneNumbers.Remove(phoneNumber);
+
+            if (phoneNumber.PhoneNumberID > 0)
+            {
+                phoneNumber.Active = false;
+                phoneNumber.WasModified = true;
+            }
+            else
+            {
+                PhoneNumbers.Remove(phoneNumber);
+            }
+
             gvPhoneNumberBook.DataBind();
 
             ClearForm();
@@ -117,6 +130,7 @@ namespace Trackr.Source.Controls
 
             ClearForm();
             divEdit.Visible = false;
+            lnkAddPhoneNumber.Visible = true;
         }
 
         protected void gvPhoneNumberBook_RowEditing(object sender, GridViewEditEventArgs e)
@@ -143,6 +157,11 @@ namespace Trackr.Source.Controls
 
             // There should be EXACTLY 10 0-9 digits
             args.IsValid = matchesCorrectNumberOfNumbers.Count == 10 && matchesCorrectNumberOfNonChars.Count == 0;
+        }
+
+        protected void lnkCancel_Click(object sender, EventArgs e)
+        {
+            gvPhoneNumberBook_RowCancelingEdit(null, null);
         }
     }
 }

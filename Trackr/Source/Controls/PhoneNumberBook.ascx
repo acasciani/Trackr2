@@ -27,7 +27,7 @@
 
     <div class="col-sm-12 text-left">
         <asp:LinkButton runat="server" ID="lnkAddPhoneNumber" OnClick="lnkAddPhoneNumber_Click" ToolTip="Add new phone number">
-            <span class="glyphicon glyphicon-plus-sign"></span> Add Phone Number
+            <span class="glyphicon glyphicon-plus-sign"></span>Add Phone Number
         </asp:LinkButton>
     </div>
 </div>
@@ -48,9 +48,14 @@
 
     <div class="clearfix"></div>
 
-    <div class="col-sm-12">
+    <div class="col-sm-6 text-left">
         <asp:LinkButton runat="server" ID="lnkSavePhoneNumber" CausesValidation="true" OnClick="lnkSavePhoneNumber_Click">
-            <span class="glyphicon glyphicon-save"></span> Save Phone Number
+            <span class="glyphicon glyphicon-save"></span>Save Phone Number
+        </asp:LinkButton>
+    </div>
+    <div class="col-sm-6 text-right">
+        <asp:LinkButton runat="server" ID="lnkCancel" OnClick="lnkCancel_Click" CausesValidation="false">
+            <span class="glyphicon glyphicon-folder-close"></span>Cancel
         </asp:LinkButton>
     </div>
 </div>

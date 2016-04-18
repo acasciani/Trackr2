@@ -90,6 +90,45 @@ namespace TrackrModels
 			}
 		}
 		
+		private int _lastModifiedBy;
+		public virtual int LastModifiedBy
+		{
+			get
+			{
+				return this._lastModifiedBy;
+			}
+			set
+			{
+				this._lastModifiedBy = value;
+			}
+		}
+		
+		private DateTime _lastModifiedAt;
+		public virtual DateTime LastModifiedAt
+		{
+			get
+			{
+				return this._lastModifiedAt;
+			}
+			set
+			{
+				this._lastModifiedAt = value;
+			}
+		}
+		
+		private bool _active;
+		public virtual bool Active
+		{
+			get
+			{
+				return this._active;
+			}
+			set
+			{
+				this._active = value;
+			}
+		}
+		
 		private Team _team;
 		public virtual Team Team
 		{
@@ -142,6 +181,9 @@ namespace TrackrModels
 			this.PlayerPassID = (int?)info.GetValue("PlayerPassID", typeof(int?));
 			this.IsSecondary = info.GetBoolean("IsSecondary");
 			this.PlayerID = (int?)info.GetValue("PlayerID", typeof(int?));
+			this.LastModifiedBy = info.GetInt32("LastModifiedBy");
+			this.LastModifiedAt = (DateTime)info.GetValue("LastModifiedAt", typeof(DateTime));
+			this.Active = info.GetBoolean("Active");
 			CustomizeDeserializationProcess(info, context);
 		}
 		
@@ -152,6 +194,9 @@ namespace TrackrModels
 			info.AddValue("PlayerPassID", this.PlayerPassID, typeof(int?));
 			info.AddValue("IsSecondary", this.IsSecondary, typeof(bool));
 			info.AddValue("PlayerID", this.PlayerID, typeof(int?));
+			info.AddValue("LastModifiedBy", this.LastModifiedBy, typeof(int));
+			info.AddValue("LastModifiedAt", this.LastModifiedAt, typeof(DateTime));
+			info.AddValue("Active", this.Active, typeof(bool));
 			CustomizeSerializationProcess(info, context);
 		}
 		

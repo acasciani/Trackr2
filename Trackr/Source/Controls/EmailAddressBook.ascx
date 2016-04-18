@@ -23,7 +23,7 @@
 
     <div class="col-sm-12 text-left">
         <asp:LinkButton runat="server" ID="lnkAddEmailAddress" OnClick="lnkAddEmailAddress_Click" ToolTip="Add new email address">
-            <span class="glyphicon glyphicon-plus-sign"></span> Add Email Address
+            <span class="glyphicon glyphicon-plus-sign"></span>Add Email Address
         </asp:LinkButton>
     </div>
 </div>
@@ -42,9 +42,15 @@
 
     <div class="clearfix"></div>
 
-    <div class="col-sm-12">
+    <div class="col-sm-6 text-left">
         <asp:LinkButton runat="server" ID="lnkSaveEmailAddress" CausesValidation="true" OnClick="lnkSaveEmailAddress_Click">
-            <span class="glyphicon glyphicon-save"></span> Save Email Address
+            <span class="glyphicon glyphicon-save"></span>Save Email Address
+        </asp:LinkButton>
+    </div>
+
+    <div class="col-sm-6 text-right">
+        <asp:LinkButton runat="server" ID="lnkCancel" OnClick="lnkCancel_Click" CausesValidation="false">
+            <span class="glyphicon glyphicon-folder-close"></span>Cancel
         </asp:LinkButton>
     </div>
 </div>

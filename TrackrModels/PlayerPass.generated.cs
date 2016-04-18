@@ -90,6 +90,45 @@ namespace TrackrModels
 			}
 		}
 		
+		private int _lastModifiedBy;
+		public virtual int LastModifiedBy
+		{
+			get
+			{
+				return this._lastModifiedBy;
+			}
+			set
+			{
+				this._lastModifiedBy = value;
+			}
+		}
+		
+		private DateTime _lastModifiedAt;
+		public virtual DateTime LastModifiedAt
+		{
+			get
+			{
+				return this._lastModifiedAt;
+			}
+			set
+			{
+				this._lastModifiedAt = value;
+			}
+		}
+		
+		private bool _active;
+		public virtual bool Active
+		{
+			get
+			{
+				return this._active;
+			}
+			set
+			{
+				this._active = value;
+			}
+		}
+		
 		private Player _player;
 		public virtual Player Player
 		{
@@ -125,6 +164,9 @@ namespace TrackrModels
 			this.PassNumber = info.GetString("PassNumber");
 			this.Expires = (DateTime)info.GetValue("Expires", typeof(DateTime));
 			this.PlayerID = info.GetInt32("PlayerID");
+			this.LastModifiedBy = info.GetInt32("LastModifiedBy");
+			this.LastModifiedAt = (DateTime)info.GetValue("LastModifiedAt", typeof(DateTime));
+			this.Active = info.GetBoolean("Active");
 			CustomizeDeserializationProcess(info, context);
 		}
 		
@@ -135,6 +177,9 @@ namespace TrackrModels
 			info.AddValue("PassNumber", this.PassNumber, typeof(string));
 			info.AddValue("Expires", this.Expires, typeof(DateTime));
 			info.AddValue("PlayerID", this.PlayerID, typeof(int));
+			info.AddValue("LastModifiedBy", this.LastModifiedBy, typeof(int));
+			info.AddValue("LastModifiedAt", this.LastModifiedAt, typeof(DateTime));
+			info.AddValue("Active", this.Active, typeof(bool));
 			CustomizeSerializationProcess(info, context);
 		}
 		

@@ -1,11 +1,11 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="PlayerManagement.ascx.cs" Inherits="Trackr.Source.Wizards.PlayerManagement" %>
 
 <style type="text/css">
-    .alert.alert-danger > div >table {
+    .alert.alert-danger.player-matches > div >table {
         color: initial;
         margin-top: 10px;
     }
-    .alert.alert-danger > div {
+    .alert.alert-danger.player-matches > div {
         background-color: white;
     }
 </style>
@@ -14,20 +14,24 @@
 
 <asp:Wizard runat="server" ID="PlayerWizard" DisplaySideBar="true" OnNextButtonClick="PlayerWizard_NextButtonClick" OnFinishButtonClick="PlayerWizard_FinishButtonClick">
     <StepNavigationTemplate>
-        <div class="text-right">
-            <asp:Button runat="server" CommandName="MovePrevious" Text="Previous" CssClass="btn btn-default" CausesValidation="false" />
-            <asp:Button runat="server" CommandName="MoveNext" Text="Save & Continue" CssClass="btn btn-default" />
+        <div class="pull-left">
+            <asp:LinkButton runat="server" CommandName="MovePrevious" Text="Previous" CausesValidation="false" />
+        </div>
+        <div class="pull-right">
+            <asp:LinkButton runat="server" CommandName="MoveNext" Text="Continue" />
         </div>
     </StepNavigationTemplate>
     <StartNavigationTemplate>
-        <div class="text-right" runat="server">
-            <asp:Button runat="server" ID="btnStart" CommandName="MoveNext" Text='Save & Continue' CssClass="btn btn-default" />
+        <div class="pull-right">
+            <asp:LinkButton runat="server" CommandName="MoveNext" Text="Continue" />
         </div>
     </StartNavigationTemplate>
     <FinishNavigationTemplate>
-        <div class="text-right">
-            <asp:Button runat="server" CommandName="MovePrevious" Text="Previous" CssClass="btn btn-default" CausesValidation="false" />
-            <asp:Button runat="server" CommandName="MoveComplete" Text="Save & Finish" CssClass="btn btn-default" />
+        <div class="pull-left">
+            <asp:LinkButton runat="server" CommandName="MovePrevious" Text="Previous" CausesValidation="false" />
+        </div>
+        <div class="pull-right">
+            <asp:LinkButton runat="server" CommandName="MoveNext" Text="Save Player" />
         </div>
     </FinishNavigationTemplate>
 
@@ -81,8 +85,8 @@
                         <asp:View runat="server">
                             <asp:Panel runat="server" ID="pnlPossiblePlayerMatches" CssClass="row" Visible="false">
                                 <div class="col-sm-12">
-                                    <div class="alert alert-danger" style="padding-bottom: 0px;">
-                                        <strong>Possible Matches:</strong> The following players in your club already exist and may match the one you are trying to create. If none of the players match, 
+                                    <div class="alert alert-danger player-matches" style="padding-bottom: 0px;">
+                                        <strong>Possible Matches:</strong> The following players already exist and may match the one you are trying to create. If none of the players match, 
                                         <asp:LinkButton runat="server" ID="lnkContinueAnywaysPlayer" CausesValidation="true" OnClick="lnkContinueAnywaysPlayer_Click">then click here to add the player</asp:LinkButton>.
 
                                         <asp:GridView runat="server" ID="gvPossiblePlayerMatches" AutoGenerateColumns="false" CssClass="table table-striped">
@@ -184,7 +188,7 @@
             <div class="row margin-bottom-5-px">
                 <div class="col-sm-12">
                     <asp:LinkButton runat="server" ID="lnkAddGuardian" OnClick="lnkAddGuardian_Click" CausesValidation="false">
-                        <i class="glyphicon glyphicon-plus-sign"></i> Add Guardian
+                        <i class="glyphicon glyphicon-plus-sign"></i>Add Guardian
                     </asp:LinkButton>
                 </div>
             </div>
@@ -226,8 +230,8 @@
                                     </div>
 
                                     <div class="row">
-                                        <div class="col-sm-12">
-                                            <asp:LinkButton runat="server" ID="lnkSaveGuardian" CausesValidation="true" OnClick="lnkSaveGuardian_Click"><span class="glyphicon glyphicon-save"></span> Save General Information</asp:LinkButton>
+                                        <div class="col-sm-6 text-left">
+                                            <asp:LinkButton runat="server" ID="lnkSaveGuardian" CausesValidation="true" OnClick="lnkSaveGuardian_Click"><span class="glyphicon glyphicon-save"></span>Save General Information</asp:LinkButton>
                                         </div>
                                     </div>
                                 </asp:View>
@@ -247,7 +251,9 @@
                         </div>
                     </div>
                     
-                    <asp:LinkButton runat="server" ID="lnkAddEditGuardianClose" CausesValidation="false" OnClick="lnkAddEditGuardianClose_Click" Text="Close" />
+                    <asp:LinkButton runat="server" ID="lnkAddEditGuardianClose" CausesValidation="false" OnClick="lnkAddEditGuardianClose_Click">
+                        <span class="glyphicon glyphicon-folder-close"></span>Cancel
+                    </asp:LinkButton>
                 </div>
             </asp:Panel>
         </asp:WizardStep>
@@ -393,7 +399,7 @@
 
 
         <asp:WizardStep StepType="Complete" Title="Complete">
-            Successfully finished editing player. <asp:LinkButton runat="server" ID="lnkEditAgain" OnClick="lnkEditAgain_Click">Continue editing this player</asp:LinkButton> or <a href="Default.aspx">view all players</a>.
+            <asp:LinkButton runat="server" ID="lnkEditAgain" OnClick="lnkEditAgain_Click">Continue editing this player</asp:LinkButton> or <a href="Default.aspx">view all players</a>.
         </asp:WizardStep>
 
     </WizardSteps>

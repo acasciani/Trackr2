@@ -6,6 +6,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using Telerik.OpenAccess.FetchOptimization;
 using TrackrModels;
+using Trackr.Utils;
 
 namespace Trackr.Source.Wizards
 {
@@ -196,6 +197,7 @@ namespace Trackr.Source.Wizards
 
             Save_Step1();
             UpdatePlayerTabs();
+            lnkPlayerTab_Click(lnkPlayerAddress, null);
         }
 
         protected void lnkContinueAnywaysPlayer_Click(object sender, EventArgs e)
@@ -248,7 +250,19 @@ namespace Trackr.Source.Wizards
                 return;
             }
 
-            PlayerManager.SaveData();
+            try
+            {
+                PlayerManager.SaveData(CurrentUser.UserID);
+                AlertBox.AddAlert("Successfully saved changes.");
+            }
+            catch (PlayerModifiedByAnotherProcessException)
+            {
+                AlertBox.AddAlert("Unable to save changes. This player was modified by someone else before you committed your changes. Please reload the page and try again.", false, UI.AlertBoxType.Error);
+            }
+            catch (Exception ex)
+            {
+                Page.Master.HandleException(ex);
+            }
         }
 
         private bool HasPlayerMatches()
@@ -668,7 +682,7 @@ namespace Trackr.Source.Wizards
         #region Guardian Administration
         public IQueryable gvGuardians_GetData()
         {
-            return PlayerManager.Player.Guardians.Select(i => new
+            return PlayerManager.Player.Guardians.Where(i => i.Active).Select(i => new
             {
                 Guardian = i.Person.FName + " " + i.Person.LName,
                 IsRemovable = true,
@@ -691,7 +705,7 @@ namespace Trackr.Source.Wizards
             UpdateGuardianTabs();
         }
 
-        private void SaveGuardian(Guid? editToken)
+        private Guid SaveGuardian(Guid? editToken)
         {
             if (!editToken.HasValue)
             {
@@ -701,6 +715,10 @@ namespace Trackr.Source.Wizards
             Guid playerEditToken = PlayerManager.Player.Guardians.First(i => i.EditToken == editToken.Value).Person.EditToken;
 
             PlayerManager.UpdatePerson(playerEditToken, txtGuardianFirstName.Text, txtGuardianLastName.Text, null);
+
+            lnkAddGuardian.Visible = true;
+
+            return editToken.Value;
         }
 
         private void Populate_GuardianEdit(Guid guardianEditToken)
@@ -739,6 +757,7 @@ namespace Trackr.Source.Wizards
 
         protected void gvGuardians_RowEditing(object sender, GridViewEditEventArgs e)
         {
+            lnkAddGuardian.Visible = false;
             Guid editToken = (Guid)gvGuardians.DataKeys[e.NewEditIndex].Value;
             Populate_GuardianEdit(editToken);
             gvGuardians.EditIndex = e.NewEditIndex;
@@ -748,6 +767,7 @@ namespace Trackr.Source.Wizards
 
         protected void gvGuardians_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
         {
+            lnkAddGuardian.Visible = true;
             gvGuardians.EditIndex = -1;
             gvGuardians.DataBind();
             UpdateGuardianTabs();
@@ -764,6 +784,7 @@ namespace Trackr.Source.Wizards
         {
             ClearGuardianForm();
             pnlAddGuardian.Visible = true;
+            lnkAddGuardian.Visible = false;
             gvGuardians.EditIndex = -1;
             gvGuardians.DataBind();
             UpdateGuardianTabs();
@@ -777,8 +798,17 @@ namespace Trackr.Source.Wizards
             }
 
             Guid? editToken = gvGuardians.EditIndex != -1 ? (Guid)gvGuardians.DataKeys[gvGuardians.EditIndex].Value : (Guid?)null;
-            SaveGuardian(editToken);
+            editToken = SaveGuardian(editToken);
             gvGuardians.DataBind();
+
+            for (int i = 0; i < gvGuardians.DataKeys.Count; i++)
+            {
+                if (editToken.Value == (Guid)gvGuardians.DataKeys[i].Value)
+                {
+                    gvGuardians.EditIndex = i;
+                    break;
+                }
+            }
 
             if (!editToken.HasValue)
             {
@@ -788,6 +818,8 @@ namespace Trackr.Source.Wizards
             {
                 UpdateGuardianTabs();
             }
+
+            lnkGuardianTab_Click(lnkGuardianAddress, new EventArgs() { });
         }
 
         protected void lnkGuardianTab_Click(object sender, EventArgs e)
@@ -838,6 +870,7 @@ namespace Trackr.Source.Wizards
             gvGuardians.EditIndex = -1;
             gvGuardians.DataBind();
             UpdateGuardianTabs();
+            lnkAddGuardian.Visible = true;
         }
         #endregion
 

@@ -83,10 +83,12 @@ namespace Trackr.Source.Controls
 
             if (Addresses.FirstOrDefault(i => i.EditToken == editToken) == null)
             {
+                address.Active = true;
                 address.SortOrder = Convert.ToByte(Addresses.Count());
                 Addresses.Add(address);
             }
 
+            lnkAddAddress.Visible = true;
             divEdit.Visible = false;
             ClearForm();
             AlertBox.AddAlert(string.Format("Successfully {0} address. Your settings will be saved when you complete this wizard.", gvAddressBook.EditIndex == -1 ? "added" : "edited"), false, UI.AlertBoxType.Warning);
@@ -97,18 +99,29 @@ namespace Trackr.Source.Controls
         protected void lnkAddAddress_Click(object sender, EventArgs e)
         {
             divEdit.Visible = true;
+            lnkAddAddress.Visible = false;
             ClearForm();
         }
 
         public IQueryable gvAddressBook_GetData()
         {
-            return (Addresses ?? new List<Address>()).AsQueryable();
+            return (Addresses ?? new List<Address>()).Where(i => i.Active).AsQueryable();
         }
 
         public void gvAddressBook_DeleteItem(Guid EditToken)
         {
             Address address = Addresses.First(i => i.EditToken == EditToken);
-            Addresses.Remove(address);
+
+            if (address.AddressID > 0)
+            {
+                address.Active = false;
+                address.WasModified = true;
+            }
+            else
+            {
+                Addresses.Remove(address);
+            }
+
             gvAddressBook.DataBind();
 
             ClearForm();
@@ -122,6 +135,7 @@ namespace Trackr.Source.Controls
 
             ClearForm();
             divEdit.Visible = false;
+            lnkAddAddress.Visible = true;
         }
 
         protected void gvAddressBook_RowEditing(object sender, GridViewEditEventArgs e)
@@ -143,6 +157,11 @@ namespace Trackr.Source.Controls
             txtZipCode.Text = address.ZipCode;
 
             divEdit.Visible = true;
+        }
+
+        protected void lnkCancel_Click(object sender, EventArgs e)
+        {
+            gvAddressBook_RowCancelingEdit(null, null);
         }
     }
 }
