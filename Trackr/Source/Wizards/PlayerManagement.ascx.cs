@@ -303,29 +303,18 @@ namespace Trackr.Source.Wizards
         #region Team Administration
         public IQueryable gvTeamAssignments_GetData()
         {
-            /*
-            using (TeamPlayersController tpc = new TeamPlayersController())
+            return PlayerManager.Player.TeamPlayers.Union(PlayerManager.Player.PlayerPasses.SelectMany(i => i.TeamPlayers)).Where(i => i.Active).Select(i => new
             {
-                FetchStrategy fetch = new FetchStrategy();
-                fetch.LoadWith<TeamPlayer>(i => i.PlayerPass);
-                fetch.LoadWith<TeamPlayer>(i => i.Team);
-                fetch.LoadWith<Team>(i => i.Program);
-
-                TeamPlayers = tpc.GetWhere(i => (i.PlayerPassID.HasValue && i.PlayerPass.PlayerID == PrimaryKey.Value) || (!i.PlayerPassID.HasValue && i.PlayerID == PrimaryKey.Value), fetch).ToList();
-
-                return TeamPlayers.Select(i => new
-                {
-                    TeamName = i.Team.TeamName,
-                    ProgramName = i.Team.Program.ProgramName,
-                    Season = string.Format("{0:yyyy} - {1:yy}", i.Team.StartYear, i.Team.EndYear),
-                    IsSecondary = i.IsSecondary,
-                    StartYear = i.Team.StartYear,
-                    IsRemovable = DateTime.Now.ToUniversalTime() < i.Team.EndYear.ToUniversalTime(),
-                    PlayerPassNumber = i.PlayerPassID.HasValue && !string.IsNullOrWhiteSpace(i.PlayerPass.PassNumber) ? i.PlayerPass.PassNumber : "",
-                    TeamPlayerID = i.TeamPlayerID
-                }).OrderByDescending(i => i.StartYear).ThenBy(i => i.ProgramName).ThenBy(i => i.TeamName).AsQueryable();
-            }*/
-            return null;
+                TeamName = i.Team.TeamName,
+                ProgramName = i.Team.Program.ProgramName,
+                Season = string.Format("{0:yyyy} - {1:yy}", i.Team.StartYear, i.Team.EndYear),
+                IsSecondary = i.IsSecondary,
+                StartYear = i.Team.StartYear,
+                IsRemovable = DateTime.Now.ToUniversalTime() < i.Team.EndYear.ToUniversalTime(),
+                PlayerPassNumber = i.PlayerPassID.HasValue && !string.IsNullOrWhiteSpace(i.PlayerPass.PassNumber) ? i.PlayerPass.PassNumber : "",
+                TeamPlayerID = i.TeamPlayerID,
+                EditToken = i.EditToken
+            }).OrderByDescending(i => i.StartYear).ThenBy(i => i.ProgramName).ThenBy(i => i.TeamName).AsQueryable();
         }
 
         private void ClearTeamPlayerForm()
@@ -340,7 +329,7 @@ namespace Trackr.Source.Wizards
 
         protected void gvTeamAssignments_RowEditing(object sender, GridViewEditEventArgs e)
         {
-           // Populate_TeamPlayerEdit(TeamPlayers[e.NewEditIndex].TeamPlayerID);
+            Populate_TeamPlayerEdit((Guid)gvTeamAssignments.DataKeys[e.NewEditIndex].Value);
             gvTeamAssignments.EditIndex = e.NewEditIndex;
             gvTeamAssignments.DataBind();
         }
@@ -351,71 +340,41 @@ namespace Trackr.Source.Wizards
             gvTeamAssignments.DataBind();
         }
 
-        private void SaveTeamPlayer(int? teamPlayerID)
+        private Guid SaveTeamPlayer(Guid? editToken, Guid? playerPassEditToken)
         {
-            using (TeamPlayersController tpc = new TeamPlayersController())
+            if (!editToken.HasValue)
             {
-                TeamPlayer teamPlayer = teamPlayerID.HasValue ? tpc.Get(teamPlayerID.Value) : new TeamPlayer();
-
-                teamPlayer.IsSecondary = chkIsSecondary.Checked;
-                teamPlayer.TeamID = ptpPicker.SelectedTeamID.Value;
-
-                int playerPassID;
-                // if there is a valid player pass id selected, then use that otherwise use player id. there should never be both specified
-                if (int.TryParse(ddlPlayerPassForTeam.SelectedValue, out playerPassID))
-                {
-                    teamPlayer.PlayerPassID = playerPassID;
-                    teamPlayer.PlayerID = null;
-                }
-                else
-                {
-                    teamPlayer.PlayerPassID = null;
-                    teamPlayer.PlayerID = PrimaryKey.Value;
-                }
-
-                if (!teamPlayerID.HasValue)
-                {
-                    tpc.AddNew(teamPlayer);
-                    AlertBox.SetStatus("Successfully saved new team assignment.");
-                }
-                else
-                {
-                    tpc.Update(teamPlayer);
-                    AlertBox.SetStatus("Successfully saved existing team assignment.");
-                }
-
-                pnlAddEditTeamPlayer.Visible = false;
-                gvTeamAssignments.EditIndex = -1;
-                gvTeamAssignments.DataBind();
+                editToken = PlayerManager.AddTeamPlayer();
             }
+
+            PlayerManager.UpdateTeamPlayer(editToken.Value, ptpPicker.SelectedTeamID.Value, chkIsSecondary.Checked, playerPassEditToken);
+
+            pnlAddEditTeamPlayer.Visible = false;
+            gvTeamAssignments.EditIndex = -1;
+            gvTeamAssignments.DataBind();
+
+            return editToken.Value;
         }
 
-        private void Populate_TeamPlayerEdit(int teamPlayerID)
+        private void Populate_TeamPlayerEdit(Guid editToken)
         {
-            using (TeamPlayersController tpc = new TeamPlayersController())
+            ClearTeamPlayerForm();
+
+            // populate
+            TeamPlayer playerPass = PlayerManager.Player.TeamPlayers.Union(PlayerManager.Player.PlayerPasses.SelectMany(i => i.TeamPlayers)).First(i => i.EditToken == editToken);
+
+            ptpPicker.SelectedProgramID = playerPass.Team.ProgramID;
+            ptpPicker.SelectedTeamID = playerPass.TeamID;
+            ptpPicker.Populate();
+
+            chkIsSecondary.Checked = playerPass.IsSecondary;
+
+            if (playerPass.PlayerPassID.HasValue)
             {
-                FetchStrategy fetch = new FetchStrategy();
-                fetch.LoadWith<TeamPlayer>(i => i.Team);
-
-                TeamPlayer player = tpc.GetWhere(i => i.TeamPlayerID == teamPlayerID, fetch).First();
-                ClearTeamPlayerForm();
-
-                ddlPlayerPassForTeam.DataBind();
-
-                // populate
-                ptpPicker.SelectedProgramID = player.Team.ProgramID;
-                ptpPicker.SelectedTeamID = player.TeamID;
-                ptpPicker.Populate();
-
-                chkIsSecondary.Checked = player.IsSecondary;
-
-                if (player.PlayerPassID.HasValue)
-                {
-                    ddlPlayerPassForTeam.SelectedValue = player.PlayerPassID.Value.ToString();
-                }
-
-                pnlAddEditTeamPlayer.Visible = true;
+                ddlPlayerPassForTeam.SelectedValue = playerPass.PlayerPassID.Value.ToString();
             }
+
+            pnlAddEditTeamPlayer.Visible = true;
         }
 
         protected void lnkSaveTeamPlayer_Click(object sender, EventArgs e)
@@ -425,8 +384,8 @@ namespace Trackr.Source.Wizards
                 return;
             }
 
-           // int? teamPlayerID = gvTeamAssignments.EditIndex != -1 ? TeamPlayers[gvTeamAssignments.EditIndex].TeamPlayerID : (int?)null;
-           // SaveTeamPlayer(teamPlayerID);
+            Guid? editToken = gvTeamAssignments.EditIndex != -1 ? (Guid)gvTeamAssignments.DataKeys[gvTeamAssignments.EditIndex].Value : (Guid?)null;
+            SaveTeamPlayer(editToken);
         }
 
         protected void lnkAddTeamPlayer_Click(object sender, EventArgs e)
@@ -437,20 +396,10 @@ namespace Trackr.Source.Wizards
             gvTeamAssignments.DataBind();
         }
 
-        public void gvTeamAssignmentss_DeleteItem(int? TeamPlayerID)
+        public void gvTeamAssignmentss_DeleteItem(Guid editToken)
         {
             ClearTeamPlayerForm();
-
-            if (!TeamPlayerID.HasValue)
-            {
-                return;
-            }
-            using (TeamPlayersController tpc = new TeamPlayersController())
-            {
-                tpc.Delete(TeamPlayerID.Value);
-                AlertBox.SetStatus("Successfully deleted team assignment.");
-            }
-
+            PlayerManager.DeleteTeamPlayer(editToken);
             gvTeamAssignments.DataBind();
         }
 
@@ -464,7 +413,7 @@ namespace Trackr.Source.Wizards
             // get any player passes
             using (PlayerPassesController ppc = new PlayerPassesController())
             {
-                return ppc.GetWhere(i => i.PlayerID == PrimaryKey.Value && i.PassNumber != null && i.PassNumber.Trim() != "").Select(i => new
+                return ppc.GetWhere(i => i.PlayerID == PrimaryKey.Value && i.PassNumber != null && i.PassNumber.Trim() != "" && i.Active).Select(i => new
                 {
                     Label = string.Format("{0} - Expires: {1:MM/dd/yyyy}", i.PassNumber, i.Expires),
                     Value = i.PlayerPassID,

@@ -345,7 +345,7 @@
 
         <asp:WizardStep runat="server" ID="Step4_Teams" StepType="Finish" Title="Teams">
             <asp:GridView runat="server" ID="gvTeamAssignments" AutoGenerateColumns="false" SelectMethod="gvTeamAssignments_GetData" EmptyDataText="This player is not assigned to any teams." CssClass="table table-striped table-hover" 
-                OnRowEditing="gvTeamAssignments_RowEditing" OnRowCancelingEdit="gvTeamAssignments_RowCancelingEdit" DeleteMethod="gvTeamAssignmentss_DeleteItem" DataKeyNames="TeamPlayerID">
+                OnRowEditing="gvTeamAssignments_RowEditing" OnRowCancelingEdit="gvTeamAssignments_RowCancelingEdit" DeleteMethod="gvTeamAssignmentss_DeleteItem" DataKeyNames="EditToken">
                 <Columns>
                     <asp:BoundField DataField="Season" HeaderText="Season" ReadOnly="true" />
                     <asp:BoundField DataField="ProgramName" HeaderText="Program Name" ReadOnly="true" />

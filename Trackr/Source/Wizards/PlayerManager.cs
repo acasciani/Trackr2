@@ -426,6 +426,7 @@ namespace Trackr.Source.Wizards
                 }
 
                 freshCopy.Person.LastModifiedAt = modifiedAt;
+                freshCopy.Person.LastModifiedBy = modifiedByUser;
                 freshCopy.Guardians.ToList().ForEach(i => { i.LastModifiedAt = modifiedAt; i.LastModifiedBy = modifiedByUser; });
                 freshCopy.Guardians.Select(i => i.Person).ToList().ForEach(i => { i.LastModifiedAt = modifiedAt; i.LastModifiedBy = modifiedByUser; });
                 freshCopy.Person.EmailAddresses.Union(freshCopy.Guardians.Select(i => i.Person).SelectMany(i => i.EmailAddresses)).ToList().ForEach(i => { i.LastModifiedAt = modifiedAt; i.LastModifiedBy = modifiedByUser; });

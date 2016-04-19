@@ -218,10 +218,10 @@
           <orm:collection element-class="TrackrModels.Transaction" inverse-field="_player" order-by="" uniqueId="17d53c36-6bbf-4829-b016-49606933865a" />
         </orm:field>
         <orm:field name="_playerPasses" property="PlayerPasses" behavior="readwrite" uniqueId="876e7733-4f83-4189-8a0a-a626a6760cb1" type="TrackrModels.PlayerPass">
-          <orm:collection element-class="TrackrModels.PlayerPass" inverse-field="_player" order-by="" uniqueId="d000aeef-9556-4d02-9139-260fb79cf2af" />
+          <orm:collection element-class="TrackrModels.PlayerPass" inverse-field="_player" managed="true" order-by="" uniqueId="d000aeef-9556-4d02-9139-260fb79cf2af" />
         </orm:field>
         <orm:field name="_teamPlayers" property="TeamPlayers" behavior="readwrite" uniqueId="fb38666f-2abe-45d2-8175-0a6440419b23" type="TrackrModels.TeamPlayer">
-          <orm:collection element-class="TrackrModels.TeamPlayer" inverse-field="_player" order-by="" uniqueId="ddd56e36-4049-459b-8fc6-29db7757842c" />
+          <orm:collection element-class="TrackrModels.TeamPlayer" inverse-field="_player" managed="true" order-by="" uniqueId="ddd56e36-4049-459b-8fc6-29db7757842c" />
         </orm:field>
         <orm:field name="_guardians" property="Guardians" behavior="readwrite" uniqueId="fc0eae40-db2e-47b5-bc7f-a425e20b7411" type="TrackrModels.Guardian">
           <orm:collection element-class="TrackrModels.Guardian" inverse-field="_player" managed="true" order-by="" uniqueId="a4fc5df8-3b5a-43e7-85e6-36e47fb42b5a" />
@@ -1172,10 +1172,10 @@
           <NavigationalProperty Id="122a83c1-04f6-4f33-b753-3b5e1abc181b" name="Transactions" type="IList&lt;Transaction&gt;" label="Transactions : IList&lt;Transaction&gt;" nullable="true" kind="Persistent" fieldName="_transactions" isDependent="false" isManaged="false" />
         </classHasNavigationalProperties>
         <classHasNavigationalProperties Id="eca7f0d0-a384-4ee7-a370-869803dd00c5">
-          <NavigationalProperty Id="876e7733-4f83-4189-8a0a-a626a6760cb1" name="PlayerPasses" type="IList&lt;PlayerPass&gt;" label="PlayerPasses : IList&lt;PlayerPass&gt;" nullable="true" kind="Persistent" fieldName="_playerPasses" isDependent="false" isManaged="false" />
+          <NavigationalProperty Id="876e7733-4f83-4189-8a0a-a626a6760cb1" name="PlayerPasses" type="IList&lt;PlayerPass&gt;" label="PlayerPasses : IList&lt;PlayerPass&gt;" nullable="true" kind="Persistent" fieldName="_playerPasses" isDependent="false" isManaged="true" />
         </classHasNavigationalProperties>
         <classHasNavigationalProperties Id="76d83385-e281-46bf-ab4d-5047da90f698">
-          <NavigationalProperty Id="fb38666f-2abe-45d2-8175-0a6440419b23" name="TeamPlayers" type="IList&lt;TeamPlayer&gt;" label="TeamPlayers : IList&lt;TeamPlayer&gt;" nullable="true" kind="Persistent" fieldName="_teamPlayers" isDependent="false" isManaged="false" />
+          <NavigationalProperty Id="fb38666f-2abe-45d2-8175-0a6440419b23" name="TeamPlayers" type="IList&lt;TeamPlayer&gt;" label="TeamPlayers : IList&lt;TeamPlayer&gt;" nullable="true" kind="Persistent" fieldName="_teamPlayers" isDependent="false" isManaged="true" />
         </classHasNavigationalProperties>
         <classHasNavigationalProperties Id="324d9ae3-c6ce-45f8-b63b-458b6bb03259">
           <NavigationalProperty Id="2395c5e2-4cbf-4e20-bd27-ff69bfc21c6f" name="Person" type="Person" label="Person : Person" nullable="true" kind="Persistent" loadBehavior="Eager" fieldName="_person" isDependent="true" isManaged="false" />
@@ -1229,7 +1229,7 @@
           <NavigationalProperty Id="78b6c29b-3d7a-456b-a1e4-89c13a986c58" name="TeamPlayers" type="IList&lt;TeamPlayer&gt;" label="TeamPlayers : IList&lt;TeamPlayer&gt;" nullable="true" kind="Persistent" fieldName="_teamPlayers" isDependent="true" isManaged="true" />
         </classHasNavigationalProperties>
         <classHasNavigationalProperties Id="8d3f3c53-7898-48e8-9138-39f0acd92009">
-          <NavigationalProperty Id="5fdc6d8e-df2a-4e9d-be20-653e0c6062ae" name="Player" type="Player" label="Player : Player" nullable="true" kind="Persistent" fieldName="_player" isDependent="false" isManaged="false" />
+          <NavigationalProperty Id="5fdc6d8e-df2a-4e9d-be20-653e0c6062ae" name="Player" type="Player" label="Player : Player" nullable="true" kind="Persistent" fieldName="_player" isDependent="false" isManaged="true" />
         </classHasNavigationalProperties>
       </navigationalProperties>
     </DomainClass>
@@ -1291,7 +1291,7 @@
           <NavigationalProperty Id="a87a4db3-77d9-4288-b329-925cf38a084f" name="PlayerPass" type="PlayerPass" label="PlayerPass : PlayerPass" nullable="true" kind="Persistent" fieldName="_playerPass" isDependent="false" isManaged="true" />
         </classHasNavigationalProperties>
         <classHasNavigationalProperties Id="f1a57904-6945-47ec-9333-9645007d24e2">
-          <NavigationalProperty Id="a991e5d3-62a2-4c4b-aee6-34b0596c40ad" name="Player" type="Player" label="Player : Player" nullable="true" kind="Persistent" fieldName="_player" isDependent="false" isManaged="false" />
+          <NavigationalProperty Id="a991e5d3-62a2-4c4b-aee6-34b0596c40ad" name="Player" type="Player" label="Player : Player" nullable="true" kind="Persistent" fieldName="_player" isDependent="false" isManaged="true" />
         </classHasNavigationalProperties>
       </navigationalProperties>
     </DomainClass>
