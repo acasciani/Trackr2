@@ -31,7 +31,7 @@
             <asp:LinkButton runat="server" CommandName="MovePrevious" Text="Previous" CausesValidation="false" />
         </div>
         <div class="pull-right">
-            <asp:LinkButton runat="server" CommandName="MoveNext" Text="Save Player" />
+            <asp:LinkButton runat="server" CommandName="MoveComplete" Text="Save Player" />
         </div>
     </FinishNavigationTemplate>
 

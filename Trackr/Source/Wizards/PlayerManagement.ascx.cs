@@ -524,14 +524,14 @@ namespace Trackr.Source.Wizards
             {
                 Expiration = i.Expires,
                 PassNumber = i.PassNumber,
-                PlayerPassID = i.PlayerPassID,
+                EditToken = i.EditToken,
                 Editable = DateTime.Today.ToUniversalTime() < i.Expires,
             }).OrderByDescending(i => i.Expiration).AsQueryable();
         }
 
         protected void gvPlayerPasses_RowEditing(object sender, GridViewEditEventArgs e)
         {
-            //Populate_PlayerPassEdit(PlayerPasses[e.NewEditIndex].PlayerPassID);
+            Populate_PlayerPassEdit((Guid)gvPlayerPasses.DataKeys[e.NewEditIndex].Value);
             gvPlayerPasses.EditIndex = e.NewEditIndex;
             gvPlayerPasses.DataBind();
         }
