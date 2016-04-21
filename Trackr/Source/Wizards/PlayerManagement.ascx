@@ -148,7 +148,7 @@
 
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <asp:LinkButton runat="server" ID="lnkSavePlayer" CausesValidation="true" OnClick="lnkSavePlayer_Click"><span class="glyphicon glyphicon-save"></span> Save General Information</asp:LinkButton>
+                                    <asp:LinkButton runat="server" ID="lnkSavePlayer" CausesValidation="true" OnClick="lnkSavePlayer_Click" Visible="false"><span class="glyphicon glyphicon-save"></span> Save General Information</asp:LinkButton>
                                 </div>
                             </div>
                         </asp:View>
@@ -399,7 +399,7 @@
 
 
         <asp:WizardStep StepType="Complete" Title="Complete">
-            <asp:LinkButton runat="server" ID="lnkEditAgain" OnClick="lnkEditAgain_Click">Continue editing this player</asp:LinkButton> or <a href="Default.aspx">view all players</a>.
+            <a href="<%=Request.Url.AbsoluteUri %>">Continue editing this player</a> or <a href="Default.aspx">view all players</a>.
         </asp:WizardStep>
 
     </WizardSteps>

@@ -70,6 +70,11 @@ namespace Trackr.Source.Wizards
 
             if (IsPostBack)
             {
+                if (PlayerManager.Player == null)
+                {
+                    Response.Redirect(Request.Url.AbsoluteUri, true);
+                }
+
                 return;
             }
 
@@ -139,11 +144,6 @@ namespace Trackr.Source.Wizards
                 // Reset views
                 PlayerWizard.ActiveStepIndex = 0;
             }
-        }
-
-        protected void lnkEditAgain_Click(object sender, EventArgs e)
-        {
-            PlayerWizard.ActiveStepIndex = 0;
         }
 
         private void Save_Step1()
@@ -224,7 +224,27 @@ namespace Trackr.Source.Wizards
                     }
                     else
                     {
-                        Save_Step1();
+                        // iterate through the player info tabs
+                        switch (mvPlayerInfoTabs.ActiveViewIndex)
+                        {
+                            case 0:
+                                lnkSavePlayer_Click(sender, null);
+                                lnkPlayerTab_Click(lnkPlayerAddress, null);
+                                e.Cancel = true;
+                                break;
+
+                            case 1:
+                                lnkPlayerTab_Click(lnkPlayerEmails, null);
+                                e.Cancel = true;
+                                break;
+
+                            case 2:
+                                lnkPlayerTab_Click(lnkPlayerPhones, null);
+                                e.Cancel = true;
+                                break;
+
+                            default: break;
+                        }
                     }
                     break;
 
