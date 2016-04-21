@@ -220,7 +220,7 @@
         <orm:field name="_playerPasses" property="PlayerPasses" behavior="readwrite" uniqueId="876e7733-4f83-4189-8a0a-a626a6760cb1" type="TrackrModels.PlayerPass">
           <orm:collection element-class="TrackrModels.PlayerPass" inverse-field="_player" managed="true" order-by="" uniqueId="d000aeef-9556-4d02-9139-260fb79cf2af" />
         </orm:field>
-        <orm:field name="_teamPlayers" property="TeamPlayers" behavior="readwrite" uniqueId="fb38666f-2abe-45d2-8175-0a6440419b23" type="TrackrModels.TeamPlayer">
+        <orm:field name="_teamPlayers" property="TeamPlayers" behavior="readwrite" uniqueId="fb38666f-2abe-45d2-8175-0a6440419b23" type="TrackrModels.TeamPlayer" dependent="true">
           <orm:collection element-class="TrackrModels.TeamPlayer" inverse-field="_player" managed="true" order-by="" uniqueId="ddd56e36-4049-459b-8fc6-29db7757842c" />
         </orm:field>
         <orm:field name="_guardians" property="Guardians" behavior="readwrite" uniqueId="fc0eae40-db2e-47b5-bc7f-a425e20b7411" type="TrackrModels.Guardian">
@@ -1175,7 +1175,7 @@
           <NavigationalProperty Id="876e7733-4f83-4189-8a0a-a626a6760cb1" name="PlayerPasses" type="IList&lt;PlayerPass&gt;" label="PlayerPasses : IList&lt;PlayerPass&gt;" nullable="true" kind="Persistent" fieldName="_playerPasses" isDependent="false" isManaged="true" />
         </classHasNavigationalProperties>
         <classHasNavigationalProperties Id="76d83385-e281-46bf-ab4d-5047da90f698">
-          <NavigationalProperty Id="fb38666f-2abe-45d2-8175-0a6440419b23" name="TeamPlayers" type="IList&lt;TeamPlayer&gt;" label="TeamPlayers : IList&lt;TeamPlayer&gt;" nullable="true" kind="Persistent" fieldName="_teamPlayers" isDependent="false" isManaged="true" />
+          <NavigationalProperty Id="fb38666f-2abe-45d2-8175-0a6440419b23" name="TeamPlayers" type="IList&lt;TeamPlayer&gt;" label="TeamPlayers : IList&lt;TeamPlayer&gt;" nullable="true" kind="Persistent" fieldName="_teamPlayers" isDependent="true" isManaged="true" />
         </classHasNavigationalProperties>
         <classHasNavigationalProperties Id="324d9ae3-c6ce-45f8-b63b-458b6bb03259">
           <NavigationalProperty Id="2395c5e2-4cbf-4e20-bd27-ff69bfc21c6f" name="Person" type="Person" label="Person : Person" nullable="true" kind="Persistent" loadBehavior="Eager" fieldName="_person" isDependent="true" isManaged="false" />

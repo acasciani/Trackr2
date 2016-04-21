@@ -235,11 +235,15 @@ namespace Trackr.Source.Wizards
         {
             TeamPlayer obj = (TeamPlayer)FindEditableObject(editToken);
             obj.WasModified = true;
-            obj.TeamID = teamID;
             obj.IsSecondary = isSecondary;
+            obj.TeamID = teamID;
 
             // remove old one
-            obj.PlayerPass.WasModified = true;
+            if (obj.PlayerPass != null)
+            {
+                obj.PlayerPass.WasModified = true;
+            }
+
             obj.PlayerPass = null;
 
             _Player.TeamPlayers.Remove(obj);
@@ -401,8 +405,10 @@ namespace Trackr.Source.Wizards
                     }
                 }
 
+                IEnumerable<TeamPlayer> _allUnionedFreshTeamPlayers = freshCopy.TeamPlayers.Union(freshCopy.PlayerPasses.SelectMany(i => i.TeamPlayers)).ToList(); // get duplicate via to list
+
                 IList<TeamPlayer> _freshTeamPlayers = freshCopy.TeamPlayers;
-                Copy(_freshTeamPlayers, _Player.TeamPlayers);
+                Copy(_freshTeamPlayers, _Player.TeamPlayers, _allUnionedFreshTeamPlayers);
 
                 foreach (PlayerPass playerPass in _Player.PlayerPasses)
                 {
@@ -417,7 +423,7 @@ namespace Trackr.Source.Wizards
                     }
 
                     IList<TeamPlayer> _freshPlayerPassTeamPlayers = _freshCopy.TeamPlayers;
-                    Copy(_freshPlayerPassTeamPlayers, playerPass.TeamPlayers);
+                    Copy(_freshPlayerPassTeamPlayers, playerPass.TeamPlayers, _allUnionedFreshTeamPlayers);
 
                     if (_freshCopy.PlayerPassID == 0)
                     {
@@ -543,8 +549,18 @@ namespace Trackr.Source.Wizards
             }
         }
 
-        private static void Copy(IList<TeamPlayer> freshCopies, IList<TeamPlayer> dirtyCopies)
+        private static void Copy(IList<TeamPlayer> freshCopies, IList<TeamPlayer> dirtyCopies, IEnumerable<TeamPlayer> allUnionedFreshTeamPlayers)
         {
+            List<int> teamPlayerIDsToKeep = dirtyCopies.Select(i => i.TeamPlayerID).ToList();
+
+            foreach (TeamPlayer freshCopy in freshCopies.ToList())
+            {
+                if (!teamPlayerIDsToKeep.Contains(freshCopy.TeamPlayerID))
+                {
+                    freshCopies.Remove(freshCopy);
+                }
+            }
+
             foreach (TeamPlayer dirtyCopy in dirtyCopies)
             {
                 if (!dirtyCopy.WasModified)
@@ -552,12 +568,13 @@ namespace Trackr.Source.Wizards
                     continue;
                 }
 
-                TeamPlayer _freshCopy = dirtyCopy.TeamPlayerID == 0 ? new TeamPlayer() : freshCopies.First(i => i.TeamPlayerID == dirtyCopy.TeamPlayerID);
+                TeamPlayer _freshCopy = dirtyCopy.TeamPlayerID == 0 ? new TeamPlayer() : allUnionedFreshTeamPlayers.First(i => i.TeamPlayerID == dirtyCopy.TeamPlayerID);
 
                 _freshCopy.Active = dirtyCopy.Active;
                 _freshCopy.IsSecondary = dirtyCopy.IsSecondary;
+                _freshCopy.TeamID = dirtyCopy.TeamID;
 
-                if (_freshCopy.TeamPlayerID == 0)
+                if (_freshCopy.TeamPlayerID == 0 || freshCopies.Count(i => i.TeamPlayerID == _freshCopy.TeamPlayerID) == 0)
                 {
                     freshCopies.Add(_freshCopy);
                 }

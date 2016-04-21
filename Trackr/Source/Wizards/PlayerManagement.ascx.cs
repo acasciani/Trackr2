@@ -303,18 +303,28 @@ namespace Trackr.Source.Wizards
         #region Team Administration
         public IQueryable gvTeamAssignments_GetData()
         {
-            return PlayerManager.Player.TeamPlayers.Union(PlayerManager.Player.PlayerPasses.SelectMany(i => i.TeamPlayers)).Where(i => i.Active).Select(i => new
+            var teamPlayers = PlayerManager.Player.TeamPlayers.Union(PlayerManager.Player.PlayerPasses.SelectMany(i => i.TeamPlayers)).Where(i => i.Active);
+
+            using (TeamsController tc = new TeamsController())
             {
-                TeamName = i.Team.TeamName,
-                ProgramName = i.Team.Program.ProgramName,
-                Season = string.Format("{0:yyyy} - {1:yy}", i.Team.StartYear, i.Team.EndYear),
-                IsSecondary = i.IsSecondary,
-                StartYear = i.Team.StartYear,
-                IsRemovable = DateTime.Now.ToUniversalTime() < i.Team.EndYear.ToUniversalTime(),
-                PlayerPassNumber = i.PlayerPassID.HasValue && !string.IsNullOrWhiteSpace(i.PlayerPass.PassNumber) ? i.PlayerPass.PassNumber : "",
-                TeamPlayerID = i.TeamPlayerID,
-                EditToken = i.EditToken
-            }).OrderByDescending(i => i.StartYear).ThenBy(i => i.ProgramName).ThenBy(i => i.TeamName).AsQueryable();
+                FetchStrategy fetch = new FetchStrategy();
+                fetch.LoadWith<Team>(i => i.Program);
+
+                List<int> teamIDsPlayerIsOn = teamPlayers.Select(i => i.TeamID).Distinct().ToList();
+                var teamInfo = tc.GetWhere(i => teamIDsPlayerIsOn.Contains(i.TeamID), fetch).Select(i => new { TeamID = i.TeamID, TeamName = i.TeamName, ProgramName = i.Program.ProgramName, StartYear = i.StartYear, EndYear = i.EndYear }).ToDictionary(i => i.TeamID);
+                
+                return teamPlayers.Select(i => new
+                {
+                    TeamName = teamInfo[i.TeamID].TeamName,
+                    ProgramName = teamInfo[i.TeamID].ProgramName,
+                    Season = string.Format("{0:yyyy} - {1:yy}", teamInfo[i.TeamID].StartYear, teamInfo[i.TeamID].EndYear),
+                    IsSecondary = i.IsSecondary,
+                    StartYear = teamInfo[i.TeamID].StartYear,
+                    IsRemovable = DateTime.Now.ToUniversalTime() < teamInfo[i.TeamID].EndYear.ToUniversalTime(),
+                    PlayerPassNumber = i.PlayerPassID.HasValue && !string.IsNullOrWhiteSpace(i.PlayerPass.PassNumber) ? i.PlayerPass.PassNumber : "",
+                    EditToken = i.EditToken
+                }).OrderByDescending(i => i.StartYear).ThenBy(i => i.ProgramName).ThenBy(i => i.TeamName).AsQueryable();
+            }
         }
 
         private void ClearTeamPlayerForm()
@@ -360,18 +370,29 @@ namespace Trackr.Source.Wizards
         {
             ClearTeamPlayerForm();
 
+            ddlPlayerPassForTeam.DataBind();
+
             // populate
             TeamPlayer playerPass = PlayerManager.Player.TeamPlayers.Union(PlayerManager.Player.PlayerPasses.SelectMany(i => i.TeamPlayers)).First(i => i.EditToken == editToken);
 
-            ptpPicker.SelectedProgramID = playerPass.Team.ProgramID;
-            ptpPicker.SelectedTeamID = playerPass.TeamID;
-            ptpPicker.Populate();
+            using (TeamsController tc = new TeamsController())
+            {
+                Team team = tc.Get(playerPass.TeamID);
+
+                ptpPicker.SelectedProgramID = team.ProgramID;
+                ptpPicker.SelectedTeamID = playerPass.TeamID;
+                ptpPicker.Populate();
+            }
 
             chkIsSecondary.Checked = playerPass.IsSecondary;
 
             if (playerPass.PlayerPassID.HasValue)
             {
-                ddlPlayerPassForTeam.SelectedValue = playerPass.PlayerPassID.Value.ToString();
+                PlayerPass pass = PlayerManager.Player.PlayerPasses.FirstOrDefault(i => i.PlayerPassID == playerPass.PlayerPassID);
+                if (pass != null)
+                {
+                    ddlPlayerPassForTeam.SelectedValue = pass.EditToken.ToString();
+                }
             }
 
             pnlAddEditTeamPlayer.Visible = true;
@@ -385,7 +406,11 @@ namespace Trackr.Source.Wizards
             }
 
             Guid? editToken = gvTeamAssignments.EditIndex != -1 ? (Guid)gvTeamAssignments.DataKeys[gvTeamAssignments.EditIndex].Value : (Guid?)null;
-            SaveTeamPlayer(editToken);
+
+            Guid _try;
+            Guid? playerPassEditToken = Guid.TryParse(ddlPlayerPassForTeam.SelectedValue, out _try) ? _try : (Guid?)null;
+
+            SaveTeamPlayer(editToken, playerPassEditToken);
         }
 
         protected void lnkAddTeamPlayer_Click(object sender, EventArgs e)
@@ -411,15 +436,12 @@ namespace Trackr.Source.Wizards
         public IQueryable ddlPlayerPassForTeam_GetData()
         {
             // get any player passes
-            using (PlayerPassesController ppc = new PlayerPassesController())
+            return PlayerManager.Player.PlayerPasses.Where(i => i.Active && i.PassNumber != null && i.PassNumber.Trim() != "").Select(i => new
             {
-                return ppc.GetWhere(i => i.PlayerID == PrimaryKey.Value && i.PassNumber != null && i.PassNumber.Trim() != "" && i.Active).Select(i => new
-                {
-                    Label = string.Format("{0} - Expires: {1:MM/dd/yyyy}", i.PassNumber, i.Expires),
-                    Value = i.PlayerPassID,
-                    Expires = i.Expires
-                }).OrderByDescending(i => i.Expires).AsQueryable();
-            }
+                Label = string.Format("{0} - Expires: {1:MM/dd/yyyy}", i.PassNumber, i.Expires),
+                Value = i.EditToken,
+                Expires = i.Expires,
+            }).OrderByDescending(i => i.Expires).AsQueryable();
         }
         #endregion
 
