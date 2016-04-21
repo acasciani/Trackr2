@@ -28,6 +28,9 @@ namespace Trackr.Source.Wizards
             set { Session["NewPlayerPicture"] = value; }
         }
 
+        public event EventHandler PlayerSavedSuccess;
+        public event EventHandler PlayerSavedError;
+
         protected void Page_Init(object sender, EventArgs e)
         {
             if (IsPostBack)
@@ -57,6 +60,29 @@ namespace Trackr.Source.Wizards
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (IsNew)
+            {
+                if (CreatePermission != Permissions.PlayerManagement.CreatePlayer)
+                {
+                    // disable some of the steps like player passes
+                    PlayerWizard.WizardSteps.RemoveAt(2);
+                    PlayerWizard.WizardSteps.RemoveAt(2);
+                    PlayerWizard.WizardSteps.RemoveAt(2);
+                    PlayerWizard.WizardSteps[1].StepType = WizardStepType.Finish;
+                }
+            }
+            else
+            {
+                if (EditPermission != Permissions.PlayerManagement.EditPlayer)
+                {
+                    // disable some of the steps like player passes
+                    PlayerWizard.WizardSteps.RemoveAt(2);
+                    PlayerWizard.WizardSteps.RemoveAt(2);
+                    PlayerWizard.WizardSteps.RemoveAt(2);
+                    PlayerWizard.WizardSteps[1].StepType = WizardStepType.Finish;
+                }
+            }
+
             AlertBox.HideStatus();
 
             AddressBook_Player.GetData = GetPlayerAddresses;
@@ -106,12 +132,15 @@ namespace Trackr.Source.Wizards
             // populate player's contact books
             AddressBook_Player.Reset();
             AddressBook_Player.PersonEditToken = player.Person.EditToken;
+            AddressBook_Player.Reload();
 
             EmailAddressBook_Player.Reset();
             EmailAddressBook_Player.PersonEditToken = player.Person.EditToken;
+            EmailAddressBook_Player.Reload();
 
             PhoneNumberBook_Player.Reset();
             PhoneNumberBook_Player.PersonEditToken = player.Person.EditToken;
+            PhoneNumberBook_Player.Reload();
         }
 
         private void Populate_Create()
@@ -269,15 +298,33 @@ namespace Trackr.Source.Wizards
             try
             {
                 PlayerManager.SaveData(CurrentUser.UserID);
-                AlertBox.AddAlert("Successfully saved changes.");
+
+                if (PlayerSavedSuccess != null)
+                {
+                    PlayerSavedSuccess(null, null);
+                }
+                else
+                {
+                    AlertBox.AddAlert("Successfully saved changes.");
+                }
             }
             catch (PlayerModifiedByAnotherProcessException)
             {
                 AlertBox.AddAlert("Unable to save changes. This player was modified by someone else before you committed your changes. Please reload the page and try again.", false, UI.AlertBoxType.Error);
+
+                if (PlayerSavedError != null)
+                {
+                    PlayerSavedError(null, null);
+                }
             }
             catch (Exception ex)
             {
                 Page.Master.HandleException(ex);
+
+                if (PlayerSavedError != null)
+                {
+                    PlayerSavedError(null, null);
+                }
             }
         }
 

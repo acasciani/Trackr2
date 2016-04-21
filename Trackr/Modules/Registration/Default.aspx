@@ -98,10 +98,18 @@
         <asp:View runat="server" ID="vWizardNewPlayer">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h4>Register A New Player</h4>
+                    <h4>
+                        Register <asp:Literal runat="server" ID="litPlayerWizardHeading" Text="A New Player" /> For <%=RegistrationYear%>
+                    </h4>
                 </div>
                 <div class="panel-body">
-                    <ui:PlayerManagement runat="server" ID="widgetPlayerManagement" CreatePermission="PlayerManagement.RegisterNewPlayer" EditPermission="PlayerManagement.ReRegisterPlayer" />
+                    <asp:Panel runat="server" ID="pnlPlayerWidget" Visible="false">
+                        <ui:PlayerManagement runat="server" ID="widgetPlayerManagement" CreatePermission="PlayerManagement.RegisterNewPlayer" EditPermission="PlayerManagement.ReRegisterPlayer" OnPlayerSavedError="widgetPlayerManagement_PlayerSavedError" OnPlayerSavedSuccess="widgetPlayerManagement_PlayerSavedSuccess" />
+                    </asp:Panel>
+
+                    <asp:Panel runat="server" ID="pnlPlayerContinueReigstration" Visible="false">
+
+                    </asp:Panel>
                 </div>
             </div>
         </asp:View>

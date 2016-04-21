@@ -41,21 +41,17 @@ namespace Trackr.Modules.Registration
             }
         }
 
+        protected void Page_Init(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrWhiteSpace(Request["SelectedPlayer"]))
+            {
+                // temporarily set to allow the widget to build proper steps
+                widgetPlayerManagement.PrimaryKey = int.Parse(Request["SelectedPlayer"]);
+            }
+        }
+
         protected void Page_Load(object sender, EventArgs e)
         {
-            Telerik.OpenAccess.BackendConfiguration configuration = new Telerik.OpenAccess.BackendConfiguration();
-            configuration.Backend = "SQLite";
-
-
-            using (ClubManagement cm = new ClubManagement("StagingConnection"))
-            {
-                var clubs = cm.Clubs;
-            }
-
-
-
-
-
             ClubName = "Gananda Bandits";
             RegistrationYear = 2017;
 
@@ -106,8 +102,17 @@ namespace Trackr.Modules.Registration
                     {
                         //re register
                         widgetPlayerManagement.PrimaryKey = int.Parse(playerID_selection);
+
+                        using (PlayersController pc = new PlayersController())
+                        {
+                            FetchStrategy fetch = new FetchStrategy();
+                            fetch.LoadWith<Player>(i => i.Person);
+                            Player player = pc.GetWhere(i => i.PlayerID == int.Parse(playerID_selection), fetch).First();
+                            litPlayerWizardHeading.Text = string.Format("{0} {1}", player.Person.FName, player.Person.LName);
+                        }
                     }
 
+                    pnlPlayerWidget.Visible = true;
                     widgetPlayerManagement.Reload();
 
 
@@ -171,6 +176,16 @@ namespace Trackr.Modules.Registration
             }
         }
         #endregion
+
+        protected void widgetPlayerManagement_PlayerSavedError(object sender, EventArgs e)
+        {
+            widgetPlayerManagement.Reload();
+        }
+
+        protected void widgetPlayerManagement_PlayerSavedSuccess(object sender, EventArgs e)
+        {
+            widgetPlayerManagement.Reload();
+        }
 
 
     }

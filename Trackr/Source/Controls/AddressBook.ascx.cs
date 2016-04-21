@@ -53,6 +53,11 @@ namespace Trackr.Source.Controls
                 return;
             }
 
+            Reload();
+        }
+
+        public void Reload()
+        {
             gvAddressBook.DataBind();
         }
 

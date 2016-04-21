@@ -76,6 +76,24 @@ namespace Trackr.Modules.Registration {
         protected global::System.Web.UI.WebControls.View vWizardNewPlayer;
         
         /// <summary>
+        /// litPlayerWizardHeading control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal litPlayerWizardHeading;
+        
+        /// <summary>
+        /// pnlPlayerWidget control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlPlayerWidget;
+        
+        /// <summary>
         /// widgetPlayerManagement control.
         /// </summary>
         /// <remarks>
@@ -83,6 +101,15 @@ namespace Trackr.Modules.Registration {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Trackr.Source.Wizards.PlayerManagement widgetPlayerManagement;
+        
+        /// <summary>
+        /// pnlPlayerContinueReigstration control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlPlayerContinueReigstration;
         
         /// <summary>
         /// divNavigation control.
