@@ -134,6 +134,25 @@ namespace Trackr.Source.Wizards
 
 
         #region Guardians
+        public static void AddGuardians(List<int> personIDs)
+        {
+            using (PeopleController pc = new PeopleController())
+            {
+                var people = pc.GetWhere(i => personIDs.Contains(i.PersonID)).ToList();
+                people.ForEach(i => i.EditToken = Guid.NewGuid());
+
+                foreach (Person person in people)
+                {
+                    Guardian obj = new Guardian() { EditToken = Guid.NewGuid() };
+                    obj.Person = person;
+                    obj.WasModified = true;
+                    obj.Active = true;
+
+                    _Player.Guardians.Add(obj);
+                }
+            }
+        }
+
         public static Guid AddGuardian(int clubID)
         {
             Guardian obj = new Guardian() { EditToken = Guid.NewGuid() };
@@ -261,7 +280,7 @@ namespace Trackr.Source.Wizards
         #endregion
 
 
-        public static int SaveData(int modifiedByUser)
+        public static int SaveData(int modifiedByUser, bool updateTeamPasses)
         {
             //returns player id
             using (PlayersController pc= new PlayersController())
@@ -405,29 +424,32 @@ namespace Trackr.Source.Wizards
                     }
                 }
 
-                IEnumerable<TeamPlayer> _allUnionedFreshTeamPlayers = freshCopy.TeamPlayers.Union(freshCopy.PlayerPasses.SelectMany(i => i.TeamPlayers)).ToList(); // get duplicate via to list
-
-                IList<TeamPlayer> _freshTeamPlayers = freshCopy.TeamPlayers;
-                Copy(_freshTeamPlayers, _Player.TeamPlayers, _allUnionedFreshTeamPlayers);
-
-                foreach (PlayerPass playerPass in _Player.PlayerPasses)
+                if (updateTeamPasses)
                 {
-                    PlayerPass _freshCopy = playerPass.PlayerPassID == 0 ? new PlayerPass() : freshCopy.PlayerPasses.First(i => i.PlayerPassID == playerPass.PlayerPassID);
+                    IEnumerable<TeamPlayer> _allUnionedFreshTeamPlayers = freshCopy.TeamPlayers.Union(freshCopy.PlayerPasses.SelectMany(i => i.TeamPlayers)).ToList(); // get duplicate via to list
 
-                    if (playerPass.PlayerPassID == 0 || playerPass.WasModified)
+                    IList<TeamPlayer> _freshTeamPlayers = freshCopy.TeamPlayers;
+                    Copy(_freshTeamPlayers, _Player.TeamPlayers, _allUnionedFreshTeamPlayers);
+
+                    foreach (PlayerPass playerPass in _Player.PlayerPasses)
                     {
-                        _freshCopy.Active = playerPass.Active;
-                        _freshCopy.Expires = playerPass.Expires;
-                        _freshCopy.PassNumber = playerPass.PassNumber;
-                        _freshCopy.Photo = playerPass.Photo;
-                    }
+                        PlayerPass _freshCopy = playerPass.PlayerPassID == 0 ? new PlayerPass() : freshCopy.PlayerPasses.First(i => i.PlayerPassID == playerPass.PlayerPassID);
 
-                    IList<TeamPlayer> _freshPlayerPassTeamPlayers = _freshCopy.TeamPlayers;
-                    Copy(_freshPlayerPassTeamPlayers, playerPass.TeamPlayers, _allUnionedFreshTeamPlayers);
+                        if (playerPass.PlayerPassID == 0 || playerPass.WasModified)
+                        {
+                            _freshCopy.Active = playerPass.Active;
+                            _freshCopy.Expires = playerPass.Expires;
+                            _freshCopy.PassNumber = playerPass.PassNumber;
+                            _freshCopy.Photo = playerPass.Photo;
+                        }
 
-                    if (_freshCopy.PlayerPassID == 0)
-                    {
-                        freshCopy.PlayerPasses.Add(_freshCopy);
+                        IList<TeamPlayer> _freshPlayerPassTeamPlayers = _freshCopy.TeamPlayers;
+                        Copy(_freshPlayerPassTeamPlayers, playerPass.TeamPlayers, _allUnionedFreshTeamPlayers);
+
+                        if (_freshCopy.PlayerPassID == 0)
+                        {
+                            freshCopy.PlayerPasses.Add(_freshCopy);
+                        }
                     }
                 }
 
@@ -439,8 +461,11 @@ namespace Trackr.Source.Wizards
                 freshCopy.Person.PhoneNumbers.Union(freshCopy.Guardians.Select(i => i.Person).SelectMany(i => i.PhoneNumbers)).ToList().ForEach(i => { i.LastModifiedAt = modifiedAt; i.LastModifiedBy = modifiedByUser; });
                 freshCopy.Person.Addresses.Union(freshCopy.Guardians.Select(i => i.Person).SelectMany(i => i.Addresses)).ToList().ForEach(i => { i.LastModifiedAt = modifiedAt; i.LastModifiedBy = modifiedByUser; });
 
-                freshCopy.PlayerPasses.ToList().ForEach(i => { i.LastModifiedAt = modifiedAt; i.LastModifiedBy = modifiedByUser; });
-                freshCopy.TeamPlayers.Union(freshCopy.PlayerPasses.SelectMany(i => i.TeamPlayers)).ToList().ForEach(i => { i.LastModifiedAt = modifiedAt; i.LastModifiedBy = modifiedByUser; });
+                if (updateTeamPasses)
+                {
+                    freshCopy.PlayerPasses.ToList().ForEach(i => { i.LastModifiedAt = modifiedAt; i.LastModifiedBy = modifiedByUser; });
+                    freshCopy.TeamPlayers.Union(freshCopy.PlayerPasses.SelectMany(i => i.TeamPlayers)).ToList().ForEach(i => { i.LastModifiedAt = modifiedAt; i.LastModifiedBy = modifiedByUser; });
+                }
 
                 if (freshCopy.PlayerID == 0)
                 {

@@ -3,14 +3,33 @@
 <%@ Register Src="~/Source/Wizards/PlayerManagement.ascx" TagName="PlayerManagement" TagPrefix="ui" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
+
+    <script runat="server">
+        public string GetPercentageFilled(double percent)
+        {
+            if (percent == 100)
+            {
+                return "<span class=\"label label-danger\">Full</span>";
+            }
+            else if (percent >= 75)
+            {
+                return "<span class=\"label label-warning\">Near Full</span>";
+            }
+            else
+            {
+                return "<span class=\"label label-success\">Open</span>";
+            }
+        }
+    </script>
+
     <style type="text/css">
-        .player-matches table {
+        .player-matches table, .proceed-registration table {
             color: initial;
             margin-top: 10px;
             margin-bottom: 0px;
         }
 
-        .player-matches table td {
+        .player-matches table td, .proceed-registration table td {
             cursor: pointer;
         }
     </style>
@@ -18,6 +37,11 @@
         function pageLoad() {
             var name = '<%=gvPossiblePlayerMatches.ClientID.ToString()%>';
             $('#' + name + ' tr').click(function (element) {
+                $(element.target.parentElement).find('input:radio').attr('checked', 'true')
+            });
+
+            var name2 = '<%=gvTeamsToRegisterFor.ClientID.ToString()%>';
+            $('#' + name2 + ' tr').click(function (element) {
                 $(element.target.parentElement).find('input:radio').attr('checked', 'true')
             });
         }
@@ -99,36 +123,83 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h4>
-                        Register <asp:Literal runat="server" ID="litPlayerWizardHeading" Text="A New Player" /> For <%=RegistrationYear%>
+                        Update Player's Information
                     </h4>
                 </div>
                 <div class="panel-body">
-                    <asp:Panel runat="server" ID="pnlPlayerWidget" Visible="false">
-                        <ui:PlayerManagement runat="server" ID="widgetPlayerManagement" CreatePermission="PlayerManagement.RegisterNewPlayer" EditPermission="PlayerManagement.ReRegisterPlayer" OnPlayerSavedError="widgetPlayerManagement_PlayerSavedError" OnPlayerSavedSuccess="widgetPlayerManagement_PlayerSavedSuccess" />
-                    </asp:Panel>
+                    <ui:AlertBox runat="server" ID="AlertBox_PlayerInfo" />
 
-                    <asp:Panel runat="server" ID="pnlPlayerContinueReigstration" Visible="false">
-
-                    </asp:Panel>
+                    <ui:PlayerManagement runat="server" ID="widgetPlayerManagement" CreatePermission="PlayerManagement.RegisterNewPlayer" EditPermission="PlayerManagement.ReRegisterPlayer" OnPlayerSavedError="widgetPlayerManagement_PlayerSavedError" OnPlayerSavedSuccess="widgetPlayerManagement_PlayerSavedSuccess" />
                 </div>
             </div>
         </asp:View>
 
+        <asp:View runat="server" ID="wizardSelectTeam">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4>
+                        Register <asp:Literal runat="server" ID="litPlayerFirstName" Text="Player" /> For <%=RegistrationYear%>
+                    </h4>
+                </div>
+                <div class="panel-body">
+                    <div class="row proceed-registration">
+                        <div class="col-sm-12">
+                            <ui:AlertBox runat="server" ID="AlertBox_PlayerRegistration" />
 
+                            <div>
+                                Select a team from below to register for next year and click "Continue".
+                            </div>
+                            <div>
+                                <asp:GridView runat="server" ID="gvTeamsToRegisterFor" AutoGenerateColumns="false" CssClass="table table-striped table-hover" Style="padding-bottom: 0px;" EmptyDataText="There are currently no available teams to register this player for.">
+                                    <Columns>
+                                        <asp:TemplateField HeaderText="Team">
+                                            <ItemTemplate>
+                                                <%# Eval("TeamName") %> - <%# Eval("ProgramName") %> <%#GetPercentageFilled((double)Eval("PercentRegistered")).ToString() %>
+                                            </ItemTemplate>
+                                        </asp:TemplateField>
+                                        <asp:TemplateField ItemStyle-CssClass="col-xs-1 text-center">
+                                            <ItemTemplate>
+                                                <%# !(bool)Eval("IsTeamFull") ? "<input type=\"radio\" name=\"SelectedTeam\" value='" + Eval("TeamID") + "' />" : "" %>
+                                            </ItemTemplate>
+                                        </asp:TemplateField>
+                                    </Columns>
+                                </asp:GridView>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </asp:View>
 
+        <asp:View runat="server" ID="wizardComplete">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4>
+                        Registration Complete
+                    </h4>
+                </div>
+                <div class="panel-body">
+                    You have successfully completed registration for this player. <a href="Default.aspx">Click here to register another player.</a>
+                </div>
+            </div>
+        </asp:View>
     </asp:MultiView>
 
     <div class="row" runat="server" id="divNavigation">
         <div class="col-sm-12">
-            <span style="margin-right: 10px;"><%{
+            <%{
                                                     if (StepHistory.Count > 0)
                                                     { %>
+                <span style="margin-right: 20px;">
                 <asp:LinkButton runat="server" ID="lnkBackStep" OnClick="lnkBackStep_Click" CausesValidation="false" CssClass="btn btn-default">Back</asp:LinkButton>
+                </span>
                 <%}
-                                                } %></span>
+                                                } %>
 
-            <span style="margin-left: 10px;">
-                <asp:LinkButton runat="server" ID="lnkContinueStep" OnClick="lnkContinueStep_Click" CausesValidation="true" CssClass="btn btn-default">Continue</asp:LinkButton>
+            <span>
+                <asp:LinkButton runat="server" ID="lnkContinueStep" OnClick="lnkContinueStep_Click" CausesValidation="true" CssClass="btn btn-default">
+                    <%=mvRegister.ActiveViewIndex == (mvRegister.Views.Count - 2) ? "Complete" : "Continue" %> Registration
+                </asp:LinkButton>
             </span>
         </div>
     </div>

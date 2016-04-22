@@ -152,6 +152,9 @@
         <orm:field name="_minRosterSize" property="MinRosterSize" behavior="readwrite" uniqueId="12bb65fb-198b-4583-a770-b3648cf595fb" type="System.Int16">
           <orm:column name="MinRosterSize" sql-type="smallint" nullable="false" length="0" scale="0" ado-type="Int16" />
         </orm:field>
+        <orm:field name="_ageCutoff" property="AgeCutoff" behavior="readwrite" uniqueId="d44cfa33-e6e4-4dcc-85c5-5c145c8a3e5b" type="System.DateTime">
+          <orm:column name="AgeCutoff" sql-type="datetime" nullable="false" length="0" scale="0" has-default-value="true" ado-type="DateTime" />
+        </orm:field>
         <orm:field name="_program" property="Program" behavior="readwrite" uniqueId="332d180a-e615-481f-b524-3bcb0d500dce" type="TrackrModels.Program">
           <orm:reference uniqueId="802bddbb-d5ff-4681-b6b9-6c5000687ea3" association-name="TeamHasProgram">
             <orm:sharedfield name="_programID" target-class="TrackrModels.Program" target-field="_programID" />
@@ -335,6 +338,9 @@
         </orm:field>
         <orm:field name="_active" property="Active" behavior="readwrite" uniqueId="5f640d57-0dd2-4cd8-ba2e-404925d88038" type="System.Boolean">
           <orm:column name="Active" sql-type="bit" nullable="false" length="0" scale="0" ado-type="Bit" />
+        </orm:field>
+        <orm:field name="_approved" property="Approved" behavior="readwrite" uniqueId="c02dd3b0-d51a-409c-97e6-947cfca5ba00" type="System.Boolean">
+          <orm:column name="Approved" sql-type="bit" nullable="false" length="0" scale="0" ado-type="Bit" />
         </orm:field>
         <orm:field name="_team" property="Team" behavior="readwrite" uniqueId="ee6d90d0-0553-43a8-8e33-4fab5c6e741f" type="TrackrModels.Team">
           <orm:reference uniqueId="1461b9d0-65bc-467d-9222-6db6886f1d17" association-name="TeamPlayerHasTeam">
@@ -692,6 +698,46 @@
           </orm:reference>
         </orm:field>
       </orm:class>
+      <orm:class name="RegistrationRule" uniqueId="fb5b9d3e-6608-46de-a34a-dbd718bd2b72">
+        <orm:table name="RegistrationRules" />
+        <orm:identity>
+          <orm:key-generator name="autoinc">
+            <orm:key-generator-member property-name="RegistrationRuleID" />
+          </orm:key-generator>
+          <orm:single-field field-name="_registrationRuleID" />
+        </orm:identity>
+        <orm:concurrency strategy="changed" />
+        <orm:field name="_registrationRuleID" property="RegistrationRuleID" behavior="readwrite" uniqueId="d3253cc0-67d4-4b36-8136-945c5533c01c" type="System.Int32">
+          <orm:column name="RegistrationRuleID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_oldTeamID" property="OldTeamID" behavior="readwrite" uniqueId="e096dc70-7fb8-4cde-9115-c8b334d557a6" type="System.Nullable`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
+          <orm:column name="OldTeamID" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_newTeamID" property="NewTeamID" behavior="readwrite" uniqueId="a33e00a9-55d8-4ce0-8618-2af38722395b" type="System.Int32">
+          <orm:column name="NewTeamID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_registrationOpens" property="RegistrationOpens" behavior="readwrite" uniqueId="b12417ac-03d8-4bb7-b06d-3d2badd615db" type="System.DateTime">
+          <orm:column name="RegistrationOpens" sql-type="datetime" nullable="false" length="0" scale="0" ado-type="DateTime" />
+        </orm:field>
+        <orm:field name="_registrationCloses" property="RegistrationCloses" behavior="readwrite" uniqueId="0f4ace64-9843-41f0-a30f-6bd0fd1e9d97" type="System.DateTime">
+          <orm:column name="RegistrationCloses" sql-type="datetime" nullable="false" length="0" scale="0" ado-type="DateTime" />
+        </orm:field>
+        <orm:field name="_dateOfBirthCutoff" property="DateOfBirthCutoff" behavior="readwrite" uniqueId="6f5a362b-f227-40a2-adc6-44bb40c1193a" type="System.Nullable`1[[System.DateTime, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
+          <orm:column name="DateOfBirthCutoff" sql-type="datetime" nullable="true" length="0" scale="0" ado-type="DateTime" />
+        </orm:field>
+        <orm:field name="_team" property="OldTeam" behavior="readwrite" uniqueId="05de8698-d53a-44cc-b418-aa44c5e39a69" type="TrackrModels.Team">
+          <orm:reference uniqueId="e309b3be-863f-4451-afd4-b6d03e966c1f" association-name="RegistrationRuleHasTeam">
+            <orm:sharedfield name="_oldTeamID" target-class="TrackrModels.Team" target-field="_teamID" />
+            <orm:constraint name="FK_RegistrationRules_OldTeams" delete-action="dbdefaultrule" destination-table="Teams" />
+          </orm:reference>
+        </orm:field>
+        <orm:field name="_team1" property="NewTeam" behavior="readwrite" uniqueId="cff9713a-111d-486c-9cf0-34bfa03814f0" type="TrackrModels.Team">
+          <orm:reference uniqueId="862c0eba-f4c1-4e69-b013-ee1704854b3a" association-name="RegistrationRuleHasTeam1">
+            <orm:sharedfield name="_newTeamID" target-class="TrackrModels.Team" target-field="_teamID" />
+            <orm:constraint name="FK_RegistrationRules_NewTeams" delete-action="dbdefaultrule" destination-table="Teams" />
+          </orm:reference>
+        </orm:field>
+      </orm:class>
     </orm:namespace>
     <orm:schema schema="">
       <orm:table name="WebUserInfo">
@@ -742,6 +788,7 @@
         <orm:column name="EndYear" sql-type="datetime" nullable="false" length="0" scale="0" ado-type="DateTime" />
         <orm:column name="MaxRosterSize" sql-type="smallint" nullable="false" length="0" scale="0" ado-type="Int16" />
         <orm:column name="MinRosterSize" sql-type="smallint" nullable="false" length="0" scale="0" ado-type="Int16" />
+        <orm:column name="AgeCutoff" sql-type="datetime" nullable="false" length="0" scale="0" has-default-value="true" ado-type="DateTime" />
         <orm:constraint name="FK_Teams_Teams" delete-action="dbdefaultrule" destination-table="Programs">
           <orm:column name="ProgramID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
         </orm:constraint>
@@ -798,6 +845,7 @@
         <orm:column name="LastModifiedBy" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
         <orm:column name="LastModifiedAt" sql-type="datetime" nullable="false" length="0" scale="0" ado-type="DateTime" />
         <orm:column name="Active" sql-type="bit" nullable="false" length="0" scale="0" ado-type="Bit" />
+        <orm:column name="Approved" sql-type="bit" nullable="false" length="0" scale="0" ado-type="Bit" />
         <orm:constraint name="FK_TeamPlayers_Teams" delete-action="dbdefaultrule" destination-table="Teams">
           <orm:column name="TeamID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
         </orm:constraint>
@@ -951,6 +999,20 @@
           <orm:column name="CreateUserID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
         </orm:constraint>
       </orm:table>
+      <orm:table name="RegistrationRules">
+        <orm:column name="RegistrationRuleID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        <orm:column name="OldTeamID" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        <orm:column name="NewTeamID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        <orm:column name="RegistrationOpens" sql-type="datetime" nullable="false" length="0" scale="0" ado-type="DateTime" />
+        <orm:column name="RegistrationCloses" sql-type="datetime" nullable="false" length="0" scale="0" ado-type="DateTime" />
+        <orm:column name="DateOfBirthCutoff" sql-type="datetime" nullable="true" length="0" scale="0" ado-type="DateTime" />
+        <orm:constraint name="FK_RegistrationRules_OldTeams" delete-action="dbdefaultrule" destination-table="Teams">
+          <orm:column name="OldTeamID" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        </orm:constraint>
+        <orm:constraint name="FK_RegistrationRules_NewTeams" delete-action="dbdefaultrule" destination-table="Teams">
+          <orm:column name="NewTeamID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:constraint>
+      </orm:table>
     </orm:schema>
     <orm:relational-naming-settings>
       <orm:remove-leading-underscore>False</orm:remove-leading-underscore>
@@ -1099,6 +1161,7 @@
       <Property Id="a2ce9f09-d689-4b22-b987-50378f22a993" name="ProgramID" type="Int32" label="ProgramID : Int32" kind="Persistent" fieldName="_programID" />
       <Property Id="c1ef74e6-e73e-459c-b98b-57fb8f78e01c" name="StartYear" type="DateTime" label="StartYear : DateTime" kind="Persistent" fieldName="_startYear" />
       <Property Id="3886bb91-446d-4837-ae96-40b4d5896f54" name="TeamName" label="TeamName : String" kind="Persistent" fieldName="_teamName" />
+      <Property Id="d44cfa33-e6e4-4dcc-85c5-5c145c8a3e5b" name="AgeCutoff" type="DateTime" label="AgeCutoff : DateTime" kind="Persistent" fieldName="_ageCutoff" />
       <AssociationTargets>
         <Association Id="802bddbb-d5ff-4681-b6b9-6c5000687ea3" SourceMultiplicity="One" name="TeamHasProgram">
           <DomainClassMoniker name="/ClubManagement/Program" />
@@ -1242,6 +1305,7 @@
       <Property Id="2f16a0e2-6724-473c-a890-278468066361" name="LastModifiedBy" type="Int32" label="LastModifiedBy : Int32" kind="Persistent" fieldName="_lastModifiedBy" />
       <Property Id="d2ce2e5a-ae63-4fdc-b895-e24d32bd2263" name="LastModifiedAt" type="DateTime" label="LastModifiedAt : DateTime" kind="Persistent" fieldName="_lastModifiedAt" />
       <Property Id="5f640d57-0dd2-4cd8-ba2e-404925d88038" name="Active" type="Boolean" label="Active : Boolean" kind="Persistent" fieldName="_active" />
+      <Property Id="c02dd3b0-d51a-409c-97e6-947cfca5ba00" name="Approved" type="Boolean" label="Approved : Boolean" kind="Persistent" fieldName="_approved" />
       <AssociationTargets>
         <Association Id="1461b9d0-65bc-467d-9222-6db6886f1d17" SourceMultiplicity="One" name="TeamPlayerHasTeam">
           <DomainClassMoniker name="/ClubManagement/Team" />
@@ -1562,6 +1626,40 @@
         </classHasNavigationalProperties>
       </navigationalProperties>
     </DomainClass>
+    <DomainClass Id="fb5b9d3e-6608-46de-a34a-dbd718bd2b72" name="RegistrationRule" namespace="TrackrModels" showPropertiesCompartment="true" identityMechanism="DatabaseServerCalculated" concurrencyMode="Changed" showNavigationCompartment="true" showImplementationCompartment="true" identityMechanismMember="RegistrationRuleID">
+      <Property Id="d3253cc0-67d4-4b36-8136-945c5533c01c" name="RegistrationRuleID" type="Int32" label="RegistrationRuleID : Int32" kind="Persistent" identity="true" fieldName="_registrationRuleID" />
+      <Property Id="a33e00a9-55d8-4ce0-8618-2af38722395b" name="NewTeamID" type="Int32" label="NewTeamID : Int32" kind="Persistent" fieldName="_newTeamID" />
+      <Property Id="e096dc70-7fb8-4cde-9115-c8b334d557a6" name="OldTeamID" type="Int32" label="OldTeamID : Int32" nullable="true" kind="Persistent" fieldName="_oldTeamID" />
+      <Property Id="0f4ace64-9843-41f0-a30f-6bd0fd1e9d97" name="RegistrationCloses" type="DateTime" label="RegistrationCloses : DateTime" kind="Persistent" fieldName="_registrationCloses" />
+      <Property Id="b12417ac-03d8-4bb7-b06d-3d2badd615db" name="RegistrationOpens" type="DateTime" label="RegistrationOpens : DateTime" kind="Persistent" fieldName="_registrationOpens" />
+      <Property Id="6f5a362b-f227-40a2-adc6-44bb40c1193a" name="DateOfBirthCutoff" type="DateTime" label="DateOfBirthCutoff : DateTime" nullable="true" kind="Persistent" fieldName="_dateOfBirthCutoff" />
+      <AssociationTargets>
+        <Association Id="e309b3be-863f-4451-afd4-b6d03e966c1f" SourceMultiplicity="One" name="RegistrationRuleHasTeam">
+          <DomainClassMoniker name="/ClubManagement/Team" />
+          <sourceNavigationalProperty>
+            <associationDefinesSourceProperty Id="80b1afd7-5c04-4179-b43e-8d5abaa6c3ec">
+              <NavigationalPropertyMoniker name="/ClubManagement/RegistrationRule/OldTeam" />
+            </associationDefinesSourceProperty>
+          </sourceNavigationalProperty>
+        </Association>
+        <Association Id="862c0eba-f4c1-4e69-b013-ee1704854b3a" SourceMultiplicity="One" name="RegistrationRuleHasTeam1">
+          <DomainClassMoniker name="/ClubManagement/Team" />
+          <sourceNavigationalProperty>
+            <associationDefinesSourceProperty Id="cc2a08d2-beb8-4506-9310-5a6998a2ab61">
+              <NavigationalPropertyMoniker name="/ClubManagement/RegistrationRule/NewTeam" />
+            </associationDefinesSourceProperty>
+          </sourceNavigationalProperty>
+        </Association>
+      </AssociationTargets>
+      <navigationalProperties>
+        <classHasNavigationalProperties Id="81c5bca3-5065-41ec-a151-2d813cdcea8b">
+          <NavigationalProperty Id="05de8698-d53a-44cc-b418-aa44c5e39a69" name="OldTeam" type="Team" label="OldTeam : Team" nullable="true" kind="Persistent" fieldName="_team" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+        <classHasNavigationalProperties Id="1fe41e12-a531-4668-88e6-b6dfe17b30a7">
+          <NavigationalProperty Id="cff9713a-111d-486c-9cf0-34bfa03814f0" name="NewTeam" type="Team" label="NewTeam : Team" nullable="true" kind="Persistent" fieldName="_team1" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+      </navigationalProperties>
+    </DomainClass>
   </Types>
   <domainContext>
     <domainModelHasDomainContext Id="242d1b49-d412-485c-b5ca-793640a0667d">
@@ -1582,6 +1680,7 @@
         <entitySetProperty name="EmailAddresses" namespace="TrackrModels" type="EmailAddress" label="EmailAddresses : IQueryable&lt;TrackrModels.EmailAddress&gt;" />
         <entitySetProperty name="TeamSchedules" namespace="TrackrModels" type="TeamSchedule" label="TeamSchedules : IQueryable&lt;TrackrModels.TeamSchedule&gt;" />
         <entitySetProperty name="Attendances" namespace="TrackrModels" type="Attendance" label="Attendances : IQueryable&lt;TrackrModels.Attendance&gt;" />
+        <entitySetProperty name="RegistrationRules" namespace="TrackrModels" type="RegistrationRule" label="RegistrationRules : IQueryable&lt;TrackrModels.RegistrationRule&gt;" />
       </domainContainer>
     </domainModelHasDomainContext>
   </domainContext>

@@ -129,6 +129,19 @@ namespace TrackrModels
 			}
 		}
 		
+		private bool _approved;
+		public virtual bool Approved
+		{
+			get
+			{
+				return this._approved;
+			}
+			set
+			{
+				this._approved = value;
+			}
+		}
+		
 		private Team _team;
 		public virtual Team Team
 		{
@@ -184,6 +197,7 @@ namespace TrackrModels
 			this.LastModifiedBy = info.GetInt32("LastModifiedBy");
 			this.LastModifiedAt = (DateTime)info.GetValue("LastModifiedAt", typeof(DateTime));
 			this.Active = info.GetBoolean("Active");
+			this.Approved = info.GetBoolean("Approved");
 			CustomizeDeserializationProcess(info, context);
 		}
 		
@@ -197,6 +211,7 @@ namespace TrackrModels
 			info.AddValue("LastModifiedBy", this.LastModifiedBy, typeof(int));
 			info.AddValue("LastModifiedAt", this.LastModifiedAt, typeof(DateTime));
 			info.AddValue("Active", this.Active, typeof(bool));
+			info.AddValue("Approved", this.Approved, typeof(bool));
 			CustomizeSerializationProcess(info, context);
 		}
 		

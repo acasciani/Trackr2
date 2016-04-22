@@ -76,22 +76,13 @@ namespace Trackr.Modules.Registration {
         protected global::System.Web.UI.WebControls.View vWizardNewPlayer;
         
         /// <summary>
-        /// litPlayerWizardHeading control.
+        /// AlertBox_PlayerInfo control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal litPlayerWizardHeading;
-        
-        /// <summary>
-        /// pnlPlayerWidget control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnlPlayerWidget;
+        protected global::Trackr.UI.AlertBox AlertBox_PlayerInfo;
         
         /// <summary>
         /// widgetPlayerManagement control.
@@ -103,13 +94,49 @@ namespace Trackr.Modules.Registration {
         protected global::Trackr.Source.Wizards.PlayerManagement widgetPlayerManagement;
         
         /// <summary>
-        /// pnlPlayerContinueReigstration control.
+        /// wizardSelectTeam control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnlPlayerContinueReigstration;
+        protected global::System.Web.UI.WebControls.View wizardSelectTeam;
+        
+        /// <summary>
+        /// litPlayerFirstName control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal litPlayerFirstName;
+        
+        /// <summary>
+        /// AlertBox_PlayerRegistration control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Trackr.UI.AlertBox AlertBox_PlayerRegistration;
+        
+        /// <summary>
+        /// gvTeamsToRegisterFor control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView gvTeamsToRegisterFor;
+        
+        /// <summary>
+        /// wizardComplete control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.View wizardComplete;
         
         /// <summary>
         /// divNavigation control.

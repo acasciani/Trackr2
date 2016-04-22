@@ -60,6 +60,11 @@ namespace Trackr
 	
     }
 
+    public partial class RegistrationRuleRepository : OpenAccessBaseRepository<TrackrModels.RegistrationRule, TrackrModels.ClubManagement>
+    {
+
+    }
+
     public partial class TeamPlayerRepository : OpenAccessBaseRepository<TrackrModels.TeamPlayer, TrackrModels.ClubManagement>
     {
 

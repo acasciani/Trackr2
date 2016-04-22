@@ -12,6 +12,11 @@ namespace Trackr.Source.Wizards
 {
     public partial class PlayerManagement : WizardBase<int>
     {
+        public class PlayerSavedEventArgs : EventArgs
+        {
+            public int? PlayerID { get; set; }
+        }
+
         private int ClubID = 1;
 
         public string CreatePermission { get; set; }
@@ -27,6 +32,8 @@ namespace Trackr.Source.Wizards
             get { return Session["NewPlayerPicture"] as byte[]; }
             set { Session["NewPlayerPicture"] = value; }
         }
+
+        public List<int> AddThesePeopleAsDefaultGuardians { get; set; }
 
         public event EventHandler PlayerSavedSuccess;
         public event EventHandler PlayerSavedError;
@@ -147,10 +154,27 @@ namespace Trackr.Source.Wizards
         {
             PlayerManager.CreatePlayer(ClubID);
 
+            Player player = PlayerManager.Player;
+
+            txtFirstName.Text = player.Person.FName;
+            txtLastName.Text = player.Person.LName;
+            txtMiddleInitial.Text = player.Person.MInitial.HasValue ? player.Person.MInitial.Value.ToString() : "";
+
+            txtDateOfBirth.Text = player.Person.DateOfBirth.HasValue ? player.Person.DateOfBirth.Value.ToString("yyyy-MM-dd") : "";
+
+            divPreview.Visible = false;
+
             OldPlayerPicture = null;
             NewPlayerPicture = null;
             pnlPossiblePlayerMatches.Visible = false;
             PlayerWizard.ActiveStepIndex = 0;
+
+            // add default guardians
+            if (AddThesePeopleAsDefaultGuardians != null && AddThesePeopleAsDefaultGuardians.Count() > 0)
+            {
+                PlayerManager.AddGuardians(AddThesePeopleAsDefaultGuardians);
+            }
+            
         }
 
         private void Populate_Edit()
@@ -297,11 +321,21 @@ namespace Trackr.Source.Wizards
 
             try
             {
-                PlayerManager.SaveData(CurrentUser.UserID);
+                bool updateTeamPasses;
+                if (WasNew)
+                {
+                    updateTeamPasses = CreatePermission == Permissions.PlayerManagement.CreatePlayer;
+                }
+                else
+                {
+                    updateTeamPasses = EditPermission == Permissions.PlayerManagement.EditPlayer;
+                }
+
+                int playerID = PlayerManager.SaveData(CurrentUser.UserID, updateTeamPasses);
 
                 if (PlayerSavedSuccess != null)
                 {
-                    PlayerSavedSuccess(null, null);
+                    PlayerSavedSuccess(null, new PlayerSavedEventArgs() { PlayerID = playerID });
                 }
                 else
                 {
@@ -314,7 +348,7 @@ namespace Trackr.Source.Wizards
 
                 if (PlayerSavedError != null)
                 {
-                    PlayerSavedError(null, null);
+                    PlayerSavedError(null, new PlayerSavedEventArgs() { PlayerID = PlayerManager.Player.PlayerID == 0 ? (int?)null : PlayerManager.Player.PlayerID });
                 }
             }
             catch (Exception ex)

@@ -386,6 +386,7 @@
     <Compile Include="Controllers\PlayerPassesController.cs" />
     <Compile Include="Controllers\PeopleController.cs" />
     <Compile Include="Controllers\PhoneNumbersController.cs" />
+    <Compile Include="Controllers\RegistrationRulesController.cs" />
     <Compile Include="Repositories\ClubManagementRepositories.cs" />
     <Compile Include="Controllers\ClubsController.cs" />
     <Compile Include="Controllers\Partials\ScopeAssignmentsController.Partial.cs" />

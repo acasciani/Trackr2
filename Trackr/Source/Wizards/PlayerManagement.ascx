@@ -14,24 +14,22 @@
 
 <asp:Wizard runat="server" ID="PlayerWizard" DisplaySideBar="true" OnNextButtonClick="PlayerWizard_NextButtonClick" OnFinishButtonClick="PlayerWizard_FinishButtonClick">
     <StepNavigationTemplate>
-        <div class="pull-left">
+        <div class="text-left" style="margin-bottom: 0;">
             <asp:LinkButton runat="server" CommandName="MovePrevious" Text="Previous" CausesValidation="false" />
-        </div>
-        <div class="pull-right">
-            <asp:LinkButton runat="server" CommandName="MoveNext" Text="Continue" />
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+            <asp:LinkButton runat="server" CommandName="MoveNext" Text="Continue Editing Info" />
         </div>
     </StepNavigationTemplate>
     <StartNavigationTemplate>
-        <div class="pull-right">
-            <asp:LinkButton runat="server" CommandName="MoveNext" Text="Continue" />
+        <div class="text-left" style="margin-bottom: 0;">
+            <asp:LinkButton runat="server" CommandName="MoveNext" Text="Continue Editing Info" />
         </div>
     </StartNavigationTemplate>
     <FinishNavigationTemplate>
-        <div class="pull-left">
+        <div class="text-left" style="margin-bottom: 0;">
             <asp:LinkButton runat="server" CommandName="MovePrevious" Text="Previous" CausesValidation="false" />
-        </div>
-        <div class="pull-right">
-            <asp:LinkButton runat="server" CommandName="MoveComplete" Text="Save Player" />
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+            <asp:LinkButton runat="server" CommandName="MoveComplete" Text="Save Player Info" />
         </div>
     </FinishNavigationTemplate>
 

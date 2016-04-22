@@ -116,6 +116,19 @@ namespace TrackrModels
 			}
 		}
 		
+		private DateTime _ageCutoff;
+		public virtual DateTime AgeCutoff
+		{
+			get
+			{
+				return this._ageCutoff;
+			}
+			set
+			{
+				this._ageCutoff = value;
+			}
+		}
+		
 		private Program _program;
 		public virtual Program Program
 		{
@@ -162,6 +175,7 @@ namespace TrackrModels
 			this.EndYear = (DateTime)info.GetValue("EndYear", typeof(DateTime));
 			this.MaxRosterSize = info.GetInt16("MaxRosterSize");
 			this.MinRosterSize = info.GetInt16("MinRosterSize");
+			this.AgeCutoff = (DateTime)info.GetValue("AgeCutoff", typeof(DateTime));
 			CustomizeDeserializationProcess(info, context);
 		}
 		
@@ -174,6 +188,7 @@ namespace TrackrModels
 			info.AddValue("EndYear", this.EndYear, typeof(DateTime));
 			info.AddValue("MaxRosterSize", this.MaxRosterSize, typeof(short));
 			info.AddValue("MinRosterSize", this.MinRosterSize, typeof(short));
+			info.AddValue("AgeCutoff", this.AgeCutoff, typeof(DateTime));
 			CustomizeSerializationProcess(info, context);
 		}
 		

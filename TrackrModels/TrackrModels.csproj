@@ -147,6 +147,9 @@
       <DependentUpon>ClubManagement.rlinq</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RegistrationRule.generated.cs">
+      <DependentUpon>ClubManagement.rlinq</DependentUpon>
+    </Compile>
     <Compile Include="Role.generated.cs">
       <DependentUpon>UserManagement.rlinq</DependentUpon>
     </Compile>

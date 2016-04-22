@@ -24,7 +24,12 @@ namespace Trackr.Modules.Registration
             public int PlayerID { get; set; }
         }
 
-        private int? PlayerID { get; set; }
+        private int? PlayerID
+        {
+            get { return ViewState["PlayerID"] as int?; }
+            set { ViewState["PlayerID"] = value; }
+        }
+
         public int RegistrationYear { get; private set; }
         public string ClubName { get; private set; }
         public Stack<int> StepHistory
@@ -41,19 +46,16 @@ namespace Trackr.Modules.Registration
             }
         }
 
-        protected void Page_Init(object sender, EventArgs e)
-        {
-            if (!string.IsNullOrWhiteSpace(Request["SelectedPlayer"]))
-            {
-                // temporarily set to allow the widget to build proper steps
-                widgetPlayerManagement.PrimaryKey = int.Parse(Request["SelectedPlayer"]);
-            }
-        }
-
         protected void Page_Load(object sender, EventArgs e)
         {
             ClubName = "Gananda Bandits";
             RegistrationYear = 2017;
+
+            if (!string.IsNullOrWhiteSpace(Request["SelectedPlayer"]))
+            {
+                // temporarily set to allow the widget to build proper steps
+                widgetPlayerManagement.PrimaryKey = Request["SelectedPlayer"] == "new" ? (int?)null : int.Parse(Request["SelectedPlayer"]);
+            }
 
             if (IsPostBack)
             {
@@ -78,6 +80,9 @@ namespace Trackr.Modules.Registration
         {
             int previousStep = StepHistory.Pop();
             mvRegister.ActiveViewIndex = previousStep;
+
+            lnkContinueStep.Visible = mvRegister.ActiveViewIndex != 1;
+            divNavigation.Visible = mvRegister.ActiveViewIndex != 3;
         }
 
         protected void lnkContinueStep_Click(object sender, EventArgs e)
@@ -96,11 +101,19 @@ namespace Trackr.Modules.Registration
                     if (playerID_selection == "new")
                     {
                         // new
-
+                        using (PeopleController pc = new PeopleController())
+                        {
+                            Person person = pc.GetWhere(i => i.UserID.HasValue && i.UserID.Value == CurrentUser.UserID).FirstOrDefault();
+                            if (person != null)
+                            {
+                                widgetPlayerManagement.AddThesePeopleAsDefaultGuardians = new List<int>() { person.PersonID };
+                            }
+                        }
                     }
                     else
                     {
                         //re register
+                        widgetPlayerManagement.AddThesePeopleAsDefaultGuardians = null;
                         widgetPlayerManagement.PrimaryKey = int.Parse(playerID_selection);
 
                         using (PlayersController pc = new PlayersController())
@@ -108,22 +121,70 @@ namespace Trackr.Modules.Registration
                             FetchStrategy fetch = new FetchStrategy();
                             fetch.LoadWith<Player>(i => i.Person);
                             Player player = pc.GetWhere(i => i.PlayerID == int.Parse(playerID_selection), fetch).First();
-                            litPlayerWizardHeading.Text = string.Format("{0} {1}", player.Person.FName, player.Person.LName);
+                            litPlayerFirstName.Text = string.Format("{0}", player.Person.FName);
                         }
                     }
 
-                    pnlPlayerWidget.Visible = true;
                     widgetPlayerManagement.Reload();
+                    break;
 
+                case 1: // player info
+                    if (!PlayerID.HasValue)
+                    {
+                        AlertBox_PlayerInfo.AddAlert("Please completely go through the player wizard to ensure information is up to date.", false, UI.AlertBoxType.Info);
+                        return;
+                    }
+                    break;
 
+                case 2: // register
+                    string teamID_selection = Request["SelectedTeam"];
+
+                    if (string.IsNullOrWhiteSpace(teamID_selection))
+                    {
+                        AlertBox_PlayerRegistration.AddAlert("Please select a team to register this player to.", false, UI.AlertBoxType.Error);
+                        return;
+                    }
+
+                    int teamID = int.Parse(teamID_selection);
+
+                        using (TeamPlayersController tpc = new TeamPlayersController())
+                        {
+                            // check to ensure they are already not assigned to the team.
+                            if (tpc.GetWhere(i => i.TeamID == teamID && i.Active && (i.PlayerID == PlayerID.Value || (i.PlayerPass != null && i.PlayerPass.PlayerID==PlayerID.Value))).Count() > 0)
+                            {
+                                AlertBox_PlayerRegistration.AddAlert("This player is already assigned to the selected team.", false, UI.AlertBoxType.Warning);
+                                return;
+                            }
+                            else
+                            {
+                                TeamPlayer teamPlayer = new TeamPlayer()
+                                {
+                                    Active = true,
+                                    IsSecondary = false,
+                                    LastModifiedAt = DateTime.Now.ToUniversalTime(),
+                                    LastModifiedBy = CurrentUser.UserID,
+                                    PlayerID = PlayerID.Value,
+                                    TeamID = teamID,
+                                    Approved = false
+                                };
+
+                                tpc.AddNew(teamPlayer);
+
+                                AlertBox_PlayerRegistration.AddAlert("Successfully registered player for team.");
+                            }
+                        }
+
+                    break;
+
+                case 3:
+                    PlayerID = null;
+                    StepHistory.Clear();
                     break;
 
                 default: break;
             }
 
-
-
-            if (mvRegister.ActiveViewIndex == mvRegister.Views.Count)
+            if (mvRegister.ActiveViewIndex == mvRegister.Views.Count - 1)
             {
                 // last step
             }
@@ -131,6 +192,9 @@ namespace Trackr.Modules.Registration
             {
                 StepHistory.Push(mvRegister.ActiveViewIndex);
                 mvRegister.ActiveViewIndex += 1;
+
+                lnkContinueStep.Visible = mvRegister.ActiveViewIndex != 1;
+                divNavigation.Visible = mvRegister.ActiveViewIndex != 3;
             }
         }
 
@@ -185,8 +249,77 @@ namespace Trackr.Modules.Registration
         protected void widgetPlayerManagement_PlayerSavedSuccess(object sender, EventArgs e)
         {
             widgetPlayerManagement.Reload();
+
+            Trackr.Source.Wizards.PlayerManagement.PlayerSavedEventArgs arg = (Trackr.Source.Wizards.PlayerManagement.PlayerSavedEventArgs)e;
+            PlayerID = arg.PlayerID;
+
+            // make sure user has scope to them
+            using (ScopeAssignmentsController sac = new ScopeAssignmentsController())
+            {
+                // check they dont have it first
+                var assignmentsForPlayer = sac.GetWhere(i => i.UserID == CurrentUser.UserID && i.ResourceID == PlayerID.Value && i.ScopeID == 4 && i.RoleID==6);
+                if (assignmentsForPlayer.Count() == 0)
+                {
+                    ScopeAssignment assignment = new ScopeAssignment()
+                    {
+                        IsDeny = false,
+                        ResourceID = PlayerID.Value,
+                        RoleID = 6,
+                        ScopeID = 4,
+                        UserID = CurrentUser.UserID
+                    };
+
+                    sac.AddNew(assignment);
+                }
+            }
+
+            SetUpRegistrationWorkFlow(arg.PlayerID.Value);
+
+            mvRegister.ActiveViewIndex += 1;
+            lnkContinueStep.Visible = mvRegister.ActiveViewIndex != 1;
+            divNavigation.Visible = mvRegister.ActiveViewIndex != 3;
         }
 
+        private void SetUpRegistrationWorkFlow(int playerID)
+        {
+            // get all teams they were on
+            FetchStrategy fetch = new FetchStrategy();
+            fetch.LoadWith<Player>(i => i.PlayerPasses);
+            fetch.LoadWith<PlayerPass>(i => i.TeamPlayers);
+            fetch.LoadWith<Player>(i => i.TeamPlayers);
+            fetch.LoadWith<Player>(i=>i.Person);
 
+            FetchStrategy fetchTeam = new FetchStrategy();
+            fetchTeam.LoadWith<RegistrationRule>(i => i.NewTeam);
+            fetchTeam.LoadWith<Team>(i => i.Program);
+
+            using (PlayersController pc = new PlayersController())
+            using(RegistrationRulesController rrc = new RegistrationRulesController())
+            {
+                var player = pc.GetWhere(i => i.PlayerID == playerID, fetch).First();
+                List<int> teamIDsPreviouslyOn = player.PlayerPasses.SelectMany(i => i.TeamPlayers).Where(i => i.Active).Select(i => i.TeamID)
+                    .Union(player.TeamPlayers.Where(i => i.Active).Select(i => i.TeamID)).Distinct().ToList();
+
+                DateTime currentTime = DateTime.Now.ToUniversalTime();
+
+                var allOpenTeams = rrc.GetWhere(i => i.RegistrationOpens <= currentTime && currentTime <= i.RegistrationCloses && i.NewTeam.Program.ClubID == player.Person.ClubID,fetchTeam);
+
+                var previousTeams = allOpenTeams.Where(i=>i.OldTeamID.HasValue && teamIDsPreviouslyOn.Contains(i.OldTeamID.Value));
+                var newTeams = allOpenTeams.Where(i=>i.DateOfBirthCutoff.HasValue && player.Person.DateOfBirth.HasValue && player.Person.DateOfBirth.Value > i.DateOfBirthCutoff.Value).OrderByDescending(i=>i.DateOfBirthCutoff.Value).Take(1);//take the youngest one
+
+                var possibleTeams = previousTeams.Union(newTeams)
+                    .Select(i => new
+                    {
+                        TeamName = i.NewTeam.TeamName,
+                        ProgramName = i.NewTeam.Program.ProgramName,
+                        PercentRegistered = 10.0,
+                        IsTeamFull = false,
+                        TeamID = i.NewTeamID
+                    }).Distinct().ToList().OrderBy(i => i.TeamName);
+
+                gvTeamsToRegisterFor.DataSource = possibleTeams;
+                gvTeamsToRegisterFor.DataBind();
+            }
+        }
     }
 }

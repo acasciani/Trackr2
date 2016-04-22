@@ -178,6 +178,14 @@ namespace TrackrModels
 			}
 		}
 		
+		public IQueryable<RegistrationRule> RegistrationRules 
+		{
+			get
+			{
+				return this.GetAll<RegistrationRule>();
+			}
+		}
+		
 		public static BackendConfiguration GetBackendConfiguration()
 		{
 			BackendConfiguration backend = new BackendConfiguration();
@@ -265,6 +273,10 @@ namespace TrackrModels
 			get;
 		}
 		IQueryable<Attendance> Attendances
+		{
+			get;
+		}
+		IQueryable<RegistrationRule> RegistrationRules
 		{
 			get;
 		}
