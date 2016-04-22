@@ -69,7 +69,7 @@ namespace Trackr.Source.Wizards
         {
             if (IsNew)
             {
-                if (CreatePermission != Permissions.PlayerManagement.CreatePlayer)
+                if (!string.IsNullOrWhiteSpace(CreatePermission) && CreatePermission != Permissions.PlayerManagement.CreatePlayer)
                 {
                     // disable some of the steps like player passes
                     PlayerWizard.WizardSteps.RemoveAt(2);
@@ -80,7 +80,7 @@ namespace Trackr.Source.Wizards
             }
             else
             {
-                if (EditPermission != Permissions.PlayerManagement.EditPlayer)
+                if (!string.IsNullOrWhiteSpace(EditPermission) && EditPermission != Permissions.PlayerManagement.EditPlayer)
                 {
                     // disable some of the steps like player passes
                     PlayerWizard.WizardSteps.RemoveAt(2);
