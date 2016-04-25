@@ -301,6 +301,33 @@ namespace Trackr.Source.Wizards {
         protected global::System.Web.UI.WebControls.MultiView mvGuardianTabs;
         
         /// <summary>
+        /// pnlPossibleGuardianMatches control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlPossibleGuardianMatches;
+        
+        /// <summary>
+        /// lnkContinueAnywaysGuardian control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton lnkContinueAnywaysGuardian;
+        
+        /// <summary>
+        /// gvPossibleGuardianMatches control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView gvPossibleGuardianMatches;
+        
+        /// <summary>
         /// txtGuardianFirstName control.
         /// </summary>
         /// <remarks>

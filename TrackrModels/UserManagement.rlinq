@@ -76,6 +76,9 @@
         <orm:field name="_isDeny" property="IsDeny" behavior="readwrite" uniqueId="25b5116a-e60e-45e6-a0d7-0ebbf2488a4a" type="System.Boolean">
           <orm:column name="IsDeny" sql-type="bit" nullable="false" length="0" scale="0" has-default-value="true" ado-type="Bit" />
         </orm:field>
+        <orm:field name="_isExplicit" property="IsExplicit" behavior="readwrite" uniqueId="c3880469-624e-457b-b108-a133888543be" type="System.Boolean">
+          <orm:column name="IsExplicit" sql-type="bit" nullable="false" length="0" scale="0" ado-type="Bit" />
+        </orm:field>
         <orm:field name="_permission" property="Permission" behavior="readwrite" uniqueId="393447b4-74bb-4c1b-8e69-7c049bb97509" type="TrackrModels.Permission">
           <orm:reference uniqueId="ab85e40d-41f5-479d-b0ad-5954283c62e1" association-name="ScopeAssignmentHasPermission">
             <orm:sharedfield name="_permissionID" target-class="TrackrModels.Permission" target-field="_permissionID" />
@@ -353,6 +356,7 @@
         <orm:column name="ScopeID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
         <orm:column name="ResourceID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
         <orm:column name="IsDeny" sql-type="bit" nullable="false" length="0" scale="0" has-default-value="true" ado-type="Bit" />
+        <orm:column name="IsExplicit" sql-type="bit" nullable="false" length="0" scale="0" ado-type="Bit" />
         <orm:constraint name="FK_ScopeAssignments_Permissions" delete-action="dbdefaultrule" destination-table="Permissions">
           <orm:column name="PermissionID" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
         </orm:constraint>
@@ -500,6 +504,7 @@
       <Property Id="405f4d8f-d9a5-4812-a193-0b3c3d787bfd" name="RoleID" type="Int32" label="RoleID : Int32" nullable="true" kind="Persistent" fieldName="_roleID" />
       <Property Id="daa50168-0bde-4c3f-9568-11d2577c4296" name="ScopeID" type="Int32" label="ScopeID : Int32" kind="Persistent" fieldName="_scopeID" />
       <Property Id="6e94588f-1dea-40b6-9a12-8e540ac487ff" name="UserID" type="Int32" label="UserID : Int32" kind="Persistent" fieldName="_userID" />
+      <Property Id="c3880469-624e-457b-b108-a133888543be" name="IsExplicit" type="Boolean" label="IsExplicit : Boolean" kind="Persistent" fieldName="_isExplicit" />
       <AssociationTargets>
         <Association Id="ab85e40d-41f5-479d-b0ad-5954283c62e1" SourceMultiplicity="ZeroOne" name="ScopeAssignmentHasPermission">
           <DomainClassMoniker name="/UserManagement/Permission" />

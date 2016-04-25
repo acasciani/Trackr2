@@ -28,7 +28,8 @@ namespace Trackr
 
         public class PlayerMatch
         {
-            public int PlayerID { get; set; }
+            public int PersonID { get; set; }
+            public int? PlayerID { get; set; }
             public string FirstName { get; set; }
             public string LastName { get; set; }
             public DateTime? DateOfBirth { get; set; }
@@ -101,7 +102,8 @@ namespace Trackr
                             {
                                 results.Add(new PlayerMatch()
                                 {
-                                    PlayerID = Convert.ToInt32(dr["PlayerID"]),
+                                    PersonID = Convert.ToInt32(dr["PersonID"]),
+                                    PlayerID = dr["PlayerID"].ToNullableInt(),
                                     FirstName = dr["FName"].ToString(),
                                     LastName = dr["LName"].ToString(),
                                     DateOfBirth = dr["DateOfBirth"].ToNullableDateTime(),

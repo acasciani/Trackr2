@@ -7,6 +7,17 @@ namespace Trackr.Utils
 {
     public static class DBUtils
     {
+        public static int? ToNullableInt(this object input)
+        {
+            if (input == null)
+            {
+                return (int?)null;
+            }
+
+            int _try;
+            return int.TryParse(input.ToString(), out _try) ? _try : (int?)null;
+        }
+
         public static double? ToNullableDouble(this object input)
         {
             if (input == null)

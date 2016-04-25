@@ -19,12 +19,12 @@
           <elementListCompartment Id="95896bb9-506d-4ca2-8ddc-7902e29dccbf" absoluteBounds="3.015, 2.6633821614583333, 1.4700000000000002, 0.44169108072916652" name="NavigationCompartment" titleTextColor="Black" itemTextColor="Black" />
         </nestedChildShapes>
       </classShape>
-      <classShape Id="059c7efb-a050-4a0d-8f0c-f7a53b060e42" absoluteBounds="0.75, 3.375, 1.5, 3.4934847005208329">
+      <classShape Id="059c7efb-a050-4a0d-8f0c-f7a53b060e42" absoluteBounds="0.75, 3.375, 1.5, 3.685786132812499">
         <DomainClassMoniker name="/UserManagement/ScopeAssignment" />
         <nestedChildShapes>
-          <elementListCompartment Id="977ac519-3136-4ce3-ae03-3d82e3af5934" absoluteBounds="0.76500000000000012, 3.885, 1.4700000000000002, 1.5954996744791667" name="AttributesCompartment" titleTextColor="Black" itemTextColor="Black" />
-          <elementListCompartment Id="78ad8278-c8cb-4538-bdd5-69d55bf22e79" absoluteBounds="0.76500000000000012, 5.4904996744791665, 1.4700000000000002, 0.2493896484375" name="ImplementationsCompartment" titleTextColor="Black" itemTextColor="Black" />
-          <elementListCompartment Id="5f80f7f7-7296-4926-8ca9-f999626c6f38" absoluteBounds="0.76500000000000012, 5.7498893229166663, 1.4700000000000002, 1.0185953776041665" name="NavigationCompartment" titleTextColor="Black" itemTextColor="Black" />
+          <elementListCompartment Id="977ac519-3136-4ce3-ae03-3d82e3af5934" absoluteBounds="0.76500000000000012, 3.885, 1.4700000000000002, 1.7878011067708333" name="AttributesCompartment" titleTextColor="Black" itemTextColor="Black" />
+          <elementListCompartment Id="78ad8278-c8cb-4538-bdd5-69d55bf22e79" absoluteBounds="0.765, 5.6828011067708335, 1.4700000000000002, 0.2493896484375" name="ImplementationsCompartment" titleTextColor="Black" itemTextColor="Black" />
+          <elementListCompartment Id="5f80f7f7-7296-4926-8ca9-f999626c6f38" absoluteBounds="0.765, 5.9421907552083333, 1.4700000000000002, 1.0185953776041665" name="NavigationCompartment" titleTextColor="Black" itemTextColor="Black" />
         </nestedChildShapes>
       </classShape>
       <classShape Id="3c0b184b-1697-48ce-845b-c3daec00213f" absoluteBounds="5.25, 5.125, 1.5, 2.3396761067708329">
@@ -43,7 +43,7 @@
           <elementListCompartment Id="b85eac17-a94c-47be-b3bd-5e3fda276d98" absoluteBounds="3.015, 8.2883821614583333, 1.4700000000000002, 0.8262939453125" name="NavigationCompartment" titleTextColor="Black" itemTextColor="Black" />
         </nestedChildShapes>
       </classShape>
-      <associationConnector edgePoints="[(1.5 : 6.86848470052083); (1.5 : 8.04483805338542); (3 : 8.04483805338542)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <associationConnector edgePoints="[(1.5 : 7.0607861328125); (1.5 : 8.13773161979167); (3 : 8.13773161979167)]" fixedFrom="Algorithm" fixedTo="Algorithm">
         <AssociationMoniker Id="ab85e40d-41f5-479d-b0ad-5954283c62e1" />
         <relativeChildShapes />
         <nodes>
@@ -51,7 +51,7 @@
           <classShapeMoniker Id="dcc8b635-5bee-4ccb-a038-2e83cdaeb557" />
         </nodes>
       </associationConnector>
-      <associationConnector edgePoints="[(2.25 : 6.57283040364583); (5.25 : 6.57283040364583)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <associationConnector edgePoints="[(2.25 : 6.54483805338542); (5.25 : 6.54483805338542)]" fixedFrom="Algorithm" fixedTo="Algorithm">
         <AssociationMoniker Id="281b75e6-c6b2-44d4-be03-c8175108273c" />
         <relativeChildShapes />
         <nodes>
@@ -67,7 +67,7 @@
           <classShapeMoniker Id="1038cf44-610f-4dfa-9cc8-f04ea7b5d551" />
         </nodes>
       </associationConnector>
-      <associationConnector edgePoints="[(1.5 : 3.375); (1.5 : 2.22753662109375); (3 : 2.22753662109375)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <associationConnector edgePoints="[(1.5 : 3.375); (1.5 : 2.22753662109375); (3 : 2.22753662109375)]" fixedFrom="Algorithm" fixedTo="Algorithm">
         <AssociationMoniker Id="609e3012-697c-4098-a07e-072f9b2cc370" />
         <relativeChildShapes />
         <nodes>

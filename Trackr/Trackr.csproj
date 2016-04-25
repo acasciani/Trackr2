@@ -201,6 +201,7 @@
     <Compile Include="Controllers\Models\Attendances.cs" />
     <Compile Include="Controllers\Models\BaseModel.cs" />
     <Compile Include="Controllers\Partials\AttendancesController.Partial.cs" />
+    <Compile Include="Controllers\Partials\PeopleController.Partial.cs" />
     <Compile Include="Controllers\Partials\PlayersController.Partial.cs" />
     <Compile Include="Controllers\Partials\TeamSchedulesController.Partial.cs" />
     <Compile Include="Controllers\Scoping\IScopableController.cs" />

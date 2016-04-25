@@ -1,11 +1,11 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="PlayerManagement.ascx.cs" Inherits="Trackr.Source.Wizards.PlayerManagement" %>
 
 <style type="text/css">
-    .alert.alert-danger.player-matches > div >table {
+    .alert.alert-danger.player-matches > div >table, .alert.alert-danger.guardian-matches > div >table {
         color: initial;
         margin-top: 10px;
     }
-    .alert.alert-danger.player-matches > div {
+    .alert.alert-danger.player-matches > div, .alert.alert-danger.guardian-matches > div {
         background-color: white;
     }
 </style>
@@ -206,6 +206,30 @@
                         <div class="tab-pane active">
                             <asp:MultiView runat="server" ID="mvGuardianTabs" ActiveViewIndex="0">
                                 <asp:View runat="server">
+                                    <asp:Panel runat="server" ID="pnlPossibleGuardianMatches" CssClass="row" Visible="false">
+                                        <div class="col-sm-12">
+                                            <div class="alert alert-danger guardian-matches" style="padding-bottom: 0px;">
+                                                <strong>Possible Matches:</strong> The following 
+                                                <%=gvPossibleGuardianMatches.Rows.Count == 2 ? "person already exists" : "people already exist" %> 
+                                                and may match the one you are trying to create. If <%=gvPossibleGuardianMatches.Rows.Count == 2 ? "the person doesn't" : "none of the people" %>  match, 
+                                                <asp:LinkButton runat="server" ID="lnkContinueAnywaysGuardian" CausesValidation="true" OnClick="lnkContinueAnywaysGuardian_Click">then click here to add a new person</asp:LinkButton>.
+
+                                                <asp:GridView runat="server" ID="gvPossibleGuardianMatches" AutoGenerateColumns="false" CssClass="table table-striped">
+                                                    <Columns>
+                                                        <asp:BoundField DataField="FirstName" HeaderText="First name" />
+                                                        <asp:BoundField DataField="LastName" HeaderText="Last name" />
+                                                        <asp:BoundField DataField="IdentifyingInfo" NullDisplayText="" />
+                                                        <asp:TemplateField>
+                                                            <ItemTemplate>
+                                                                <asp:LinkButton runat="server" ID="lnkSelectGuardian" CommandArgument='<%#Eval("PersonID") %>' OnClick="lnkSelectGuardian_Click" ToolTip="Add Person As Guardian">Add as Guardian</asp:LinkButton>
+                                                            </ItemTemplate>
+                                                        </asp:TemplateField>
+                                                    </Columns>
+                                                </asp:GridView>
+                                            </div>
+                                        </div>
+                                    </asp:Panel>
+
                                     <div class="form-group row">
                                         <label class="col-sm-12 control-label" for="<%=txtGuardianFirstName.ClientID %>">First name</label>
                                         <div class="col-sm-12">

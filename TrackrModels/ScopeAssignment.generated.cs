@@ -115,6 +115,19 @@ namespace TrackrModels
 			}
 		}
 		
+		private bool _isExplicit;
+		public virtual bool IsExplicit
+		{
+			get
+			{
+				return this._isExplicit;
+			}
+			set
+			{
+				this._isExplicit = value;
+			}
+		}
+		
 		private Permission _permission;
 		public virtual Permission Permission
 		{

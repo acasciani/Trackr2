@@ -253,26 +253,6 @@ namespace Trackr.Modules.Registration
             Trackr.Source.Wizards.PlayerManagement.PlayerSavedEventArgs arg = (Trackr.Source.Wizards.PlayerManagement.PlayerSavedEventArgs)e;
             PlayerID = arg.PlayerID;
 
-            // make sure user has scope to them
-            using (ScopeAssignmentsController sac = new ScopeAssignmentsController())
-            {
-                // check they dont have it first
-                var assignmentsForPlayer = sac.GetWhere(i => i.UserID == CurrentUser.UserID && i.ResourceID == PlayerID.Value && i.ScopeID == 4 && i.RoleID==6);
-                if (assignmentsForPlayer.Count() == 0)
-                {
-                    ScopeAssignment assignment = new ScopeAssignment()
-                    {
-                        IsDeny = false,
-                        ResourceID = PlayerID.Value,
-                        RoleID = 6,
-                        ScopeID = 4,
-                        UserID = CurrentUser.UserID
-                    };
-
-                    sac.AddNew(assignment);
-                }
-            }
-
             SetUpRegistrationWorkFlow(arg.PlayerID.Value);
 
             mvRegister.ActiveViewIndex += 1;

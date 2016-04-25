@@ -324,11 +324,11 @@ namespace Trackr.Source.Wizards
                 bool updateTeamPasses;
                 if (WasNew)
                 {
-                    updateTeamPasses = CreatePermission == Permissions.PlayerManagement.CreatePlayer;
+                    updateTeamPasses = string.IsNullOrWhiteSpace(CreatePermission) || CreatePermission == Permissions.PlayerManagement.CreatePlayer;
                 }
                 else
                 {
-                    updateTeamPasses = EditPermission == Permissions.PlayerManagement.EditPlayer;
+                    updateTeamPasses = string.IsNullOrWhiteSpace(EditPermission) || EditPermission == Permissions.PlayerManagement.EditPlayer;
                 }
 
                 int playerID = PlayerManager.SaveData(CurrentUser.UserID, updateTeamPasses);
@@ -731,6 +731,7 @@ namespace Trackr.Source.Wizards
 
         private void ClearGuardianForm()
         {
+            pnlPossibleGuardianMatches.Visible = false;
             txtGuardianFirstName.Text = null;
             txtGuardianMiddleInitial.Text = null;
             txtGuardianLastName.Text = null;
@@ -739,6 +740,7 @@ namespace Trackr.Source.Wizards
             PhoneNumberBook.Reset();
             mvGuardianTabs.ActiveViewIndex = 0;
             pnlAddGuardian.Visible = false;
+            lnkAddGuardian.Visible = true;
             UpdateGuardianTabs();
         }
 
@@ -752,8 +754,6 @@ namespace Trackr.Source.Wizards
             Guid playerEditToken = PlayerManager.Player.Guardians.First(i => i.EditToken == editToken.Value).Person.EditToken;
 
             PlayerManager.UpdatePerson(playerEditToken, txtGuardianFirstName.Text, txtGuardianLastName.Text, null);
-
-            lnkAddGuardian.Visible = true;
 
             return editToken.Value;
         }
@@ -769,6 +769,7 @@ namespace Trackr.Source.Wizards
             txtGuardianLastName.Text = guardian.Person.LName;
 
             pnlAddGuardian.Visible = true;
+            lnkAddGuardian.Visible = false;
         }
 
         private void Populate_AddressBook(Guid personEditToken)
@@ -794,7 +795,6 @@ namespace Trackr.Source.Wizards
 
         protected void gvGuardians_RowEditing(object sender, GridViewEditEventArgs e)
         {
-            lnkAddGuardian.Visible = false;
             Guid editToken = (Guid)gvGuardians.DataKeys[e.NewEditIndex].Value;
             Populate_GuardianEdit(editToken);
             gvGuardians.EditIndex = e.NewEditIndex;
@@ -804,7 +804,6 @@ namespace Trackr.Source.Wizards
 
         protected void gvGuardians_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
         {
-            lnkAddGuardian.Visible = true;
             gvGuardians.EditIndex = -1;
             gvGuardians.DataBind();
             UpdateGuardianTabs();
@@ -829,11 +828,16 @@ namespace Trackr.Source.Wizards
 
         protected void lnkSaveGuardian_Click(object sender, EventArgs e)
         {
-            if (!Page.IsValid)
+            if (!Page.IsValid || HasGuardianMatches())
             {
                 return;
             }
 
+            SaveGuardian_Step1();
+        }
+
+        private void SaveGuardian_Step1()
+        {
             Guid? editToken = gvGuardians.EditIndex != -1 ? (Guid)gvGuardians.DataKeys[gvGuardians.EditIndex].Value : (Guid?)null;
             editToken = SaveGuardian(editToken);
             gvGuardians.DataBind();
@@ -904,10 +908,86 @@ namespace Trackr.Source.Wizards
             AddressBook.Reset();
             mvGuardianTabs.ActiveViewIndex = 0;
             pnlAddGuardian.Visible = false;
+            lnkAddGuardian.Visible = true;
             gvGuardians.EditIndex = -1;
             gvGuardians.DataBind();
             UpdateGuardianTabs();
-            lnkAddGuardian.Visible = true;
+        }
+
+        protected void lnkContinueAnywaysGuardian_Click(object sender, EventArgs e)
+        {
+            if (!Page.IsValid)
+            {
+                return;
+            }
+
+            pnlPossibleGuardianMatches.Visible = false;
+            SaveGuardian_Step1();
+        }
+
+        protected void lnkSelectGuardian_Click(object sender, EventArgs e)
+        {
+            LinkButton button = (LinkButton)sender;
+            int personID = int.Parse(button.CommandArgument);
+
+            PlayerManager.AddGuardians(new List<int>() { personID });
+
+            pnlPossibleGuardianMatches.Visible = false;
+            gvGuardians.EditIndex = -1;
+            gvGuardians.DataBind();
+            ClearGuardianForm();
+        }
+
+        private bool HasGuardianMatches()
+        {
+            // now check for any possible duplicate people (only when adding a new guardian)
+            if (gvGuardians.EditIndex == -1)
+            {
+                using (PeopleController pc = new PeopleController())
+                {
+                    string fName = txtGuardianFirstName.Text.Trim();
+                    string lName = txtGuardianLastName.Text.Trim();
+                    char? mInitial = string.IsNullOrWhiteSpace(txtGuardianMiddleInitial.Text) ? (char?)null : txtGuardianMiddleInitial.Text.ToCharArray()[0];
+
+                    var matches = pc.GetPossibleMatches(1, fName, lName, mInitial, null);
+
+                    // get some other info about guardian
+                    FetchStrategy fetch = new FetchStrategy();
+                    fetch.LoadWith<Person>(i=>i.EmailAddresses);
+                    fetch.LoadWith<Person>(i=>i.Addresses);
+                    fetch.LoadWith<Person>(i=>i.PhoneNumbers);
+
+                    List<int> matchesIDs = matches.Select(i=>i.PersonID).Distinct().ToList();
+
+                    var personInfo = pc.GetWhere(i => matchesIDs.Contains(i.PersonID), fetch).Select(i => new
+                    {
+                        PersonID = i.PersonID,
+                        DefaultEmail = i.EmailAddresses.OrderBy(j => j.SortOrder).Select(j => j.Email).FirstOrDefault(),
+                        DefaultPhone = i.PhoneNumbers.OrderBy(j=>j.SortOrder).Select(j=> Utils.UserInputUtils.FormatTenDigitNumber(j.TenDigit)).FirstOrDefault(),
+                        DefaultAddress = i.Addresses.OrderBy(j=>j.SortOrder).Select(j=>j.Street1).FirstOrDefault()
+                    }).ToDictionary(i=>i.PersonID);
+
+
+                    var results = matches
+                        .Select(i => new
+                        {
+                            PersonID = i.PersonID,
+                            FirstName = i.FirstName,
+                            LastName = i.LastName,
+                            IdentifyingInfo = personInfo.ContainsKey(i.PersonID) ? personInfo[i.PersonID].DefaultAddress ?? personInfo[i.PersonID].DefaultEmail ?? personInfo[i.PersonID].DefaultPhone : ""
+                        });
+
+                    if (results.Count() > 0)
+                    {
+                        gvPossibleGuardianMatches.DataSource = results;
+                        gvPossibleGuardianMatches.DataBind();
+                        pnlPossibleGuardianMatches.Visible = true;
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
         #endregion
 
