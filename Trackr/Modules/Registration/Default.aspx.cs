@@ -220,7 +220,7 @@ namespace Trackr.Modules.Registration
         {
             using (PeopleController pc = new PeopleController())
             using (EmailAddressesController eac = new EmailAddressesController())
-            {
+            {/*
                 FetchStrategy fetch = new FetchStrategy() { MaxFetchDepth = 5 };
                 fetch.LoadWith<Person>(i => i.Guardians);
                 fetch.LoadWith<Guardian>(i => i.Player);
@@ -237,6 +237,8 @@ namespace Trackr.Modules.Registration
                     });
 
                 return playersAssociatedToUserID.OrderBy(i => i.FirstName).ThenBy(i => i.LastName).ThenBy(i => i.DateOfBirth).ToList();
+              * */
+                return null;
             }
         }
         #endregion

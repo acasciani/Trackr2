@@ -168,15 +168,6 @@ namespace TrackrModels
 			}
 		}
 		
-		private IList<Guardian> _guardians = new List<Guardian>();
-		public virtual IList<Guardian> Guardians
-		{
-			get
-			{
-				return this._guardians;
-			}
-		}
-		
 		private IList<Address> _addresses = new List<Address>();
 		public virtual IList<Address> Addresses
 		{

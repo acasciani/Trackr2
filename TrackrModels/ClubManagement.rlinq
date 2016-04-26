@@ -406,9 +406,6 @@
             <orm:constraint name="FK_People_Clubs" delete-action="dbdefaultrule" destination-table="Clubs" />
           </orm:reference>
         </orm:field>
-        <orm:field name="_guardians" property="Guardians" behavior="readwrite" uniqueId="7c0c4a12-add5-4dd4-86fc-b0e87244139e" type="TrackrModels.Guardian">
-          <orm:collection element-class="TrackrModels.Guardian" inverse-field="_person" managed="true" order-by="" uniqueId="e7bc19ce-a67f-418d-9eb6-91f4ccba29ea" />
-        </orm:field>
         <orm:field name="_addresses" property="Addresses" behavior="readwrite" uniqueId="0a108568-1ff9-4387-b16d-59e4febdcf94" type="TrackrModels.Address">
           <orm:collection element-class="TrackrModels.Address" inverse-field="_person" managed="true" order-by="" uniqueId="8bc6d170-c00d-4cba-8e04-dc75f6fdb867" />
         </orm:field>
@@ -1386,9 +1383,6 @@
         </Association>
       </AssociationTargets>
       <navigationalProperties>
-        <classHasNavigationalProperties Id="f8b4b613-0021-4697-bd22-ce825377dce5">
-          <NavigationalProperty Id="7c0c4a12-add5-4dd4-86fc-b0e87244139e" name="Guardians" type="IList&lt;Guardian&gt;" label="Guardians : IList&lt;Guardian&gt;" nullable="true" kind="Persistent" fieldName="_guardians" isDependent="false" isManaged="true" />
-        </classHasNavigationalProperties>
         <classHasNavigationalProperties Id="03c23e64-0a44-4cd5-90e9-415dfcb4b47b">
           <NavigationalProperty Id="0a108568-1ff9-4387-b16d-59e4febdcf94" name="Addresses" type="IList&lt;Address&gt;" label="Addresses : IList&lt;Address&gt;" nullable="true" kind="Persistent" fieldName="_addresses" isDependent="false" isManaged="true" />
         </classHasNavigationalProperties>
@@ -1427,11 +1421,6 @@
         </Association>
         <Association Id="e7bc19ce-a67f-418d-9eb6-91f4ccba29ea" SourceMultiplicity="One" name="GuardianHasPerson">
           <DomainClassMoniker name="/ClubManagement/Person" />
-          <targetNavigationalProperty>
-            <associationDefinesTargetProperty Id="d47f38da-6853-467a-8f70-20091aaa3bcb">
-              <NavigationalPropertyMoniker name="/ClubManagement/Person/Guardians" />
-            </associationDefinesTargetProperty>
-          </targetNavigationalProperty>
           <sourceNavigationalProperty>
             <associationDefinesSourceProperty Id="e3cc3a05-6cc7-4b63-ad0d-962e9b1c88cf">
               <NavigationalPropertyMoniker name="/ClubManagement/Guardian/Person" />
@@ -1444,7 +1433,7 @@
           <NavigationalProperty Id="3f75e32a-50b4-4aa9-b5dd-2a7689606c0c" name="Player" type="Player" label="Player : Player" nullable="true" kind="Persistent" fieldName="_player" isDependent="false" isManaged="true" />
         </classHasNavigationalProperties>
         <classHasNavigationalProperties Id="684e63e9-ac48-4677-bc59-050e5b8b4bde">
-          <NavigationalProperty Id="b9536000-5749-403b-a191-9352103867ff" name="Person" type="Person" label="Person : Person" nullable="true" kind="Persistent" fieldName="_person" isDependent="false" isManaged="true" />
+          <NavigationalProperty Id="b9536000-5749-403b-a191-9352103867ff" name="Person" type="Person" label="Person : Person" nullable="true" kind="Persistent" fieldName="_person" isDependent="false" isManaged="false" />
         </classHasNavigationalProperties>
       </navigationalProperties>
     </DomainClass>

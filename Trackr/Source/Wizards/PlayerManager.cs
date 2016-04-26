@@ -4,7 +4,9 @@ using System.Linq;
 using System.Web;
 using Telerik.OpenAccess.FetchOptimization;
 using TrackrModels;
-
+using Telerik.OpenAccess;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Trackr.Source.Wizards
 {
@@ -13,7 +15,7 @@ namespace Trackr.Source.Wizards
         public PlayerModifiedByAnotherProcessException(string message) : base(message) { }
     }
 
-    public static class PlayerManager
+    public class PlayerManager
     {
         private static Player _Player
         {
@@ -37,7 +39,7 @@ namespace Trackr.Source.Wizards
 
         public static void EditPlayer(int playerID)
         {
-            using (PlayersController pc = new PlayersController())
+            using (ClubManagement cm = new ClubManagement())
             {
                 FetchStrategy fetch = new FetchStrategy() { MaxFetchDepth = 4 };
                 fetch.LoadWith<Player>(i => i.Guardians);
@@ -51,7 +53,11 @@ namespace Trackr.Source.Wizards
                 fetch.LoadWith<PlayerPass>(i => i.TeamPlayers);
                 fetch.LoadWith<PlayerPass>(i => i.Photo);
 
-                _Player = pc.GetWhere(i => i.PlayerID == playerID, fetch).First();
+                var attachedObject = cm.Players.LoadWith(fetch).Where(i => i.PlayerID == playerID).First();
+                var detachedObject = cm.CreateDetachedCopy(cm.Players.Where(i => i.PlayerID == playerID).First(), fetch);
+
+                _Player = detachedObject;
+
 
                 _Player.Person.EditToken = Guid.NewGuid();
 
@@ -136,20 +142,28 @@ namespace Trackr.Source.Wizards
         #region Guardians
         public static void AddGuardians(List<int> personIDs)
         {
-            using (PeopleController pc = new PeopleController())
+            using (ClubManagement cm = new ClubManagement())
             {
-                var people = pc.GetWhere(i => personIDs.Contains(i.PersonID)).ToList();
+                Player player = cm.AttachCopy(_Player);
+
+                var people = cm.People.Where(i => personIDs.Contains(i.PersonID)).ToList();
                 people.ForEach(i => i.EditToken = Guid.NewGuid());
 
                 foreach (Person person in people)
                 {
                     Guardian obj = new Guardian() { EditToken = Guid.NewGuid() };
+
                     obj.Person = person;
+                    //obj.PersonID = test.PersonID;
+                    
                     obj.WasModified = true;
                     obj.Active = true;
 
-                    _Player.Guardians.Add(obj);
+
+                    player.Guardians.Add(obj);
                 }
+
+                _Player = player;
             }
         }
 
@@ -283,7 +297,6 @@ namespace Trackr.Source.Wizards
         public static int SaveData(int modifiedByUser, bool updateTeamPasses)
         {
             //returns player id
-            using (PlayersController pc= new PlayersController())
             using(ClubManagement cm = new ClubManagement())
             {
                 FetchStrategy fetch = new FetchStrategy() { MaxFetchDepth = 4 };
@@ -298,7 +311,7 @@ namespace Trackr.Source.Wizards
                 fetch.LoadWith<PlayerPass>(i => i.TeamPlayers);
                 fetch.LoadWith<PlayerPass>(i => i.Photo);
 
-                Player freshCopy = _Player.PlayerID > 0 ? pc.GetWhere(i => i.PlayerID == _Player.PlayerID, fetch).First() : new Player(){Person = new Person()};
+                Player freshCopy = _Player.PlayerID > 0 ? cm.Players.LoadWith(fetch).Where(i => i.PlayerID == _Player.PlayerID).First() : new Player(){Person = new Person()};
 
                 //check if any guardians are outdated
                 List<int> guardianIDs = _Player.Guardians.Where(i=>i.GuardianID > 0).Select(i=>i.GuardianID).Distinct().ToList();
@@ -390,7 +403,24 @@ namespace Trackr.Source.Wizards
 
                 foreach (Guardian guardian in _Player.Guardians)
                 {
-                    Guardian _freshCopy = guardian.GuardianID == 0 ? new Guardian(){Person=new Person()} : freshCopy.Guardians.First(i=>i.GuardianID == guardian.GuardianID);
+                    Guardian _freshCopy;
+
+                    if (guardian.GuardianID == 0)
+                    {
+                        _freshCopy = new Guardian();
+                        if (guardian.PersonID == 0)
+                        {
+                            _freshCopy.Person = new Person();
+                        }
+                        else
+                        {
+                            _freshCopy.Person = cm.People.LoadWith(fetch).Where(i => i.PersonID == guardian.Person.PersonID).First();
+                        }
+                    }
+                    else
+                    {
+                        _freshCopy = freshCopy.Guardians.First(i => i.GuardianID == guardian.GuardianID);
+                    }
 
                     if (guardian.PersonID == 0 || (guardian.PersonID > 0 && guardian.Person.WasModified))
                     {
@@ -422,6 +452,10 @@ namespace Trackr.Source.Wizards
                     {
                         freshCopy.Guardians.Add(_freshCopy);
                     }
+
+                    SetPersonObjectModified(_freshCopy.Person, modifiedAt, modifiedByUser);
+                    _freshCopy.LastModifiedAt = modifiedAt;
+                    _freshCopy.LastModifiedBy = modifiedByUser;
                 }
 
                 if (updateTeamPasses)
@@ -453,13 +487,7 @@ namespace Trackr.Source.Wizards
                     }
                 }
 
-                freshCopy.Person.LastModifiedAt = modifiedAt;
-                freshCopy.Person.LastModifiedBy = modifiedByUser;
-                freshCopy.Guardians.ToList().ForEach(i => { i.LastModifiedAt = modifiedAt; i.LastModifiedBy = modifiedByUser; });
-                freshCopy.Guardians.Select(i => i.Person).ToList().ForEach(i => { i.LastModifiedAt = modifiedAt; i.LastModifiedBy = modifiedByUser; });
-                freshCopy.Person.EmailAddresses.Union(freshCopy.Guardians.Select(i => i.Person).SelectMany(i => i.EmailAddresses)).ToList().ForEach(i => { i.LastModifiedAt = modifiedAt; i.LastModifiedBy = modifiedByUser; });
-                freshCopy.Person.PhoneNumbers.Union(freshCopy.Guardians.Select(i => i.Person).SelectMany(i => i.PhoneNumbers)).ToList().ForEach(i => { i.LastModifiedAt = modifiedAt; i.LastModifiedBy = modifiedByUser; });
-                freshCopy.Person.Addresses.Union(freshCopy.Guardians.Select(i => i.Person).SelectMany(i => i.Addresses)).ToList().ForEach(i => { i.LastModifiedAt = modifiedAt; i.LastModifiedBy = modifiedByUser; });
+                SetPersonObjectModified(freshCopy.Person, modifiedAt, modifiedByUser);
 
                 if (updateTeamPasses)
                 {
@@ -469,12 +497,71 @@ namespace Trackr.Source.Wizards
 
                 if (freshCopy.PlayerID == 0)
                 {
-                    return pc.AddNew(freshCopy).PlayerID;
+                    cm.Add(freshCopy);
+
+                    cm.SaveChanges();
+
+                    int playerID = freshCopy.PlayerID;
+                    UpdateScopingForGuardians(playerID);
+                    return playerID;
                 }
                 else
                 {
-                    pc.Update(freshCopy);
+                    cm.SaveChanges();
+                    UpdateScopingForGuardians(freshCopy.PlayerID);
                     return freshCopy.PlayerID;
+                }
+            }
+        }
+
+        private static void SetPersonObjectModified(Person person, DateTime modifiedAt, int modifiedBy)
+        {
+            person.LastModifiedAt = modifiedAt;
+            person.LastModifiedBy = modifiedBy;
+            person.EmailAddresses.ToList().ForEach(i => { i.LastModifiedAt = modifiedAt; i.LastModifiedBy = modifiedBy; });
+            person.Addresses.ToList().ForEach(i => { i.LastModifiedAt = modifiedAt; i.LastModifiedBy = modifiedBy; });
+            person.PhoneNumbers.ToList().ForEach(i => { i.LastModifiedAt = modifiedAt; i.LastModifiedBy = modifiedBy; });
+        }
+
+        private static void UpdateScopingForGuardians(int playerID)
+        {
+            // make sure all guardians have parent scope to this player, and remove old ones if not explicit
+            // since we are deleting and re-adding we will use a transaction
+
+            using (ClubManagement cm = new ClubManagement())
+            using(TrackrModels.UserManagement um = new TrackrModels.UserManagement())
+            {
+                try
+                {
+                    List<int> userIDs = cm.Guardians.Where(i => i.PlayerID == playerID && i.Person.UserID.HasValue && i.Active).Select(i => i.Person.UserID.Value).Distinct().ToList();
+
+                    // delete assignments for this player
+                    IQueryable<ScopeAssignment> assignmentsToDelete = um.ScopeAssignments.Where(i => i.ResourceID == playerID && i.ScopeID == 4 && i.RoleID == 6 && !i.IsExplicit);
+                    cm.Delete(assignmentsToDelete);
+
+                    // add assignments back in
+                    foreach (int userID in userIDs)
+                    {
+                        ScopeAssignment assignment = new ScopeAssignment()
+                        {
+                            IsDeny = false,
+                            ResourceID = playerID,
+                            RoleID = 6,
+                            ScopeID = 4,
+                            UserID = userID,
+                            IsExplicit = false
+                        };
+
+                        cm.Add(assignment);
+                    }
+
+                    // commit
+                    cm.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    cm.ClearChanges();
+                    ex.HandleException();
                 }
             }
         }
