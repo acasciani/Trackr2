@@ -124,10 +124,12 @@ namespace Trackr.Source.Controls
                     .Where(i => TeamWhereClause == null ? true : TeamWhereClause(i))
                     .Select(i => new
                     {
-                        Label = i.TeamName,
-                        Value = i.TeamID
+                        Label = string.Format("{0} - {1:MMM d, yyyy}", i.TeamName, i.EndYear),
+                        Value = i.TeamID,
+                        EndDate = i.EndYear
                     })
-                    .OrderBy(i => i.Label).ToList();
+                    .OrderByDescending(i=>i.EndDate)
+                    .ThenBy(i => i.Label).ToList();
 
                 ddlTeam.Reset(true);
                 ddlTeam.DataSource = teams;

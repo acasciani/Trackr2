@@ -130,9 +130,10 @@ namespace Trackr.Source.Wizards
 
 
         #region Person
-        public static void UpdatePerson(Guid editToken, string firstName, string lastName, DateTime? dateOfBirth)
+        public static void UpdatePerson(Guid editToken, string firstName, string lastName, char? middleInitial, DateTime? dateOfBirth)
         {
             Person obj = (Person)FindEditableObject(editToken);
+            obj.MInitial = middleInitial;
             obj.FName = firstName;
             obj.LName = lastName;
             obj.WasModified = true;
