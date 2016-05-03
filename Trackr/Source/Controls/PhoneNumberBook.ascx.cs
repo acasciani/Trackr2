@@ -46,6 +46,7 @@ namespace Trackr.Source.Controls
         protected void Page_Load(object sender, EventArgs e)
         {
             AlertBox.HideStatus();
+            lnkAddPhoneNumber.Visible = !divEdit.Visible;
 
             if (IsPostBack)
             {

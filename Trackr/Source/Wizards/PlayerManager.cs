@@ -1,16 +1,17 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using Telerik.OpenAccess.FetchOptimization;
 using TrackrModels;
 using Telerik.OpenAccess;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
+using Trackr.Utils;
+using ProtoBuf;
 
 namespace Trackr.Source.Wizards
 {
-    public class PlayerModifiedByAnotherProcessException : Exception {
+    public class PlayerModifiedByAnotherProcessException : Exception
+    {
         public PlayerModifiedByAnotherProcessException() : base() { }
         public PlayerModifiedByAnotherProcessException(string message) : base(message) { }
     }
@@ -29,6 +30,25 @@ namespace Trackr.Source.Wizards
             }
         }
 
+        private static FetchStrategy PlayerFetchStrategy
+        {
+            get
+            {
+                FetchStrategy fetch = new FetchStrategy() { MaxFetchDepth = 5 };
+                fetch.LoadWith<Player>(i => i.Guardians);
+                fetch.LoadWith<Player>(i => i.Person);
+                fetch.LoadWith<Guardian>(i => i.Person);
+                fetch.LoadWith<Person>(i => i.Addresses);
+                fetch.LoadWith<Person>(i => i.EmailAddresses);
+                fetch.LoadWith<Person>(i => i.PhoneNumbers);
+                fetch.LoadWith<Player>(i => i.PlayerPasses);
+                fetch.LoadWith<Player>(i => i.TeamPlayers);
+                fetch.LoadWith<PlayerPass>(i => i.TeamPlayers);
+                fetch.LoadWith<PlayerPass>(i => i.Photo);
+                return fetch;
+            }
+        }
+
         public static void CreatePlayer(int clubID)
         {
             _Player = new Player();
@@ -41,24 +61,8 @@ namespace Trackr.Source.Wizards
         {
             using (ClubManagement cm = new ClubManagement())
             {
-                FetchStrategy fetch = new FetchStrategy() { MaxFetchDepth = 4 };
-                fetch.LoadWith<Player>(i => i.Guardians);
-                fetch.LoadWith<Player>(i => i.Person);
-                fetch.LoadWith<Guardian>(i => i.Person);
-                fetch.LoadWith<Person>(i => i.Addresses);
-                fetch.LoadWith<Person>(i => i.EmailAddresses);
-                fetch.LoadWith<Person>(i => i.PhoneNumbers);
-                fetch.LoadWith<Player>(i => i.PlayerPasses);
-                fetch.LoadWith<Player>(i => i.TeamPlayers);
-                fetch.LoadWith<PlayerPass>(i => i.TeamPlayers);
-                fetch.LoadWith<PlayerPass>(i => i.Photo);
-
-                var attachedObject = cm.Players.LoadWith(fetch).Where(i => i.PlayerID == playerID).First();
-                var detachedObject = cm.CreateDetachedCopy(cm.Players.Where(i => i.PlayerID == playerID).First(), fetch);
-
-                _Player = detachedObject;
-
-
+                var temp = cm.Players.LoadWith(PlayerFetchStrategy).Where(i => i.PlayerID == playerID).First();
+                _Player = cm.CreateDetachedCopy<Player>(temp, PlayerFetchStrategy);
                 _Player.Person.EditToken = Guid.NewGuid();
 
                 foreach (Guardian guardian in _Player.Guardians)
@@ -119,7 +123,6 @@ namespace Trackr.Source.Wizards
             HttpContext.Current.Session.Remove("Player");
         }
 
-
         public static Player Player
         {
             get { return _Player; }
@@ -138,32 +141,26 @@ namespace Trackr.Source.Wizards
         #endregion
 
 
-
         #region Guardians
         public static void AddGuardians(List<int> personIDs)
         {
             using (ClubManagement cm = new ClubManagement())
             {
-                Player player = cm.AttachCopy(_Player);
-
                 var people = cm.People.Where(i => personIDs.Contains(i.PersonID)).ToList();
                 people.ForEach(i => i.EditToken = Guid.NewGuid());
 
                 foreach (Person person in people)
                 {
+                    Person clone = Serializer.DeepClone<Person>(person);
+
                     Guardian obj = new Guardian() { EditToken = Guid.NewGuid() };
 
-                    obj.Person = person;
-                    //obj.PersonID = test.PersonID;
-                    
+                    obj.Person = clone;
                     obj.WasModified = true;
                     obj.Active = true;
 
-
-                    player.Guardians.Add(obj);
+                    _Player.Guardians.Add(obj);
                 }
-
-                _Player = player;
             }
         }
 
@@ -297,219 +294,234 @@ namespace Trackr.Source.Wizards
         public static int SaveData(int modifiedByUser, bool updateTeamPasses)
         {
             //returns player id
-            using(ClubManagement cm = new ClubManagement())
+            using (ClubManagement cm = new ClubManagement())
             {
-                FetchStrategy fetch = new FetchStrategy() { MaxFetchDepth = 4 };
-                fetch.LoadWith<Player>(i => i.Guardians);
-                fetch.LoadWith<Player>(i => i.Person);
-                fetch.LoadWith<Guardian>(i => i.Person);
-                fetch.LoadWith<Person>(i => i.Addresses);
-                fetch.LoadWith<Person>(i => i.EmailAddresses);
-                fetch.LoadWith<Person>(i => i.PhoneNumbers);
-                fetch.LoadWith<Player>(i => i.PlayerPasses);
-                fetch.LoadWith<Player>(i => i.TeamPlayers);
-                fetch.LoadWith<PlayerPass>(i => i.TeamPlayers);
-                fetch.LoadWith<PlayerPass>(i => i.Photo);
-
-                Player freshCopy = _Player.PlayerID > 0 ? cm.Players.LoadWith(fetch).Where(i => i.PlayerID == _Player.PlayerID).First() : new Player(){Person = new Person()};
-
-                //check if any guardians are outdated
-                List<int> guardianIDs = _Player.Guardians.Where(i=>i.GuardianID > 0).Select(i=>i.GuardianID).Distinct().ToList();
-                var guardians = cm.Guardians.Where(i => guardianIDs.Contains(i.GuardianID)).Select(i => new { GuardianID = i.GuardianID, LastModifiedAt = i.LastModifiedAt }).ToDictionary(i => i.GuardianID);
-                foreach (Guardian guardian in _Player.Guardians)
+                try
                 {
-                    if (guardians.ContainsKey(guardian.GuardianID) && guardians[guardian.GuardianID].LastModifiedAt > guardian.LastModifiedAt)
+                    Player freshCopy = _Player.PlayerID > 0 ? cm.Players.LoadWith(PlayerFetchStrategy).Where(i => i.PlayerID == _Player.PlayerID).First() : new Player() { Person = new Person() };
+
+                    //check if any persons are outdated
+                    List<int> personIDs = _Player.Guardians.Where(i => i.Person.PersonID > 0).Select(i => i.PersonID).Distinct().ToList();
+                    var people = cm.People.Where(i => personIDs.Contains(i.PersonID)).Select(i => new { PersonID = i.PersonID, LastModifiedAt = i.LastModifiedAt }).ToDictionary(i => i.PersonID);
+
+                    if (freshCopy.PersonID > 0)
                     {
-                        throw new PlayerModifiedByAnotherProcessException("A guardian of this player was modified by another process.");
+                        people.Add(freshCopy.PersonID, new { PersonID = freshCopy.PersonID, LastModifiedAt = freshCopy.Person.LastModifiedAt });
                     }
-                }
 
-                //check if any email addresses are outdated
-                List<int> emailAddressIDs = _Player.Person.EmailAddresses.Union(_Player.Guardians.Select(i => i.Person).SelectMany(i => i.EmailAddresses)).Where(i => i.EmailAddressID > 0).Select(i => i.EmailAddressID).Distinct().ToList();
-                var emails = cm.EmailAddresses.Where(i => emailAddressIDs.Contains(i.EmailAddressID)).Select(i => new { EmailAddressID = i.EmailAddressID, LastModifiedAt = i.LastModifiedAt }).ToDictionary(i => i.EmailAddressID);
-                foreach (EmailAddress emailAddress in _Player.Person.EmailAddresses.Union(_Player.Guardians.Select(i => i.Person).SelectMany(i => i.EmailAddresses)))
-                {
-                    if (emails.ContainsKey(emailAddress.EmailAddressID) && emails[emailAddress.EmailAddressID].LastModifiedAt > emailAddress.LastModifiedAt)
+                    List<Person> persons = _Player.Guardians.Select(i => i.Person).ToList();
+                    persons.Add(freshCopy.Person);
+                    foreach (Person person in persons)
                     {
-                        throw new PlayerModifiedByAnotherProcessException("An email address of this player or their guardian(s) was modified by another process.");
-                    }
-                }
-
-                //check if any phone numbers are outdated
-                List<int> phoneNumberIDs = _Player.Person.PhoneNumbers.Union(_Player.Guardians.Select(i => i.Person).SelectMany(i => i.PhoneNumbers)).Where(i => i.PhoneNumberID > 0).Select(i => i.PhoneNumberID).Distinct().ToList();
-                var phoneNumbers = cm.PhoneNumbers.Where(i => phoneNumberIDs.Contains(i.PhoneNumberID)).Select(i => new { PhoneNumberID = i.PhoneNumberID, LastModifiedAt = i.LastModifiedAt }).ToDictionary(i => i.PhoneNumberID);
-                foreach (PhoneNumber phoneNumber in _Player.Person.PhoneNumbers.Union(_Player.Guardians.Select(i => i.Person).SelectMany(i => i.PhoneNumbers)))
-                {
-                    if (phoneNumbers.ContainsKey(phoneNumber.PhoneNumberID) && phoneNumbers[phoneNumber.PhoneNumberID].LastModifiedAt > phoneNumber.LastModifiedAt)
-                    {
-                        throw new PlayerModifiedByAnotherProcessException("A phone number of this player or their guardian(s) was modified by another process.");
-                    }
-                }
-
-                //check if any addresses are outdated
-                List<int> addressIDs = _Player.Person.Addresses.Union(_Player.Guardians.Select(i => i.Person).SelectMany(i => i.Addresses)).Where(i => i.AddressID > 0).Select(i => i.AddressID).Distinct().ToList();
-                var addresses = cm.Addresses.Where(i => addressIDs.Contains(i.AddressID)).Select(i => new { AddressID = i.AddressID, LastModifiedAt = i.LastModifiedAt }).ToDictionary(i => i.AddressID);
-                foreach (Address address in _Player.Person.Addresses.Union(_Player.Guardians.Select(i => i.Person).SelectMany(i => i.Addresses)))
-                {
-                    if (addresses.ContainsKey(address.AddressID) && addresses[address.AddressID].LastModifiedAt > address.LastModifiedAt)
-                    {
-                        throw new PlayerModifiedByAnotherProcessException("An address of this player or their guardian(s) was modified by another process.");
-                    }
-                }
-
-                // check if any playerpasses are outdated
-                List<int> playerPassIDs = _Player.PlayerPasses.Where(i => i.PlayerPassID > 0).Select(i => i.PlayerPassID).Distinct().ToList();
-                var playerPasses = cm.PlayerPasses.Where(i => playerPassIDs.Contains(i.PlayerPassID)).Select(i => new { PlayerPassID = i.PlayerPassID, LastModifiedAt = i.LastModifiedAt }).ToDictionary(i => i.PlayerPassID);
-                foreach (PlayerPass playerPass in _Player.PlayerPasses)
-                {
-                    if (playerPasses.ContainsKey(playerPass.PlayerPassID) && playerPasses[playerPass.PlayerPassID].LastModifiedAt > playerPass.LastModifiedAt)
-                    {
-                        throw new PlayerModifiedByAnotherProcessException("A player pass of this player was modified by another process.");
-                    }
-                }
-
-                // check if any teamplayers are outdated
-                List<int> teamPlayerIDs = _Player.TeamPlayers.Union(_Player.PlayerPasses.SelectMany(i=>i.TeamPlayers)).Where(i => i.TeamPlayerID > 0).Select(i => i.TeamPlayerID).Distinct().ToList();
-                var teamPlayers = cm.TeamPlayers.Where(i => teamPlayerIDs.Contains(i.TeamPlayerID)).Select(i => new { TeamPlayerID = i.TeamPlayerID, LastModifiedAt = i.LastModifiedAt }).ToDictionary(i => i.TeamPlayerID);
-                foreach (TeamPlayer teamPlayer in _Player.TeamPlayers.Union(_Player.PlayerPasses.SelectMany(i=>i.TeamPlayers)))
-                {
-                    if (teamPlayers.ContainsKey(teamPlayer.TeamPlayerID) && teamPlayers[teamPlayer.TeamPlayerID].LastModifiedAt > teamPlayer.LastModifiedAt)
-                    {
-                        throw new PlayerModifiedByAnotherProcessException("A team player of this player was modified by another process.");
-                    }
-                }
-
-                DateTime modifiedAt = DateTime.Now.ToUniversalTime();
-
-                // everything up to this point is fresh
-                if (_Player.PersonID == 0 || (_Player.PersonID > 0 && _Player.Person.WasModified))
-                {
-                    freshCopy.Person.ClubID = _Player.Person.ClubID;
-                    freshCopy.Person.DateOfBirth = _Player.Person.DateOfBirth;
-                    freshCopy.Person.FName = _Player.Person.FName;
-                    freshCopy.Person.Gender = _Player.Person.Gender;
-                    freshCopy.Person.LName = _Player.Person.LName;
-                    freshCopy.Person.UserID = _Player.Person.UserID;
-                }
-
-                IList<EmailAddress> _freshPlayerEmails = freshCopy.Person.EmailAddresses;
-                Copy(_freshPlayerEmails, _Player.Person.EmailAddresses);
-
-                IList<PhoneNumber> _freshPlayerPhones = freshCopy.Person.PhoneNumbers;
-                Copy(_freshPlayerPhones, _Player.Person.PhoneNumbers);
-
-                IList<Address> _freshPlayerAddresses = freshCopy.Person.Addresses;
-                Copy(_freshPlayerAddresses, _Player.Person.Addresses);
-
-                foreach (Guardian guardian in _Player.Guardians)
-                {
-                    Guardian _freshCopy;
-
-                    if (guardian.GuardianID == 0)
-                    {
-                        _freshCopy = new Guardian();
-                        if (guardian.PersonID == 0)
+                        if (people.ContainsKey(person.PersonID) && people[person.PersonID].LastModifiedAt > person.LastModifiedAt)
                         {
-                            _freshCopy.Person = new Person();
+                            throw new PlayerModifiedByAnotherProcessException("A person of this player was modified by another process.");
+                        }
+                    }
+
+                    //check if any guardians are outdated
+                    List<int> guardianIDs = _Player.Guardians.Where(i => i.GuardianID > 0).Select(i => i.GuardianID).Distinct().ToList();
+                    var guardians = cm.Guardians.Where(i => guardianIDs.Contains(i.GuardianID)).Select(i => new { GuardianID = i.GuardianID, LastModifiedAt = i.LastModifiedAt }).ToDictionary(i => i.GuardianID);
+                    foreach (Guardian guardian in _Player.Guardians)
+                    {
+                        if (guardians.ContainsKey(guardian.GuardianID) && guardians[guardian.GuardianID].LastModifiedAt > guardian.LastModifiedAt)
+                        {
+                            throw new PlayerModifiedByAnotherProcessException("A guardian of this player was modified by another process.");
+                        }
+                    }
+
+                    //check if any email addresses are outdated
+                    List<int> emailAddressIDs = _Player.Person.EmailAddresses.Union(_Player.Guardians.Select(i => i.Person).SelectMany(i => i.EmailAddresses)).Where(i => i.EmailAddressID > 0).Select(i => i.EmailAddressID).Distinct().ToList();
+                    var emails = cm.EmailAddresses.Where(i => emailAddressIDs.Contains(i.EmailAddressID)).Select(i => new { EmailAddressID = i.EmailAddressID, LastModifiedAt = i.LastModifiedAt }).ToDictionary(i => i.EmailAddressID);
+                    foreach (EmailAddress emailAddress in _Player.Person.EmailAddresses.Union(_Player.Guardians.Select(i => i.Person).SelectMany(i => i.EmailAddresses)))
+                    {
+                        if (emails.ContainsKey(emailAddress.EmailAddressID) && emails[emailAddress.EmailAddressID].LastModifiedAt > emailAddress.LastModifiedAt)
+                        {
+                            throw new PlayerModifiedByAnotherProcessException("An email address of this player or their guardian(s) was modified by another process.");
+                        }
+                    }
+
+                    //check if any phone numbers are outdated
+                    List<int> phoneNumberIDs = _Player.Person.PhoneNumbers.Union(_Player.Guardians.Select(i => i.Person).SelectMany(i => i.PhoneNumbers)).Where(i => i.PhoneNumberID > 0).Select(i => i.PhoneNumberID).Distinct().ToList();
+                    var phoneNumbers = cm.PhoneNumbers.Where(i => phoneNumberIDs.Contains(i.PhoneNumberID)).Select(i => new { PhoneNumberID = i.PhoneNumberID, LastModifiedAt = i.LastModifiedAt }).ToDictionary(i => i.PhoneNumberID);
+                    foreach (PhoneNumber phoneNumber in _Player.Person.PhoneNumbers.Union(_Player.Guardians.Select(i => i.Person).SelectMany(i => i.PhoneNumbers)))
+                    {
+                        if (phoneNumbers.ContainsKey(phoneNumber.PhoneNumberID) && phoneNumbers[phoneNumber.PhoneNumberID].LastModifiedAt > phoneNumber.LastModifiedAt)
+                        {
+                            throw new PlayerModifiedByAnotherProcessException("A phone number of this player or their guardian(s) was modified by another process.");
+                        }
+                    }
+
+                    //check if any addresses are outdated
+                    List<int> addressIDs = _Player.Person.Addresses.Union(_Player.Guardians.Select(i => i.Person).SelectMany(i => i.Addresses)).Where(i => i.AddressID > 0).Select(i => i.AddressID).Distinct().ToList();
+                    var addresses = cm.Addresses.Where(i => addressIDs.Contains(i.AddressID)).Select(i => new { AddressID = i.AddressID, LastModifiedAt = i.LastModifiedAt }).ToDictionary(i => i.AddressID);
+                    foreach (Address address in _Player.Person.Addresses.Union(_Player.Guardians.Select(i => i.Person).SelectMany(i => i.Addresses)))
+                    {
+                        if (addresses.ContainsKey(address.AddressID) && addresses[address.AddressID].LastModifiedAt > address.LastModifiedAt)
+                        {
+                            throw new PlayerModifiedByAnotherProcessException("An address of this player or their guardian(s) was modified by another process.");
+                        }
+                    }
+
+                    // check if any playerpasses are outdated
+                    List<int> playerPassIDs = _Player.PlayerPasses.Where(i => i.PlayerPassID > 0).Select(i => i.PlayerPassID).Distinct().ToList();
+                    var playerPasses = cm.PlayerPasses.Where(i => playerPassIDs.Contains(i.PlayerPassID)).Select(i => new { PlayerPassID = i.PlayerPassID, LastModifiedAt = i.LastModifiedAt }).ToDictionary(i => i.PlayerPassID);
+                    foreach (PlayerPass playerPass in _Player.PlayerPasses)
+                    {
+                        if (playerPasses.ContainsKey(playerPass.PlayerPassID) && playerPasses[playerPass.PlayerPassID].LastModifiedAt > playerPass.LastModifiedAt)
+                        {
+                            throw new PlayerModifiedByAnotherProcessException("A player pass of this player was modified by another process.");
+                        }
+                    }
+
+                    // check if any teamplayers are outdated
+                    List<int> teamPlayerIDs = _Player.TeamPlayers.Union(_Player.PlayerPasses.SelectMany(i => i.TeamPlayers)).Where(i => i.TeamPlayerID > 0).Select(i => i.TeamPlayerID).Distinct().ToList();
+                    var teamPlayers = cm.TeamPlayers.Where(i => teamPlayerIDs.Contains(i.TeamPlayerID)).Select(i => new { TeamPlayerID = i.TeamPlayerID, LastModifiedAt = i.LastModifiedAt }).ToDictionary(i => i.TeamPlayerID);
+                    foreach (TeamPlayer teamPlayer in _Player.TeamPlayers.Union(_Player.PlayerPasses.SelectMany(i => i.TeamPlayers)))
+                    {
+                        if (teamPlayers.ContainsKey(teamPlayer.TeamPlayerID) && teamPlayers[teamPlayer.TeamPlayerID].LastModifiedAt > teamPlayer.LastModifiedAt)
+                        {
+                            throw new PlayerModifiedByAnotherProcessException("A team player of this player was modified by another process.");
+                        }
+                    }
+
+                    DateTime modifiedAt = DateTime.Now.ToUniversalTime();
+
+                    // everything up to this point is fresh
+                    if (_Player.PersonID == 0 || (_Player.PersonID > 0 && _Player.Person.WasModified))
+                    {
+                        freshCopy.Person.ClubID = _Player.Person.ClubID;
+                        freshCopy.Person.DateOfBirth = _Player.Person.DateOfBirth;
+                        freshCopy.Person.FName = _Player.Person.FName;
+                        freshCopy.Person.Gender = _Player.Person.Gender;
+                        freshCopy.Person.LName = _Player.Person.LName;
+                        freshCopy.Person.UserID = _Player.Person.UserID;
+                    }
+
+                    IList<EmailAddress> _freshPlayerEmails = freshCopy.Person.EmailAddresses;
+                    Copy(_freshPlayerEmails, _Player.Person.EmailAddresses);
+
+                    IList<PhoneNumber> _freshPlayerPhones = freshCopy.Person.PhoneNumbers;
+                    Copy(_freshPlayerPhones, _Player.Person.PhoneNumbers);
+
+                    IList<Address> _freshPlayerAddresses = freshCopy.Person.Addresses;
+                    Copy(_freshPlayerAddresses, _Player.Person.Addresses);
+
+                    foreach (Guardian guardian in _Player.Guardians)
+                    {
+                        Guardian _freshCopy;
+
+                        if (guardian.GuardianID == 0)
+                        {
+                            _freshCopy = new Guardian();
+                            if (guardian.Person.PersonID == 0)
+                            {
+                                _freshCopy.Person = new Person();
+                            }
+                            else
+                            {
+                                _freshCopy.Person = cm.People.LoadWith(PlayerFetchStrategy).Where(i => i.PersonID == guardian.Person.PersonID).First();
+                            }
                         }
                         else
                         {
-                            _freshCopy.Person = cm.People.LoadWith(fetch).Where(i => i.PersonID == guardian.Person.PersonID).First();
+                            _freshCopy = freshCopy.Guardians.First(i => i.GuardianID == guardian.GuardianID);
                         }
+
+                        if (guardian.Person.PersonID == 0 || (guardian.Person.PersonID > 0 && guardian.Person.WasModified))
+                        {
+                            _freshCopy.Person.ClubID = guardian.Person.ClubID;
+                            _freshCopy.Person.DateOfBirth = guardian.Person.DateOfBirth;
+                            _freshCopy.Person.FName = guardian.Person.FName;
+                            _freshCopy.Person.Gender = guardian.Person.Gender;
+                            _freshCopy.Person.LName = guardian.Person.LName;
+                            _freshCopy.Person.MInitial = guardian.Person.MInitial;
+                            _freshCopy.Person.UserID = guardian.Person.UserID;
+                        }
+
+                        if (guardian.GuardianID == 0 || (guardian.GuardianID > 0 && guardian.WasModified))
+                        {
+                            _freshCopy.SortOrder = guardian.SortOrder;
+                            _freshCopy.Active = guardian.Active;
+                        }
+
+                        IList<EmailAddress> _freshCopyGuardianEmails = _freshCopy.Person.EmailAddresses;
+                        Copy(_freshCopyGuardianEmails, guardian.Person.EmailAddresses);
+
+                        IList<Address> _freshCopyGuardianAddresses = _freshCopy.Person.Addresses;
+                        Copy(_freshCopyGuardianAddresses, guardian.Person.Addresses);
+
+                        IList<PhoneNumber> _freshCopyGuardianPhones = _freshCopy.Person.PhoneNumbers;
+                        Copy(_freshCopyGuardianPhones, guardian.Person.PhoneNumbers);
+
+                        if (_freshCopy.GuardianID == 0)
+                        {
+                            freshCopy.Guardians.Add(_freshCopy);
+                        }
+
+                        SetPersonObjectModified(_freshCopy.Person, modifiedAt, modifiedByUser);
+                        _freshCopy.LastModifiedAt = modifiedAt;
+                        _freshCopy.LastModifiedBy = modifiedByUser;
+                    }
+
+                    if (updateTeamPasses)
+                    {
+                        IEnumerable<TeamPlayer> _allUnionedFreshTeamPlayers = freshCopy.TeamPlayers.Union(freshCopy.PlayerPasses.SelectMany(i => i.TeamPlayers)).ToList(); // get duplicate via to list
+
+                        IList<TeamPlayer> _freshTeamPlayers = freshCopy.TeamPlayers;
+                        Copy(_freshTeamPlayers, _Player.TeamPlayers, _allUnionedFreshTeamPlayers);
+
+                        foreach (PlayerPass playerPass in _Player.PlayerPasses)
+                        {
+                            PlayerPass _freshCopy = playerPass.PlayerPassID == 0 ? new PlayerPass() : freshCopy.PlayerPasses.First(i => i.PlayerPassID == playerPass.PlayerPassID);
+
+                            if (playerPass.PlayerPassID == 0 || playerPass.WasModified)
+                            {
+                                _freshCopy.Active = playerPass.Active;
+                                _freshCopy.Expires = playerPass.Expires;
+                                _freshCopy.PassNumber = playerPass.PassNumber;
+                                _freshCopy.Photo = playerPass.Photo;
+                            }
+
+                            IList<TeamPlayer> _freshPlayerPassTeamPlayers = _freshCopy.TeamPlayers;
+                            Copy(_freshPlayerPassTeamPlayers, playerPass.TeamPlayers, _allUnionedFreshTeamPlayers);
+
+                            if (_freshCopy.PlayerPassID == 0)
+                            {
+                                freshCopy.PlayerPasses.Add(_freshCopy);
+                            }
+                        }
+                    }
+
+                    SetPersonObjectModified(freshCopy.Person, modifiedAt, modifiedByUser);
+
+                    if (updateTeamPasses)
+                    {
+                        freshCopy.PlayerPasses.ToList().ForEach(i => { i.LastModifiedAt = modifiedAt; i.LastModifiedBy = modifiedByUser; });
+                        freshCopy.TeamPlayers.Union(freshCopy.PlayerPasses.SelectMany(i => i.TeamPlayers)).ToList().ForEach(i => { i.LastModifiedAt = modifiedAt; i.LastModifiedBy = modifiedByUser; });
+                    }
+
+                    if (freshCopy.PlayerID == 0)
+                    {
+                        cm.Add(freshCopy);
+
+                        cm.SaveChanges();
+
+                        int playerID = freshCopy.PlayerID;
+                        UpdateScopingForGuardians(playerID);
+                        return playerID;
                     }
                     else
                     {
-                        _freshCopy = freshCopy.Guardians.First(i => i.GuardianID == guardian.GuardianID);
-                    }
-
-                    if (guardian.PersonID == 0 || (guardian.PersonID > 0 && guardian.Person.WasModified))
-                    {
-                        _freshCopy.Person.ClubID = guardian.Person.ClubID;
-                        _freshCopy.Person.DateOfBirth = guardian.Person.DateOfBirth;
-                        _freshCopy.Person.FName = guardian.Person.FName;
-                        _freshCopy.Person.Gender = guardian.Person.Gender;
-                        _freshCopy.Person.LName = guardian.Person.LName;
-                        _freshCopy.Person.MInitial = guardian.Person.MInitial;
-                        _freshCopy.Person.UserID = guardian.Person.UserID;
-                    }
-
-                    if (guardian.GuardianID == 0 || (guardian.GuardianID > 0 && guardian.WasModified))
-                    {
-                        _freshCopy.SortOrder = guardian.SortOrder;
-                        _freshCopy.Active = guardian.Active;
-                    }
-
-                    IList<EmailAddress> _freshCopyGuardianEmails = _freshCopy.Person.EmailAddresses;
-                    Copy(_freshCopyGuardianEmails, guardian.Person.EmailAddresses);
-
-                    IList<Address> _freshCopyGuardianAddresses = _freshCopy.Person.Addresses;
-                    Copy(_freshCopyGuardianAddresses, guardian.Person.Addresses);
-
-                    IList<PhoneNumber> _freshCopyGuardianPhones = _freshCopy.Person.PhoneNumbers;
-                    Copy(_freshCopyGuardianPhones, guardian.Person.PhoneNumbers);
-
-                    if (_freshCopy.GuardianID == 0)
-                    {
-                        freshCopy.Guardians.Add(_freshCopy);
-                    }
-
-                    SetPersonObjectModified(_freshCopy.Person, modifiedAt, modifiedByUser);
-                    _freshCopy.LastModifiedAt = modifiedAt;
-                    _freshCopy.LastModifiedBy = modifiedByUser;
-                }
-
-                if (updateTeamPasses)
-                {
-                    IEnumerable<TeamPlayer> _allUnionedFreshTeamPlayers = freshCopy.TeamPlayers.Union(freshCopy.PlayerPasses.SelectMany(i => i.TeamPlayers)).ToList(); // get duplicate via to list
-
-                    IList<TeamPlayer> _freshTeamPlayers = freshCopy.TeamPlayers;
-                    Copy(_freshTeamPlayers, _Player.TeamPlayers, _allUnionedFreshTeamPlayers);
-
-                    foreach (PlayerPass playerPass in _Player.PlayerPasses)
-                    {
-                        PlayerPass _freshCopy = playerPass.PlayerPassID == 0 ? new PlayerPass() : freshCopy.PlayerPasses.First(i => i.PlayerPassID == playerPass.PlayerPassID);
-
-                        if (playerPass.PlayerPassID == 0 || playerPass.WasModified)
-                        {
-                            _freshCopy.Active = playerPass.Active;
-                            _freshCopy.Expires = playerPass.Expires;
-                            _freshCopy.PassNumber = playerPass.PassNumber;
-                            _freshCopy.Photo = playerPass.Photo;
-                        }
-
-                        IList<TeamPlayer> _freshPlayerPassTeamPlayers = _freshCopy.TeamPlayers;
-                        Copy(_freshPlayerPassTeamPlayers, playerPass.TeamPlayers, _allUnionedFreshTeamPlayers);
-
-                        if (_freshCopy.PlayerPassID == 0)
-                        {
-                            freshCopy.PlayerPasses.Add(_freshCopy);
-                        }
+                        cm.SaveChanges();
+                        UpdateScopingForGuardians(freshCopy.PlayerID);
+                        return freshCopy.PlayerID;
                     }
                 }
-
-                SetPersonObjectModified(freshCopy.Person, modifiedAt, modifiedByUser);
-
-                if (updateTeamPasses)
+                catch (Exception ex)
                 {
-                    freshCopy.PlayerPasses.ToList().ForEach(i => { i.LastModifiedAt = modifiedAt; i.LastModifiedBy = modifiedByUser; });
-                    freshCopy.TeamPlayers.Union(freshCopy.PlayerPasses.SelectMany(i => i.TeamPlayers)).ToList().ForEach(i => { i.LastModifiedAt = modifiedAt; i.LastModifiedBy = modifiedByUser; });
-                }
-
-                if (freshCopy.PlayerID == 0)
-                {
-                    cm.Add(freshCopy);
-
-                    cm.SaveChanges();
-
-                    int playerID = freshCopy.PlayerID;
-                    UpdateScopingForGuardians(playerID);
-                    return playerID;
-                }
-                else
-                {
-                    cm.SaveChanges();
-                    UpdateScopingForGuardians(freshCopy.PlayerID);
-                    return freshCopy.PlayerID;
+                    cm.ClearChanges();
+                    throw ex;
                 }
             }
         }
@@ -529,7 +541,7 @@ namespace Trackr.Source.Wizards
             // since we are deleting and re-adding we will use a transaction
 
             using (ClubManagement cm = new ClubManagement())
-            using(TrackrModels.UserManagement um = new TrackrModels.UserManagement())
+            using (TrackrModels.UserManagement um = new TrackrModels.UserManagement())
             {
                 try
                 {

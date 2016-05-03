@@ -155,28 +155,6 @@ namespace TrackrModels
 			}
 		}
 		
-		private Club _club;
-		public virtual Club Club
-		{
-			get
-			{
-				return this._club;
-			}
-			set
-			{
-				this._club = value;
-			}
-		}
-		
-		private IList<Address> _addresses = new List<Address>();
-		public virtual IList<Address> Addresses
-		{
-			get
-			{
-				return this._addresses;
-			}
-		}
-		
 		private IList<PhoneNumber> _phoneNumbers = new List<PhoneNumber>();
 		public virtual IList<PhoneNumber> PhoneNumbers
 		{
@@ -192,6 +170,15 @@ namespace TrackrModels
 			get
 			{
 				return this._emailAddresses;
+			}
+		}
+		
+		private IList<Address> _addresses = new List<Address>();
+		public virtual IList<Address> Addresses
+		{
+			get
+			{
+				return this._addresses;
 			}
 		}
 		

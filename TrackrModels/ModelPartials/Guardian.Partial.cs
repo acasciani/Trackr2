@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace TrackrModels
 {
+    [ProtoBuf.ProtoContract(ImplicitFields = ProtoBuf.ImplicitFields.AllPublic)]
     public partial class Guardian : IEditable
     {
         public Guid EditToken { get; set; }

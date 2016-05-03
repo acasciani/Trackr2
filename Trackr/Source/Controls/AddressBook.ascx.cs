@@ -47,6 +47,7 @@ namespace Trackr.Source.Controls
         protected void Page_Load(object sender, EventArgs e)
         {
             AlertBox.HideStatus();
+            lnkAddAddress.Visible = !divEdit.Visible;
 
             if (IsPostBack)
             {

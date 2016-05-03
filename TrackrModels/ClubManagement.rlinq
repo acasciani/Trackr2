@@ -251,9 +251,6 @@
         <orm:field name="_programs" property="Programs" behavior="readwrite" uniqueId="822dee46-d5f1-463d-a1c9-9b8c29dd18b7" type="TrackrModels.Program">
           <orm:collection element-class="TrackrModels.Program" inverse-field="_club" order-by="" uniqueId="d5abb3e9-2dd5-4453-a355-45918f1fef23" />
         </orm:field>
-        <orm:field name="_people" property="People" behavior="readwrite" uniqueId="c043fa1d-f50b-4c5f-b1f9-86f6bc8e1934" type="TrackrModels.Person">
-          <orm:collection element-class="TrackrModels.Person" inverse-field="_club" order-by="" uniqueId="6847fabc-e976-4203-9b4c-0867fd06fb0a" />
-        </orm:field>
       </orm:class>
       <orm:class name="PlayerPass" uniqueId="cc46e759-acc2-42af-82bd-c75dee018045">
         <orm:table name="PlayerPasses" />
@@ -400,20 +397,20 @@
         <orm:field name="_lastModifiedAt" property="LastModifiedAt" behavior="readwrite" uniqueId="043e04b7-835a-4140-bd5d-896aac5336bf" type="System.DateTime">
           <orm:column name="LastModifiedAt" sql-type="datetime" nullable="false" length="0" scale="0" ado-type="DateTime" />
         </orm:field>
-        <orm:field name="_club" property="Club" behavior="readwrite" uniqueId="1a7aac61-adb1-4273-bf7c-bc7820719bb5" type="TrackrModels.Club">
-          <orm:reference uniqueId="6847fabc-e976-4203-9b4c-0867fd06fb0a" association-name="PersonHasClub">
-            <orm:sharedfield name="_clubID" target-class="TrackrModels.Club" target-field="_clubID" />
-            <orm:constraint name="FK_People_Clubs" delete-action="dbdefaultrule" destination-table="Clubs" />
-          </orm:reference>
+        <orm:field name="_phoneNumbers" property="PhoneNumbers" behavior="readwrite" uniqueId="d8dfcdce-1d8d-4340-843e-6e3c3d48eccf" type="TrackrModels.PhoneNumber" dependent="true">
+          <orm:collection element-class="TrackrModels.PhoneNumber" order-by="" uniqueId="96902e80-5796-4daf-b263-4c633056e479">
+            <orm:sharedfield name="_personID" target-class="TrackrModels.Person" target-field="_personID" />
+          </orm:collection>
         </orm:field>
-        <orm:field name="_addresses" property="Addresses" behavior="readwrite" uniqueId="0a108568-1ff9-4387-b16d-59e4febdcf94" type="TrackrModels.Address">
-          <orm:collection element-class="TrackrModels.Address" inverse-field="_person" managed="true" order-by="" uniqueId="8bc6d170-c00d-4cba-8e04-dc75f6fdb867" />
+        <orm:field name="_emailAddresses" property="EmailAddresses" behavior="readwrite" uniqueId="60571906-d0d6-4fd5-8542-97d00e384408" type="TrackrModels.EmailAddress" dependent="true">
+          <orm:collection element-class="TrackrModels.EmailAddress" order-by="" uniqueId="2f6a5adb-ad23-4683-949f-224f037f7df5">
+            <orm:sharedfield name="_personID" target-class="TrackrModels.Person" target-field="_personID" />
+          </orm:collection>
         </orm:field>
-        <orm:field name="_phoneNumbers" property="PhoneNumbers" behavior="readwrite" uniqueId="d8dfcdce-1d8d-4340-843e-6e3c3d48eccf" type="TrackrModels.PhoneNumber">
-          <orm:collection element-class="TrackrModels.PhoneNumber" inverse-field="_person" managed="true" order-by="" uniqueId="96902e80-5796-4daf-b263-4c633056e479" />
-        </orm:field>
-        <orm:field name="_emailAddresses" property="EmailAddresses" behavior="readwrite" uniqueId="60571906-d0d6-4fd5-8542-97d00e384408" type="TrackrModels.EmailAddress">
-          <orm:collection element-class="TrackrModels.EmailAddress" inverse-field="_person" managed="true" order-by="" uniqueId="2f6a5adb-ad23-4683-949f-224f037f7df5" />
+        <orm:field name="_addresses" property="Addresses" behavior="readwrite" uniqueId="0a108568-1ff9-4387-b16d-59e4febdcf94" type="TrackrModels.Address" dependent="true">
+          <orm:collection element-class="TrackrModels.Address" order-by="" uniqueId="8bc6d170-c00d-4cba-8e04-dc75f6fdb867">
+            <orm:sharedfield name="_personID" target-class="TrackrModels.Person" target-field="_personID" />
+          </orm:collection>
         </orm:field>
       </orm:class>
       <orm:class name="Guardian" uniqueId="f9e226b5-203b-494d-b033-ac05193b8e60">
@@ -501,12 +498,6 @@
         <orm:field name="_active" property="Active" behavior="readwrite" uniqueId="691aec7a-709c-4b84-bd82-c33cf1bed4f3" type="System.Boolean">
           <orm:column name="Active" sql-type="bit" nullable="false" length="0" scale="0" ado-type="Bit" />
         </orm:field>
-        <orm:field name="_person" property="Person" behavior="readwrite" uniqueId="1145475e-6fdf-41c4-8654-3a48ccbe7efe" type="TrackrModels.Person">
-          <orm:reference uniqueId="8bc6d170-c00d-4cba-8e04-dc75f6fdb867" association-name="AddressHasPerson">
-            <orm:sharedfield name="_personID" target-class="TrackrModels.Person" target-field="_personID" />
-            <orm:constraint name="FK_Addresses_Addresses" delete-action="dbdefaultrule" destination-table="People" />
-          </orm:reference>
-        </orm:field>
       </orm:class>
       <orm:class name="PhoneNumber" uniqueId="d8bd4f43-02e2-4f72-b855-727dc3ebf9b7">
         <orm:table name="PhoneNumbers" />
@@ -541,12 +532,6 @@
         <orm:field name="_active" property="Active" behavior="readwrite" uniqueId="02f29096-c0e8-4caa-91c3-a5037f48a3a9" type="System.Boolean">
           <orm:column name="Active" sql-type="bit" nullable="false" length="0" scale="0" ado-type="Bit" />
         </orm:field>
-        <orm:field name="_person" property="Person" behavior="readwrite" uniqueId="0013b660-22b8-4262-b79b-3d96690cb7eb" type="TrackrModels.Person">
-          <orm:reference uniqueId="96902e80-5796-4daf-b263-4c633056e479" association-name="PhoneNumberHasPerson">
-            <orm:sharedfield name="_personID" target-class="TrackrModels.Person" target-field="_personID" />
-            <orm:constraint name="FK_PhoneNumbers_People" delete-action="dbdefaultrule" destination-table="People" />
-          </orm:reference>
-        </orm:field>
       </orm:class>
       <orm:class name="EmailAddress" uniqueId="a67f6ff4-18e9-4ccf-80d3-daf4c281323e">
         <orm:table name="EmailAddresses" />
@@ -580,12 +565,6 @@
         </orm:field>
         <orm:field name="_active" property="Active" behavior="readwrite" uniqueId="574549b5-eb43-48ba-b297-fce36beddda6" type="System.Boolean">
           <orm:column name="Active" sql-type="bit" nullable="false" length="0" scale="0" ado-type="Bit" />
-        </orm:field>
-        <orm:field name="_person" property="Person" behavior="readwrite" uniqueId="dac71d92-89ec-4d41-896f-573f8a1b4155" type="TrackrModels.Person">
-          <orm:reference uniqueId="2f6a5adb-ad23-4683-949f-224f037f7df5" association-name="EmailAddressHasPerson">
-            <orm:sharedfield name="_personID" target-class="TrackrModels.Person" target-field="_personID" />
-            <orm:constraint name="FK_EmailAddresses_People" delete-action="dbdefaultrule" destination-table="People" />
-          </orm:reference>
         </orm:field>
       </orm:class>
       <orm:class name="TeamSchedule" uniqueId="5b4a6723-2872-4e12-8261-5cc6d900c311">
@@ -1255,9 +1234,6 @@
         <classHasNavigationalProperties Id="c7c5bfce-79a5-43e6-9404-f646d5b7b2e1">
           <NavigationalProperty Id="822dee46-d5f1-463d-a1c9-9b8c29dd18b7" name="Programs" type="IList&lt;Program&gt;" label="Programs : IList&lt;Program&gt;" nullable="true" kind="Persistent" fieldName="_programs" isDependent="false" isManaged="false" />
         </classHasNavigationalProperties>
-        <classHasNavigationalProperties Id="106f0a99-47d3-4ce1-a6c0-8c0d34b49d30">
-          <NavigationalProperty Id="c043fa1d-f50b-4c5f-b1f9-86f6bc8e1934" name="People" type="IList&lt;Person&gt;" label="People : IList&lt;Person&gt;" nullable="true" kind="Persistent" fieldName="_people" isDependent="false" isManaged="false" />
-        </classHasNavigationalProperties>
       </navigationalProperties>
     </DomainClass>
     <DomainClass Id="cc46e759-acc2-42af-82bd-c75dee018045" name="PlayerPass" namespace="TrackrModels" showPropertiesCompartment="true" identityMechanism="DatabaseServerCalculated" concurrencyMode="Changed" showNavigationCompartment="true" showImplementationCompartment="true" identityMechanismMember="PlayerPassID">
@@ -1367,33 +1343,15 @@
       <Property Id="72ccad61-d034-43f2-82ad-b4365cbc14ad" name="UserID" type="Int32" label="UserID : Int32" nullable="true" kind="Persistent" fieldName="_userID" />
       <Property Id="70010dd8-efee-434d-8df2-70abb78e85d3" name="LastModifiedBy" type="Int32" label="LastModifiedBy : Int32" kind="Persistent" fieldName="_lastModifiedBy" />
       <Property Id="043e04b7-835a-4140-bd5d-896aac5336bf" name="LastModifiedAt" type="DateTime" label="LastModifiedAt : DateTime" kind="Persistent" fieldName="_lastModifiedAt" />
-      <AssociationTargets>
-        <Association Id="6847fabc-e976-4203-9b4c-0867fd06fb0a" SourceMultiplicity="One" name="PersonHasClub">
-          <DomainClassMoniker name="/ClubManagement/Club" />
-          <targetNavigationalProperty>
-            <associationDefinesTargetProperty Id="e0c5121d-3613-4bf8-b302-88896cfde14d">
-              <NavigationalPropertyMoniker name="/ClubManagement/Club/People" />
-            </associationDefinesTargetProperty>
-          </targetNavigationalProperty>
-          <sourceNavigationalProperty>
-            <associationDefinesSourceProperty Id="4fffec74-daa4-4abb-b85a-da98f83008f8">
-              <NavigationalPropertyMoniker name="/ClubManagement/Person/Club" />
-            </associationDefinesSourceProperty>
-          </sourceNavigationalProperty>
-        </Association>
-      </AssociationTargets>
       <navigationalProperties>
         <classHasNavigationalProperties Id="03c23e64-0a44-4cd5-90e9-415dfcb4b47b">
-          <NavigationalProperty Id="0a108568-1ff9-4387-b16d-59e4febdcf94" name="Addresses" type="IList&lt;Address&gt;" label="Addresses : IList&lt;Address&gt;" nullable="true" kind="Persistent" fieldName="_addresses" isDependent="false" isManaged="true" />
+          <NavigationalProperty Id="0a108568-1ff9-4387-b16d-59e4febdcf94" name="Addresses" type="IList&lt;Address&gt;" label="Addresses : IList&lt;Address&gt;" nullable="true" kind="Persistent" fieldName="_addresses" isDependent="true" isManaged="false" />
         </classHasNavigationalProperties>
         <classHasNavigationalProperties Id="b6b897bc-977e-466a-8c89-c11e3f186716">
-          <NavigationalProperty Id="d8dfcdce-1d8d-4340-843e-6e3c3d48eccf" name="PhoneNumbers" type="IList&lt;PhoneNumber&gt;" label="PhoneNumbers : IList&lt;PhoneNumber&gt;" nullable="true" kind="Persistent" fieldName="_phoneNumbers" isDependent="false" isManaged="true" />
+          <NavigationalProperty Id="d8dfcdce-1d8d-4340-843e-6e3c3d48eccf" name="PhoneNumbers" type="IList&lt;PhoneNumber&gt;" label="PhoneNumbers : IList&lt;PhoneNumber&gt;" nullable="true" kind="Persistent" fieldName="_phoneNumbers" isDependent="true" isManaged="false" />
         </classHasNavigationalProperties>
         <classHasNavigationalProperties Id="d92e15b2-1e94-4a0b-89fc-1e097ea573d0">
-          <NavigationalProperty Id="60571906-d0d6-4fd5-8542-97d00e384408" name="EmailAddresses" type="IList&lt;EmailAddress&gt;" label="EmailAddresses : IList&lt;EmailAddress&gt;" nullable="true" kind="Persistent" fieldName="_emailAddresses" isDependent="false" isManaged="true" />
-        </classHasNavigationalProperties>
-        <classHasNavigationalProperties Id="b54beadd-65f5-4ef0-b11a-beb121a83743">
-          <NavigationalProperty Id="1a7aac61-adb1-4273-bf7c-bc7820719bb5" name="Club" type="Club" label="Club : Club" nullable="true" kind="Persistent" fieldName="_club" isDependent="false" isManaged="false" />
+          <NavigationalProperty Id="60571906-d0d6-4fd5-8542-97d00e384408" name="EmailAddresses" type="IList&lt;EmailAddress&gt;" label="EmailAddresses : IList&lt;EmailAddress&gt;" nullable="true" kind="Persistent" fieldName="_emailAddresses" isDependent="true" isManaged="false" />
         </classHasNavigationalProperties>
       </navigationalProperties>
     </DomainClass>
@@ -1450,25 +1408,15 @@
       <Property Id="b277c909-71d5-4bec-bc3b-4747fa4d2c50" name="LastModifiedAt" type="DateTime" label="LastModifiedAt : DateTime" kind="Persistent" fieldName="_lastModifiedAt" />
       <Property Id="691aec7a-709c-4b84-bd82-c33cf1bed4f3" name="Active" type="Boolean" label="Active : Boolean" kind="Persistent" fieldName="_active" />
       <AssociationTargets>
-        <Association Id="8bc6d170-c00d-4cba-8e04-dc75f6fdb867" SourceMultiplicity="One" name="AddressHasPerson">
+        <Association Id="8bc6d170-c00d-4cba-8e04-dc75f6fdb867" SourceMultiplicity="ZeroOne" name="AddressHasPerson">
           <DomainClassMoniker name="/ClubManagement/Person" />
           <targetNavigationalProperty>
             <associationDefinesTargetProperty Id="1858a3d1-eea1-449b-82b9-ee8c752c3ac4">
               <NavigationalPropertyMoniker name="/ClubManagement/Person/Addresses" />
             </associationDefinesTargetProperty>
           </targetNavigationalProperty>
-          <sourceNavigationalProperty>
-            <associationDefinesSourceProperty Id="c1e0ed92-c2dc-418b-9fe7-6fb70fba6f29">
-              <NavigationalPropertyMoniker name="/ClubManagement/Address/Person" />
-            </associationDefinesSourceProperty>
-          </sourceNavigationalProperty>
         </Association>
       </AssociationTargets>
-      <navigationalProperties>
-        <classHasNavigationalProperties Id="76f4498f-e6b8-460c-a826-81a617f0e9a9">
-          <NavigationalProperty Id="1145475e-6fdf-41c4-8654-3a48ccbe7efe" name="Person" type="Person" label="Person : Person" nullable="true" kind="Persistent" fieldName="_person" isDependent="false" isManaged="true" />
-        </classHasNavigationalProperties>
-      </navigationalProperties>
     </DomainClass>
     <DomainClass Id="d8bd4f43-02e2-4f72-b855-727dc3ebf9b7" name="PhoneNumber" namespace="TrackrModels" showPropertiesCompartment="true" identityMechanism="DatabaseServerCalculated" concurrencyMode="Changed" showNavigationCompartment="true" showImplementationCompartment="true" identityMechanismMember="PhoneNumberID">
       <Property Id="429149a4-3597-400d-acf5-6e9ecf9d305c" name="PhoneNumberID" type="Int32" label="PhoneNumberID : Int32" kind="Persistent" identity="true" fieldName="_phoneNumberID" />
@@ -1480,25 +1428,15 @@
       <Property Id="e22d2510-a6e7-4d1d-8ca6-931f5f34964a" name="LastModifiedAt" type="DateTime" label="LastModifiedAt : DateTime" kind="Persistent" fieldName="_lastModifiedAt" />
       <Property Id="02f29096-c0e8-4caa-91c3-a5037f48a3a9" name="Active" type="Boolean" label="Active : Boolean" kind="Persistent" fieldName="_active" />
       <AssociationTargets>
-        <Association Id="96902e80-5796-4daf-b263-4c633056e479" SourceMultiplicity="One" name="PhoneNumberHasPerson">
+        <Association Id="96902e80-5796-4daf-b263-4c633056e479" SourceMultiplicity="ZeroOne" name="PhoneNumberHasPerson">
           <DomainClassMoniker name="/ClubManagement/Person" />
           <targetNavigationalProperty>
             <associationDefinesTargetProperty Id="0a6a96f1-04cc-4632-ac72-34e198d92db6">
               <NavigationalPropertyMoniker name="/ClubManagement/Person/PhoneNumbers" />
             </associationDefinesTargetProperty>
           </targetNavigationalProperty>
-          <sourceNavigationalProperty>
-            <associationDefinesSourceProperty Id="c1b74d2a-f009-4d87-a20c-ea8f281b5318">
-              <NavigationalPropertyMoniker name="/ClubManagement/PhoneNumber/Person" />
-            </associationDefinesSourceProperty>
-          </sourceNavigationalProperty>
         </Association>
       </AssociationTargets>
-      <navigationalProperties>
-        <classHasNavigationalProperties Id="e5b0cb02-d7d7-4ec6-b306-b2f794d9a189">
-          <NavigationalProperty Id="0013b660-22b8-4262-b79b-3d96690cb7eb" name="Person" type="Person" label="Person : Person" nullable="true" kind="Persistent" fieldName="_person" isDependent="false" isManaged="true" />
-        </classHasNavigationalProperties>
-      </navigationalProperties>
     </DomainClass>
     <DomainClass Id="a67f6ff4-18e9-4ccf-80d3-daf4c281323e" name="EmailAddress" namespace="TrackrModels" showPropertiesCompartment="true" identityMechanism="DatabaseServerCalculated" concurrencyMode="Changed" showNavigationCompartment="true" showImplementationCompartment="true" identityMechanismMember="EmailAddressID">
       <Property Id="69cdd4da-2267-4ea6-b396-f5eff9b25826" name="EmailAddressID" type="Int32" label="EmailAddressID : Int32" kind="Persistent" identity="true" fieldName="_emailAddressID" />
@@ -1510,25 +1448,15 @@
       <Property Id="6054a4e9-5137-452e-96e4-2d639c6bd456" name="LastModifiedAt" type="DateTime" label="LastModifiedAt : DateTime" kind="Persistent" fieldName="_lastModifiedAt" />
       <Property Id="574549b5-eb43-48ba-b297-fce36beddda6" name="Active" type="Boolean" label="Active : Boolean" kind="Persistent" fieldName="_active" />
       <AssociationTargets>
-        <Association Id="2f6a5adb-ad23-4683-949f-224f037f7df5" SourceMultiplicity="One" name="EmailAddressHasPerson">
+        <Association Id="2f6a5adb-ad23-4683-949f-224f037f7df5" SourceMultiplicity="ZeroOne" name="EmailAddressHasPerson">
           <DomainClassMoniker name="/ClubManagement/Person" />
           <targetNavigationalProperty>
             <associationDefinesTargetProperty Id="9b5d9644-f892-4ee1-8b03-c1eba0390d97">
               <NavigationalPropertyMoniker name="/ClubManagement/Person/EmailAddresses" />
             </associationDefinesTargetProperty>
           </targetNavigationalProperty>
-          <sourceNavigationalProperty>
-            <associationDefinesSourceProperty Id="e1d78e14-dbbf-49e4-a7c5-9e129b17d9eb">
-              <NavigationalPropertyMoniker name="/ClubManagement/EmailAddress/Person" />
-            </associationDefinesSourceProperty>
-          </sourceNavigationalProperty>
         </Association>
       </AssociationTargets>
-      <navigationalProperties>
-        <classHasNavigationalProperties Id="d0c2b81c-7c8d-4aeb-be3b-7b7748e8315f">
-          <NavigationalProperty Id="dac71d92-89ec-4d41-896f-573f8a1b4155" name="Person" type="Person" label="Person : Person" nullable="true" kind="Persistent" fieldName="_person" isDependent="false" isManaged="true" />
-        </classHasNavigationalProperties>
-      </navigationalProperties>
     </DomainClass>
     <DomainClass Id="5b4a6723-2872-4e12-8261-5cc6d900c311" name="TeamSchedule" namespace="TrackrModels" showPropertiesCompartment="true" identityMechanism="DatabaseServerCalculated" concurrencyMode="Changed" showNavigationCompartment="true" showImplementationCompartment="true" identityMechanismMember="TeamScheduleID">
       <Property Id="f4ae2017-2b4e-4ba9-a8b3-e969e94b26d8" name="TeamScheduleID" type="Int32" label="TeamScheduleID : Int32" kind="Persistent" identity="true" fieldName="_teamScheduleID" />

@@ -18,7 +18,6 @@ using Telerik.OpenAccess.Metadata;
 using Telerik.OpenAccess.Data.Common;
 using Telerik.OpenAccess.Metadata.Fluent;
 using Telerik.OpenAccess.Metadata.Fluent.Advanced;
-using TrackrModels;
 
 namespace TrackrModels	
 {
@@ -126,19 +125,6 @@ namespace TrackrModels
 			set
 			{
 				this._active = value;
-			}
-		}
-		
-		private Person _person;
-		public virtual Person Person
-		{
-			get
-			{
-				return this._person;
-			}
-			set
-			{
-				this._person = value;
 			}
 		}
 		

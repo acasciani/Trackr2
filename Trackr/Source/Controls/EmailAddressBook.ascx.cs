@@ -44,6 +44,8 @@ namespace Trackr.Source.Controls
         {
             AlertBox.HideStatus();
 
+            lnkAddEmailAddress.Visible = !divEdit.Visible;
+
             if (IsPostBack)
             {
                 return;
