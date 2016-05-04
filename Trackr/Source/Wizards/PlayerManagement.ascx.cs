@@ -343,7 +343,7 @@ namespace Trackr.Source.Wizards
                     AlertBox.AddAlert("Successfully saved changes.");
                 }
             }
-            catch (PlayerModifiedByAnotherProcessException)
+            catch (PlayerModifiedByAnotherProcessException ex)
             {
                 AlertBox.AddAlert("Unable to save changes. This player was modified by someone else before you committed your changes. Please reload the page and try again.", false, UI.AlertBoxType.Error);
 

@@ -219,15 +219,14 @@ namespace Trackr.Modules.Registration
         private List<PlayerMatch> GetPossiblePlayersToRegister(int userID)
         {
             using (PeopleController pc = new PeopleController())
-            using (EmailAddressesController eac = new EmailAddressesController())
-            {/*
+            using (GuardiansController gc = new GuardiansController())
+            {
                 FetchStrategy fetch = new FetchStrategy() { MaxFetchDepth = 5 };
-                fetch.LoadWith<Person>(i => i.Guardians);
                 fetch.LoadWith<Guardian>(i => i.Player);
-                fetch.LoadWith<EmailAddress>(i => i.Person);
-                fetch.LoadWith<Player>(i => i.Person);
 
-                var playersAssociatedToUserID = pc.GetWhere(i => i.UserID.HasValue && userID == i.UserID.Value, fetch).SelectMany(i => i.Guardians)
+                List<int> peopleWithUserID = pc.GetWhere(i => i.UserID.HasValue && userID == i.UserID.Value).Select(i => i.PersonID).Distinct().ToList();
+
+                var playersAssociatedToUserID = gc.GetWhere(i => peopleWithUserID.Contains(i.PersonID), fetch)
                     .Select(i => new PlayerMatch()
                     {
                         PlayerID = i.PlayerID,
@@ -237,8 +236,6 @@ namespace Trackr.Modules.Registration
                     });
 
                 return playersAssociatedToUserID.OrderBy(i => i.FirstName).ThenBy(i => i.LastName).ThenBy(i => i.DateOfBirth).ToList();
-              * */
-                return null;
             }
         }
         #endregion

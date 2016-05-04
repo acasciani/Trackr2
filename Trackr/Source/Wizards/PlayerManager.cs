@@ -550,7 +550,7 @@ namespace Trackr.Source.Wizards
 
                     // delete assignments for this player
                     IQueryable<ScopeAssignment> assignmentsToDelete = um.ScopeAssignments.Where(i => i.ResourceID == playerID && i.ScopeID == 4 && i.RoleID == 6 && !i.IsExplicit);
-                    cm.Delete(assignmentsToDelete);
+                    um.Delete(assignmentsToDelete);
 
                     // add assignments back in
                     foreach (int userID in userIDs)
@@ -565,15 +565,15 @@ namespace Trackr.Source.Wizards
                             IsExplicit = false
                         };
 
-                        cm.Add(assignment);
+                        um.Add(assignment);
                     }
 
                     // commit
-                    cm.SaveChanges();
+                    um.SaveChanges();
                 }
                 catch (Exception ex)
                 {
-                    cm.ClearChanges();
+                    um.ClearChanges();
                     ex.HandleException();
                 }
             }
