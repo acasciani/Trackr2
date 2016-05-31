@@ -413,7 +413,7 @@ namespace Trackr.Source.Wizards
 
                 List<int> teamIDsPlayerIsOn = teamPlayers.Select(i => i.TeamID).Distinct().ToList();
                 var teamInfo = tc.GetWhere(i => teamIDsPlayerIsOn.Contains(i.TeamID), fetch).Select(i => new { TeamID = i.TeamID, TeamName = i.TeamName, ProgramName = i.Program.ProgramName, StartYear = i.StartYear, EndYear = i.EndYear }).ToDictionary(i => i.TeamID);
-                
+
                 return teamPlayers.Select(i => new
                 {
                     TeamName = teamInfo[i.TeamID].TeamName,
@@ -423,7 +423,8 @@ namespace Trackr.Source.Wizards
                     StartYear = teamInfo[i.TeamID].StartYear,
                     IsRemovable = DateTime.Now.ToUniversalTime() < teamInfo[i.TeamID].EndYear.ToUniversalTime(),
                     PlayerPassNumber = i.PlayerPassID.HasValue && !string.IsNullOrWhiteSpace(i.PlayerPass.PassNumber) ? i.PlayerPass.PassNumber : "",
-                    EditToken = i.EditToken
+                    EditToken = i.EditToken,
+                    IsApproved = i.Approved
                 }).OrderByDescending(i => i.StartYear).ThenBy(i => i.ProgramName).ThenBy(i => i.TeamName).AsQueryable();
             }
         }
@@ -436,6 +437,8 @@ namespace Trackr.Source.Wizards
             ptpPicker.Populate();
             pnlAddEditTeamPlayer.Visible = false;
             ddlPlayerPassForTeam.Enabled = true;
+            chkIsSecondary.Checked = false;
+            chkIsApproved.Checked = false;
         }
 
         protected void gvTeamAssignments_RowEditing(object sender, GridViewEditEventArgs e)
@@ -451,6 +454,24 @@ namespace Trackr.Source.Wizards
             gvTeamAssignments.DataBind();
         }
 
+        protected void gvTeamAssignments_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                if ((bool)DataBinder.Eval(e.Row.DataItem, "IsApproved"))
+                {
+                    // green
+                    e.Row.CssClass += " bg-green";
+                }
+                else
+                {
+                    e.Row.CssClass += " bg-red";
+                }
+
+                e.Row.CssClass = e.Row.CssClass.Trim();
+            }
+        }
+
         private Guid SaveTeamPlayer(Guid? editToken, Guid? playerPassEditToken)
         {
             if (!editToken.HasValue)
@@ -458,7 +479,7 @@ namespace Trackr.Source.Wizards
                 editToken = PlayerManager.AddTeamPlayer();
             }
 
-            PlayerManager.UpdateTeamPlayer(editToken.Value, ptpPicker.SelectedTeamID.Value, chkIsSecondary.Checked, playerPassEditToken);
+            PlayerManager.UpdateTeamPlayer(editToken.Value, ptpPicker.SelectedTeamID.Value, chkIsSecondary.Checked, chkIsApproved.Checked, playerPassEditToken);
 
             pnlAddEditTeamPlayer.Visible = false;
             gvTeamAssignments.EditIndex = -1;
@@ -486,6 +507,7 @@ namespace Trackr.Source.Wizards
             }
 
             chkIsSecondary.Checked = playerPass.IsSecondary;
+            chkIsApproved.Checked = playerPass.Approved;
 
             if (playerPass.PlayerPassID.HasValue)
             {

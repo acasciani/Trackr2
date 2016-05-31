@@ -32,6 +32,7 @@ namespace Trackr.Modules.Registration
 
         public int RegistrationYear { get; private set; }
         public string ClubName { get; private set; }
+        public int ClubID { get; private set; }
         public Stack<int> StepHistory
         {
             get
@@ -50,6 +51,7 @@ namespace Trackr.Modules.Registration
         {
             ClubName = "Gananda Bandits";
             RegistrationYear = 2017;
+            ClubID = 1;
 
             if (!string.IsNullOrWhiteSpace(Request["SelectedPlayer"]))
             {
@@ -218,27 +220,20 @@ namespace Trackr.Modules.Registration
         #region Find possible players to register for email address
         private List<PlayerMatch> GetPossiblePlayersToRegister(int userID)
         {
+            using (ClubManagement cm = new ClubManagement())
             using (PeopleController pc = new PeopleController())
             using (EmailAddressesController eac = new EmailAddressesController())
-            {/*
-                FetchStrategy fetch = new FetchStrategy() { MaxFetchDepth = 5 };
-                fetch.LoadWith<Person>(i => i.Guardians);
-                fetch.LoadWith<Guardian>(i => i.Player);
-                fetch.LoadWith<EmailAddress>(i => i.Person);
-                fetch.LoadWith<Player>(i => i.Person);
-
-                var playersAssociatedToUserID = pc.GetWhere(i => i.UserID.HasValue && userID == i.UserID.Value, fetch).SelectMany(i => i.Guardians)
+            {
+                var playersAssociatedToGuardian = cm.Guardians.Where(i => i.Active && i.Person.UserID.HasValue && i.Person.UserID.Value == userID).Select(i => i.Player)
                     .Select(i => new PlayerMatch()
                     {
                         PlayerID = i.PlayerID,
-                        FirstName = i.Player.Person.FName,
-                        LastName = i.Player.Person.LName,
-                        DateOfBirth = i.Player.Person.DateOfBirth
+                        FirstName = i.Person.FName,
+                        LastName = i.Person.LName,
+                        DateOfBirth = i.Person.DateOfBirth
                     });
 
-                return playersAssociatedToUserID.OrderBy(i => i.FirstName).ThenBy(i => i.LastName).ThenBy(i => i.DateOfBirth).ToList();
-              * */
-                return null;
+                return playersAssociatedToGuardian.OrderBy(i => i.FirstName).ThenBy(i => i.LastName).ThenBy(i => i.DateOfBirth).ToList();
             }
         }
         #endregion
@@ -265,38 +260,32 @@ namespace Trackr.Modules.Registration
         private void SetUpRegistrationWorkFlow(int playerID)
         {
             // get all teams they were on
-            FetchStrategy fetch = new FetchStrategy();
-            fetch.LoadWith<Player>(i => i.PlayerPasses);
-            fetch.LoadWith<PlayerPass>(i => i.TeamPlayers);
-            fetch.LoadWith<Player>(i => i.TeamPlayers);
-            fetch.LoadWith<Player>(i=>i.Person);
 
-            FetchStrategy fetchTeam = new FetchStrategy();
-            fetchTeam.LoadWith<RegistrationRule>(i => i.NewTeam);
-            fetchTeam.LoadWith<Team>(i => i.Program);
-
+            using(ClubManagement cm = new ClubManagement())
             using (PlayersController pc = new PlayersController())
             using(RegistrationRulesController rrc = new RegistrationRulesController())
             {
-                var player = pc.GetWhere(i => i.PlayerID == playerID, fetch).First();
-                List<int> teamIDsPreviouslyOn = player.PlayerPasses.SelectMany(i => i.TeamPlayers).Where(i => i.Active).Select(i => i.TeamID)
-                    .Union(player.TeamPlayers.Where(i => i.Active).Select(i => i.TeamID)).Distinct().ToList();
-
                 DateTime currentTime = DateTime.Now.ToUniversalTime();
 
-                var allOpenTeams = rrc.GetWhere(i => i.RegistrationOpens <= currentTime && currentTime <= i.RegistrationCloses && i.NewTeam.Program.ClubID == player.Person.ClubID,fetchTeam);
+                List<RegistrationRule> allOpenTeams = cm.RegistrationRules.Where(i => i.RegistrationOpens <= currentTime && currentTime <= i.RegistrationCloses && i.NewTeam.Program.ClubID == ClubID).ToList();
 
-                var previousTeams = allOpenTeams.Where(i=>i.OldTeamID.HasValue && teamIDsPreviouslyOn.Contains(i.OldTeamID.Value));
-                var newTeams = allOpenTeams.Where(i=>i.DateOfBirthCutoff.HasValue && player.Person.DateOfBirth.HasValue && player.Person.DateOfBirth.Value > i.DateOfBirthCutoff.Value).OrderByDescending(i=>i.DateOfBirthCutoff.Value).Take(1);//take the youngest one
+                List<int> teamIDsOn = cm.PlayerPasses.Where(i => i.PlayerID == playerID && i.Active).SelectMany(i => i.TeamPlayers).Select(i => i.TeamID).Union(cm.TeamPlayers.Where(i => i.PlayerID == playerID).Select(i => i.TeamID)).Distinct().ToList();
+                List<int> teamIDsExcludingUpcomingTeams = teamIDsOn.Except(allOpenTeams.Select(i => i.NewTeamID)).Distinct().ToList();
 
-                var possibleTeams = previousTeams.Union(newTeams)
+                Player player = cm.Players.Where(i => i.PlayerID == playerID).First();
+
+                var newTeams = allOpenTeams.Where(i => !teamIDsOn.Contains(i.NewTeamID) && i.DateOfBirthCutoff.HasValue && player.Person.DateOfBirth.HasValue && player.Person.DateOfBirth.Value > i.DateOfBirthCutoff.Value).OrderByDescending(i => i.DateOfBirthCutoff.Value).Take(1);//take the youngest one
+
+                var possibleTeams = newTeams
                     .Select(i => new
                     {
                         TeamName = i.NewTeam.TeamName,
                         ProgramName = i.NewTeam.Program.ProgramName,
-                        PercentRegistered = 10.0,
-                        IsTeamFull = false,
-                        TeamID = i.NewTeamID
+                        PercentRegistered = decimal.Divide(Convert.ToDecimal(i.NewTeam.TeamPlayers.Where(j => j.Active).Count()), Convert.ToDecimal(i.NewTeam.MaxRosterSize))*100,
+                        IsTeamFull = i.NewTeam.TeamPlayers.Where(j=>j.Active).Count() == i.NewTeam.MaxRosterSize,
+                        TeamID = i.NewTeamID,
+                        TeamStart = i.NewTeam.StartYear,
+                        TeamEnd = i.NewTeam.EndYear
                     }).Distinct().ToList().OrderBy(i => i.TeamName);
 
                 gvTeamsToRegisterFor.DataSource = possibleTeams;

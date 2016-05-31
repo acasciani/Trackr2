@@ -8,6 +8,12 @@
     .alert.alert-danger.player-matches > div, .alert.alert-danger.guardian-matches > div {
         background-color: white;
     }
+    .bg-red{
+        background-color:#FFC4C4 !important;
+    }
+    .bg-green {
+        background-color:#C5FFC4 !important;
+    }
 </style>
 
 <ui:AlertBox runat="server" ID="AlertBox" />
@@ -366,8 +372,8 @@
 
 
         <asp:WizardStep runat="server" ID="Step4_Teams" StepType="Finish" Title="Teams">
-            <asp:GridView runat="server" ID="gvTeamAssignments" AutoGenerateColumns="false" SelectMethod="gvTeamAssignments_GetData" EmptyDataText="This player is not assigned to any teams." CssClass="table table-striped table-hover" 
-                OnRowEditing="gvTeamAssignments_RowEditing" OnRowCancelingEdit="gvTeamAssignments_RowCancelingEdit" DeleteMethod="gvTeamAssignmentss_DeleteItem" DataKeyNames="EditToken">
+            <asp:GridView runat="server" ID="gvTeamAssignments" AutoGenerateColumns="false" SelectMethod="gvTeamAssignments_GetData" EmptyDataText="This player is not assigned to any teams." CssClass="table table-hover" 
+                OnRowEditing="gvTeamAssignments_RowEditing" OnRowCancelingEdit="gvTeamAssignments_RowCancelingEdit" DeleteMethod="gvTeamAssignmentss_DeleteItem" DataKeyNames="EditToken" OnRowDataBound="gvTeamAssignments_RowDataBound">
                 <Columns>
                     <asp:BoundField DataField="Season" HeaderText="Season" ReadOnly="true" />
                     <asp:BoundField DataField="ProgramName" HeaderText="Program Name" ReadOnly="true" />
@@ -407,6 +413,12 @@
                     <div class="form-group row">
                         <div class="col-sm-12">
                             <asp:CheckBox runat="server" ID="chkIsSecondary" /> <label for="<%=chkIsSecondary.ClientID %>">Is Secondary Player</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <asp:CheckBox runat="server" ID="chkIsApproved" /> <label for="<%=chkIsApproved.ClientID %>">Is Player Approved</label>
                         </div>
                     </div>
 

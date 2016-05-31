@@ -5,7 +5,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
 
     <script runat="server">
-        public string GetPercentageFilled(double percent)
+        public string GetPercentageFilled(decimal percent)
         {
             if (percent == 100)
             {
@@ -154,7 +154,7 @@
                                     <Columns>
                                         <asp:TemplateField HeaderText="Team">
                                             <ItemTemplate>
-                                                <%# Eval("TeamName") %> - <%# Eval("ProgramName") %> <%#GetPercentageFilled((double)Eval("PercentRegistered")).ToString() %>
+                                                <strong><%# Eval("TeamName") %></strong> <%# ((DateTime)Eval("TeamStart")).ToString("MMM yyyy") %> to <%# ((DateTime)Eval("TeamEnd")).ToString("MMM yyyy") %> - <%# Eval("ProgramName") %> <%#GetPercentageFilled((decimal)Eval("PercentRegistered")).ToString() %>
                                             </ItemTemplate>
                                         </asp:TemplateField>
                                         <asp:TemplateField ItemStyle-CssClass="col-xs-1 text-center">

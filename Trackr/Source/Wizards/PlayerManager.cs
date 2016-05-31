@@ -261,11 +261,12 @@ namespace Trackr.Source.Wizards
             }
         }
 
-        public static void UpdateTeamPlayer(Guid editToken, int teamID, bool isSecondary, Guid? playerPassEditToken)
+        public static void UpdateTeamPlayer(Guid editToken, int teamID, bool isSecondary, bool isApproved, Guid? playerPassEditToken)
         {
             TeamPlayer obj = (TeamPlayer)FindEditableObject(editToken);
             obj.WasModified = true;
             obj.IsSecondary = isSecondary;
+            obj.Approved = isApproved;
             obj.TeamID = teamID;
 
             // remove old one
@@ -549,7 +550,7 @@ namespace Trackr.Source.Wizards
 
                     // delete assignments for this player
                     IQueryable<ScopeAssignment> assignmentsToDelete = um.ScopeAssignments.Where(i => i.ResourceID == playerID && i.ScopeID == 4 && i.RoleID == 6 && !i.IsExplicit);
-                    cm.Delete(assignmentsToDelete);
+                    um.Delete(assignmentsToDelete);
 
                     // add assignments back in
                     foreach (int userID in userIDs)
@@ -564,15 +565,15 @@ namespace Trackr.Source.Wizards
                             IsExplicit = false
                         };
 
-                        cm.Add(assignment);
+                        um.Add(assignment);
                     }
 
                     // commit
-                    cm.SaveChanges();
+                    um.SaveChanges();
                 }
                 catch (Exception ex)
                 {
-                    cm.ClearChanges();
+                    um.ClearChanges();
                     ex.HandleException();
                 }
             }
@@ -696,6 +697,7 @@ namespace Trackr.Source.Wizards
 
                 _freshCopy.Active = dirtyCopy.Active;
                 _freshCopy.IsSecondary = dirtyCopy.IsSecondary;
+                _freshCopy.Approved = dirtyCopy.Approved;
                 _freshCopy.TeamID = dirtyCopy.TeamID;
 
                 if (_freshCopy.TeamPlayerID == 0 || freshCopies.Count(i => i.TeamPlayerID == _freshCopy.TeamPlayerID) == 0)

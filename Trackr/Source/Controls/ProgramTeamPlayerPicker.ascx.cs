@@ -120,14 +120,30 @@ namespace Trackr.Source.Controls
         {
             using (TeamsController tc = new TeamsController())
             {
-                var teams = tc.GetScopedEntities(CurrentUser.UserID, Permission).Where(i => i.ProgramID == SelectedProgramID.Value)
+                // if there is two teams with the same name, then we want to also say start/end date
+                var currentTeams = tc.GetScopedEntities(CurrentUser.UserID, Permission).Where(i => i.ProgramID == SelectedProgramID.Value)
                     .Where(i => TeamWhereClause == null ? true : TeamWhereClause(i))
-                    .Select(i => new
-                    {
+                    .Select(i => new {
                         Label = i.TeamName,
-                        Value = i.TeamID
+                        Start = i.StartYear,
+                        End = i.EndYear,
+                        Value = i.TeamID,
+                        IsPresent = DateTime.Today <= i.EndYear.Date
                     })
-                    .OrderBy(i => i.Label).ToList();
+                    .GroupBy(i => i.Label).ToList();
+
+                var nonDuplicatedLabels = currentTeams.Where(i => i.Count() == 1).Select(i => i.First());
+                var duplicatedLabels = currentTeams.Where(i => i.Count() != 1).SelectMany(i => i.Select(j => new
+                {
+                    Label = j.Label + string.Format(" ({0} to {1})", j.Start.ToString("MMM yyyy"), j.End.ToString("MMM yyyy")),
+                    Start = j.Start,
+                    End = j.End,
+                    Value = j.Value,
+                    IsPresent = j.IsPresent
+                }));
+
+                var teams = nonDuplicatedLabels.Union(duplicatedLabels).OrderByDescending(i => i.IsPresent).ThenBy(i => i.Start).ThenBy(i => i.Label).ToList();
+
 
                 ddlTeam.Reset(true);
                 ddlTeam.DataSource = teams;
