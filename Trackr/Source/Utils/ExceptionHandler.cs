@@ -27,18 +27,18 @@ namespace Trackr
                 switch (priority)
                 {
                     case ExceptionPriority.Urgent:
-                        To = "coachcasciani+EH_Urgent@gmail.com";
+                        To = "playermanagementstudio+EH_Urgent@gmail.com";
                         mailpriority = MailPriority.High;
                         break;
                     case ExceptionPriority.High:
-                        To = "coachcasciani+EH_High@gmail.com";
+                        To = "playermanagementstudio+EH_High@gmail.com";
                         mailpriority = MailPriority.High;
                         break;
                     case ExceptionPriority.Medium:
-                        To = "coachcasciani+EH_Mid@gmail.com";
+                        To = "playermanagementstudio+EH_Mid@gmail.com";
                         break;
                     default:
-                        To = "coachcasciani+EH_Low@gmail.com";
+                        To = "playermanagementstudio+EH_Low@gmail.com";
                         mailpriority = MailPriority.Low;
                         break;
                 }
@@ -68,7 +68,7 @@ namespace Trackr
                     message.Subject = Subject;
                     message.Body = body;
                     message.Priority = mailpriority;
-                    message.From = new MailAddress("coachcasciani@gmail.com");
+                    message.From = new MailAddress("playermanagementstudio@gmail.com");
                     client.Send(message);
                 }
             }

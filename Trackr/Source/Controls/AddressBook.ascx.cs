@@ -76,6 +76,11 @@ namespace Trackr.Source.Controls
 
         protected void lnkSaveAddress_Click(object sender, EventArgs e)
         {
+            if (!Page.IsValid)
+            {
+                return;
+            }
+
             Guid editToken = gvAddressBook.EditIndex == -1 ? Guid.NewGuid() : (Guid)gvAddressBook.DataKeys[gvAddressBook.EditIndex].Value;
 
             Address address = Addresses.FirstOrDefault(i => i.EditToken == editToken) ?? new Address() { EditToken = Guid.NewGuid() };

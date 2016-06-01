@@ -75,6 +75,11 @@ namespace Trackr.Source.Controls
 
         protected void lnkSavePhoneNumber_Click(object sender, EventArgs e)
         {
+            if (!Page.IsValid)
+            {
+                return;
+            }
+
             Guid editToken = gvPhoneNumberBook.EditIndex == -1 ? Guid.NewGuid() : (Guid)gvPhoneNumberBook.DataKeys[gvPhoneNumberBook.EditIndex].Value;
 
             PhoneNumber phoneNumber = PhoneNumbers.FirstOrDefault(i => i.EditToken == editToken) ?? new PhoneNumber() { EditToken = Guid.NewGuid() };

@@ -201,7 +201,8 @@ namespace Trackr.Source.Wizards
 
         private void Save_Step1()
         {
-            PlayerManager.UpdatePerson(PlayerManager.Player.Person.EditToken, txtFirstName.Text, txtLastName.Text, DateTime.Parse(txtDateOfBirth.Text));
+            char? mInitial = string.IsNullOrWhiteSpace(txtMiddleInitial.Text) ? (char?)null : txtMiddleInitial.Text[0];
+            PlayerManager.UpdatePerson(PlayerManager.Player.Person.EditToken, txtFirstName.Text, txtLastName.Text, mInitial, DateTime.Parse(txtDateOfBirth.Text));
         }
 
         protected void lnkPlayerTab_Click(object sender, EventArgs e)
@@ -342,7 +343,7 @@ namespace Trackr.Source.Wizards
                     AlertBox.AddAlert("Successfully saved changes.");
                 }
             }
-            catch (PlayerModifiedByAnotherProcessException)
+            catch (PlayerModifiedByAnotherProcessException ex)
             {
                 AlertBox.AddAlert("Unable to save changes. This player was modified by someone else before you committed your changes. Please reload the page and try again.", false, UI.AlertBoxType.Error);
 
@@ -373,7 +374,7 @@ namespace Trackr.Source.Wizards
                     string lName = txtLastName.Text.Trim();
                     char? mInitial = string.IsNullOrWhiteSpace(txtMiddleInitial.Text) ? (char?)null : txtMiddleInitial.Text.ToCharArray()[0];
 
-                    var matches = pc.GetPossibleMatches(1, fName, lName, mInitial, DateTime.Parse(txtDateOfBirth.Text))
+                    var matches = pc.GetPossibleMatches(1, fName, lName, null, DateTime.Parse(txtDateOfBirth.Text))
                         .GroupBy(i => new { i.PlayerID, i.DOB_Distance, i.FirstName_Distance, i.LastName_Distance })
                         .OrderBy(i => i.Key.DOB_Distance).ThenBy(i => i.Key.LastName_Distance).ThenBy(i => i.Key.FirstName_Distance)
                         .Select(i => new
@@ -775,7 +776,8 @@ namespace Trackr.Source.Wizards
 
             Guid playerEditToken = PlayerManager.Player.Guardians.First(i => i.EditToken == editToken.Value).Person.EditToken;
 
-            PlayerManager.UpdatePerson(playerEditToken, txtGuardianFirstName.Text, txtGuardianLastName.Text, null);
+            char? mInitial = string.IsNullOrWhiteSpace(txtGuardianMiddleInitial.Text) ? (char?)null : txtGuardianMiddleInitial.Text[0];
+            PlayerManager.UpdatePerson(playerEditToken, txtGuardianFirstName.Text, txtGuardianLastName.Text, mInitial, null);
 
             return editToken.Value;
         }
@@ -971,7 +973,7 @@ namespace Trackr.Source.Wizards
                     string lName = txtGuardianLastName.Text.Trim();
                     char? mInitial = string.IsNullOrWhiteSpace(txtGuardianMiddleInitial.Text) ? (char?)null : txtGuardianMiddleInitial.Text.ToCharArray()[0];
 
-                    var matches = pc.GetPossibleMatches(1, fName, lName, mInitial, null);
+                    var matches = pc.GetPossibleMatches(1, fName, lName, null, null);
 
                     // get some other info about guardian
                     FetchStrategy fetch = new FetchStrategy();
