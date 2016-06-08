@@ -150,6 +150,7 @@ namespace Trackr.Modules.Registration
                     int teamID = int.Parse(teamID_selection);
 
                         using (TeamPlayersController tpc = new TeamPlayersController())
+                        using(GuardiansController gc = new GuardiansController())
                         {
                             // check to ensure they are already not assigned to the team.
                             if (tpc.GetWhere(i => i.TeamID == teamID && i.Active && (i.PlayerID == PlayerID.Value || (i.PlayerPass != null && i.PlayerPass.PlayerID==PlayerID.Value))).Count() > 0)
@@ -170,9 +171,69 @@ namespace Trackr.Modules.Registration
                                     Approved = false
                                 };
 
-                                tpc.AddNew(teamPlayer);
+                                TeamPlayer addedTeamPlayer = tpc.AddNew(teamPlayer);
 
                                 AlertBox_PlayerRegistration.AddAlert("Successfully registered player for team.");
+
+                                FetchStrategy fetch = new FetchStrategy();
+                                fetch.LoadWith<Guardian>(i=>i.Person);
+                                fetch.LoadWith<Person>(i=>i.EmailAddresses);
+
+                                var guardians = gc.GetWhere(i=>i.PlayerID == PlayerID.Value && i.Active, fetch).Select(i=>i.Person).ToList();
+
+                                if (guardians.Count() > 0)
+                                {
+                                    string toName = null;
+
+                                    if (guardians.Count() > 1)
+                                    {
+                                        List<string> guardianNames = guardians.Select(i => i.FName).OrderBy(i => i).ToList();
+                                        toName = string.Join(", ", guardianNames.Take(guardianNames.Count() - 1)) + " and " + guardianNames.Last();
+                                    }
+                                    else
+                                    {
+                                        toName = guardians.First().FName;
+                                    }
+
+                                    FetchStrategy fetchTeam = new FetchStrategy();
+                                    fetchTeam.LoadWith<TeamPlayer>(i => i.Team);
+                                    fetchTeam.LoadWith<TeamPlayer>(i => i.Player);
+                                    fetchTeam.LoadWith<Player>(i => i.Person);
+
+                                    TeamPlayer tp = tpc.GetWhere(i => i.TeamPlayerID == addedTeamPlayer.TeamPlayerID, fetchTeam).First();
+
+                                    List<Messenger.EmailRecipient> recipients = new List<Messenger.EmailRecipient>();
+
+                                    guardians.ForEach(i => 
+                                    {
+                                        string name = (i.FName + " " + i.LName).Trim();
+                                        i.EmailAddresses.Where(j => j.Active).Select(j => j.Email).Distinct().ToList().ForEach(j => recipients.Add(new Messenger.EmailRecipient()
+                                        {
+                                            Email = j,
+                                            Name = name,
+                                            RecipientType = Messenger.EmailRecipientType.TO
+                                        }));
+                                    });
+
+                                    List<Messenger.TemplateVariable> variables = new List<Messenger.TemplateVariable>();
+                                    variables.Add(new Messenger.TemplateVariable()
+                                    {
+                                        VariableName = "GuardianNames",
+                                        VariableContent = toName
+                                    });
+                                    variables.Add(new Messenger.TemplateVariable()
+                                    {
+                                        VariableName = "TeamName",
+                                        VariableContent = tp.Team.TeamName
+                                    });
+                                    variables.Add(new Messenger.TemplateVariable()
+                                    {
+                                        VariableName = "ChildName",
+                                        VariableContent = tp.Player.Person.FName
+                                    });
+
+                                    Messenger.SendEmail("registration-successful", null, variables, recipients, false, false);
+                                }
                             }
                         }
 
@@ -269,7 +330,7 @@ namespace Trackr.Modules.Registration
 
                 List<RegistrationRule> allOpenTeams = cm.RegistrationRules.Where(i => i.RegistrationOpens <= currentTime && currentTime <= i.RegistrationCloses && i.NewTeam.Program.ClubID == ClubID).ToList();
 
-                List<int> teamIDsOn = cm.PlayerPasses.Where(i => i.PlayerID == playerID && i.Active).SelectMany(i => i.TeamPlayers).Select(i => i.TeamID).Union(cm.TeamPlayers.Where(i => i.PlayerID == playerID).Select(i => i.TeamID)).Distinct().ToList();
+                List<int> teamIDsOn = cm.PlayerPasses.Where(i => i.PlayerID == playerID && i.Active).SelectMany(i => i.TeamPlayers).Select(i => i.TeamID).Union(cm.TeamPlayers.Where(i => i.PlayerID == playerID && i.Active).Select(i => i.TeamID)).Distinct().ToList();
                 List<int> teamIDsExcludingUpcomingTeams = teamIDsOn.Except(allOpenTeams.Select(i => i.NewTeamID)).Distinct().ToList();
 
                 Player player = cm.Players.Where(i => i.PlayerID == playerID).First();

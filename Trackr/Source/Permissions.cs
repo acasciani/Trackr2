@@ -12,6 +12,8 @@ namespace Trackr
             public const string CreateUser = "UserManagement.CreateUser";
             public const string EditUser = "UserManagement.EditUser";
             public const string ViewUsers = "UserManagement.ViewUsers";
+
+            public const string CreateUsersFromGuardians = "UserManagement.CreateUsersFromGuardians";
         }
 
         public class PlayerManagement

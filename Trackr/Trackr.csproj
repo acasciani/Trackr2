@@ -84,6 +84,10 @@
       <HintPath>..\packages\protobuf-net.2.0.0.668\lib\net40\protobuf-net.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\RestSharp.105.2.3\lib\net45\RestSharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -237,6 +241,7 @@
     <Content Include="Modules\PlayerManagement\Manage.aspx" />
     <Content Include="Modules\UserManagement\Default.aspx" />
     <Content Include="Modules\UserManagement\Manage.aspx" />
+    <Content Include="Modules\UserManagement\NonUserGuardians.aspx" />
     <Content Include="packages.config" />
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
@@ -394,6 +399,13 @@
     <Compile Include="Controllers\PeopleController.cs" />
     <Compile Include="Controllers\PhoneNumbersController.cs" />
     <Compile Include="Controllers\RegistrationRulesController.cs" />
+    <Compile Include="Modules\UserManagement\NonUserGuardians.aspx.cs">
+      <DependentUpon>NonUserGuardians.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\UserManagement\NonUserGuardians.aspx.designer.cs">
+      <DependentUpon>NonUserGuardians.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Repositories\ClubManagementRepositories.cs" />
     <Compile Include="Controllers\ClubsController.cs" />
     <Compile Include="Controllers\Partials\ScopeAssignmentsController.Partial.cs" />
@@ -520,6 +532,7 @@
     <Compile Include="Source\Utils\ConverterUtils.cs" />
     <Compile Include="Source\Utils\DBUtils.cs" />
     <Compile Include="Source\Utils\ExceptionHandler.cs" />
+    <Compile Include="Source\Utils\Messenger\Messenger.Email.cs" />
     <Compile Include="Source\Utils\PageExtensions.cs" />
     <Compile Include="Source\Utils\UserInputUtils.cs" />
     <Compile Include="Source\Wizards\PlayerManagement.ascx.cs">
