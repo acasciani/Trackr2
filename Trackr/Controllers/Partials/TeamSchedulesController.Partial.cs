@@ -49,7 +49,7 @@ namespace Trackr
                     fetch.LoadWith<TeamSchedule>(i => i.Team);
                     fetch.LoadWith<Team>(i => i.Program);
 
-                    List<int> scopedTeamIDs = tc.GetScopedIDs(int.Parse(HttpContext.Current.User.Identity.Name), "PlayerManagement.ViewPlayers");
+                    List<int> scopedTeamIDs = tc.GetScopedIDs(int.Parse(HttpContext.Current.User.Identity.Name), Permissions.Scheduler.ViewSchedule);
 
                     IQueryable<TeamSchedule> response = null;
 

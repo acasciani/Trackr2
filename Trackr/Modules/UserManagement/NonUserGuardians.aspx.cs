@@ -211,7 +211,10 @@ namespace Trackr.Modules.UserManagement
                             }
                             finally
                             {
-                                ScriptManager.RegisterStartupScript(this, this.GetType(), "modal", "$('.add-non-user-guardian-as-user').modal('toggle')", true);
+                                ScriptManager.RegisterStartupScript(this, this.GetType(), "modal", "$('.modal-backdrop').remove()", true);
+                                gvAllNonUsers.DataBind();
+
+                                uP_Main.Update();
                             }
                         }
                         catch (Exception ex)
@@ -229,7 +232,7 @@ namespace Trackr.Modules.UserManagement
                         break;
 
                     default:
-                        CreateAlertBox.AddAlert("Unable to create new user from guardian for the following reason: " + status.ToString());
+                        CreateAlertBox.AddAlert("Unable to create new user from guardian for the following reason: " + status.ToString(), false, UI.AlertBoxType.Error);
                         break;
                 }
             }

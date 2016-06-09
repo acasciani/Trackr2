@@ -45,6 +45,27 @@ namespace Trackr
 
         protected void Page_PreInit(object sender, System.EventArgs e)
         {
+            // Check to make sure the user id in session is the same as the current one. If it is not, then we need to wipe out data so we don't show this user the old user's data
+            int? sessionUserID = Session["__UserIDOnFile"] as int?;
+
+            if (sessionUserID.HasValue && CurrentUser !=null)
+            {
+                if (sessionUserID != CurrentUser.UserID)
+                {
+                    Session.Clear();
+                    Session["__UserIDOnFile"] = CurrentUser.UserID;
+                }
+            }
+            else
+            {
+                Session.Clear();
+
+                if (CurrentUser != null)
+                {
+                    Session["__UserIDOnFile"] = CurrentUser.UserID;
+                }
+            }
+
             if (WebFormsFriendlyUrlResolver.IsMobileView(new HttpContextWrapper(Context)))
             {
                 MasterPageFile = "~/Site.Mobile.Master";

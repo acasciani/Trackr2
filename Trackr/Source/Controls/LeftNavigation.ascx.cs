@@ -6,6 +6,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using Telerik.OpenAccess.FetchOptimization;
 using TrackrModels;
+using Telerik.OpenAccess;
 
 namespace Trackr.Source.Controls
 {
@@ -40,8 +41,6 @@ namespace Trackr.Source.Controls
 
                 return myLinks;
             }
-
-            set { Session["MyPermissionedLinks"] = value; }
         }
 
 
@@ -107,6 +106,7 @@ namespace Trackr.Source.Controls
 
         private List<MyLink> GetPermissionedLinksFromDB()
         {
+            using(UserManagement um = new UserManagement())
             using (WebUsersController wuc = new WebUsersController())
             using(LinksController lc = new LinksController())
             {
@@ -116,7 +116,8 @@ namespace Trackr.Source.Controls
                 fetch.LoadWith<LinkGroup>(i => i.Glyphicon);
                 fetch.LoadWith<Link>(i => i.LinkPermissions);
 
-                IEnumerable<ScopeAssignment> assignedScopes = wuc.Get(CurrentUser.UserID).ScopeAssignments;
+
+                IEnumerable<ScopeAssignment> assignedScopes = um.ScopeAssignments.Where(i => i.UserID == CurrentUser.UserID);
 
                 // if user has even one allowed permission, then we need to add it. need to do it by permission then by role
                 var allowedByPermission = assignedScopes.Where(i => i.PermissionID.HasValue && !i.IsDeny).Select(i => i.PermissionID.Value);

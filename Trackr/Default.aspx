@@ -4,9 +4,9 @@
 
     
     <div class="jumbotron">
-        <h1>t</h1>
-        <p class="lead">Welcome.</p>
-        <p><a href="http://www.asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
+        <h1>2017 Registration Now OPEN</h1>
+        <p class="lead">Registration for the 2017 year is now open. This system is still in testing. Please note any issues you encounter and provide us feedback to improve the system.</p>
+        <p><a href="/Modules/Registration" class="btn btn-primary btn-lg">Register Now &raquo;</a></p>
     </div>
 
 

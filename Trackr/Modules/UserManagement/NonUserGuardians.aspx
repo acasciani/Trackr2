@@ -3,8 +3,7 @@
 <%@ Register Src="~/Source/Wizards/UserManagement.ascx" TagName="UserManagement" TagPrefix="ui" %>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <asp:UpdatePanel runat="server" ID="uP_Main">
-
+    <asp:UpdatePanel runat="server" ID="uP_Main" UpdateMode="Conditional">
         <ContentTemplate>
     <div class="panel panel-default">
         <div class="panel-heading">
