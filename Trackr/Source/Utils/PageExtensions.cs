@@ -34,10 +34,13 @@ namespace Trackr.Utils
         {
             int userID;
 
+           
             if (!HttpContext.Current.User.Identity.IsAuthenticated || !int.TryParse(HttpContext.Current.User.Identity.Name, out userID))
             {
-                throw new Exception("User not authenticated");
+                //throw new Exception("User not authenticated");
+                return null;
             }
+             
 
             WebUser user = HttpContext.Current.Session["CurrentWebUser"] as WebUser;
 
