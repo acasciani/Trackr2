@@ -40,12 +40,13 @@ namespace Trackr
                             break;
 
                         case "Program":
-                            //List<int> programTeamIDs = cm.Teams.Where(i => i.ProgramID == scopeAssignment.ResourceID).Select(i => i.TeamID).Distinct().ToList();
-                            //IDs.AddRange(cm.TeamPlayers.Where(i => programTeamIDs.Contains(i.TeamID)).Select(i => i.TeamPlayerID).Distinct());
+                            // A team player is the only way a player is assigned to a team or program. A Team Player can have either a PlayerID or a PlayerPassID
+                            // So if one is null, the other is not.
+                            IDs.AddRange(cm.TeamPlayers.Where(i => i.Team.ProgramID == scopeAssignment.ResourceID).Select(i => i.PlayerID.HasValue ? i.PlayerID.Value : i.PlayerPass.PlayerID).Distinct().ToList());
                             break;
 
                         case "Team":
-                            //IDs.AddRange(cm.TeamPlayers.Where(i => i.TeamID == scopeAssignment.ResourceID).Select(i => i.TeamPlayerID).Distinct());
+                            IDs.AddRange(cm.TeamPlayers.Where(i => i.TeamID == scopeAssignment.ResourceID).Select(i => i.PlayerID.HasValue ? i.PlayerID.Value : i.PlayerPass.PlayerID).Distinct().ToList());
                             break;
 
                         case "Player":

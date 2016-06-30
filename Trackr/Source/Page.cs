@@ -48,7 +48,7 @@ namespace Trackr
             // Check to make sure the user id in session is the same as the current one. If it is not, then we need to wipe out data so we don't show this user the old user's data
             int? sessionUserID = Session["__UserIDOnFile"] as int?;
 
-            if (sessionUserID.HasValue && CurrentUser !=null)
+            if (HttpContext.Current.User.Identity.IsAuthenticated && sessionUserID.HasValue && CurrentUser != null)
             {
                 if (sessionUserID != CurrentUser.UserID)
                 {
@@ -60,7 +60,7 @@ namespace Trackr
             {
                 Session.Clear();
 
-                if (CurrentUser != null)
+                if (HttpContext.Current.User.Identity.IsAuthenticated && CurrentUser != null)
                 {
                     Session["__UserIDOnFile"] = CurrentUser.UserID;
                 }
