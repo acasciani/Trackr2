@@ -1,0 +1,15 @@
+﻿.Messenger .nav-tabs .glyphicon:not(.no-margin) { margin-right:10px; }
+.Messenger .tab-pane .list-group-item:first-child {border-top-right-radius: 0px;border-top-left-radius: 0px;}
+.Messenger .tab-pane .list-group-item:last-child {border-bottom-right-radius: 0px;border-bottom-left-radius: 0px;}
+.Messenger .tab-pane .list-group .checkbox { display: inline-block;margin: 0px; }
+.Messenger .tab-pane .list-group input[type="checkbox"]{ margin-top: 2px; }
+.Messenger .tab-pane .list-group .glyphicon { margin-right:5px; }
+.Messenger .tab-pane .list-group .glyphicon:hover { color:#FFBC00; }
+.Messenger a.list-group-item { font-weight:bold; }
+.Messenger a.list-group-item.read { color: #222;background-color: #F3F3F3; font-weight: normal; }
+.Messenger hr { margin-top: 5px;margin-bottom: 10px; }
+.Messenger .nav-pills>li>a {padding: 5px 10px;}
+
+.Messenger .ad { padding: 5px;background: #F5F5F5;color: #222;font-size: 80%;border: 1px solid #E5E5E5; }
+.Messenger .ad a.title {color: #15C;text-decoration: none;font-weight: bold;font-size: 110%;}
+.Messenger .ad a.url {color: #093;text-decoration: none;}

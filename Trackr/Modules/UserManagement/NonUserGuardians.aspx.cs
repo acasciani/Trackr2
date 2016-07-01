@@ -175,32 +175,32 @@ namespace Trackr.Modules.UserManagement
 
                             try
                             {
-                                List<Messenger.EmailRecipient> recipients = new List<Messenger.EmailRecipient>();
-                                recipients.Add(new Messenger.EmailRecipient()
+                                List<Trackr.Utils.Messenger.EmailRecipient> recipients = new List<Trackr.Utils.Messenger.EmailRecipient>();
+                                recipients.Add(new Trackr.Utils.Messenger.EmailRecipient()
                                 {
                                     Email = email,
                                     Name = person.FName + " " + person.LName,
-                                    RecipientType = Messenger.EmailRecipientType.TO
+                                    RecipientType = Trackr.Utils.Messenger.EmailRecipientType.TO
                                 });
 
-                                List<Messenger.TemplateVariable> variables = new List<Messenger.TemplateVariable>();
-                                variables.Add(new Messenger.TemplateVariable()
+                                List<Trackr.Utils.Messenger.TemplateVariable> variables = new List<Trackr.Utils.Messenger.TemplateVariable>();
+                                variables.Add(new Trackr.Utils.Messenger.TemplateVariable()
                                 {
                                     VariableName = "PersonName",
                                     VariableContent = person.FName + " " + person.LName
                                 });
-                                variables.Add(new Messenger.TemplateVariable()
+                                variables.Add(new Trackr.Utils.Messenger.TemplateVariable()
                                 {
                                     VariableName = "LoginEmail",
                                     VariableContent = email
                                 });
-                                variables.Add(new Messenger.TemplateVariable()
+                                variables.Add(new Trackr.Utils.Messenger.TemplateVariable()
                                 {
                                     VariableName = "LoginPassword",
                                     VariableContent = password
                                 });
 
-                                Messenger.SendEmail("user-account-created", null, variables, recipients, false, false);
+                                Trackr.Utils.Messenger.SendEmail("user-account-created", null, variables, recipients, false, false);
 
                                 AlertBox.AddAlert(string.Format("Successfully created user account for {0} and emailed them their login information.", email));
                             }

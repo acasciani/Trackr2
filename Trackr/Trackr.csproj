@@ -231,9 +231,11 @@
     <Content Include="Content\images\ganandalogo.png" />
     <Content Include="Content\images\highlight.png" />
     <Content Include="Content\menu\left-full.css" />
+    <Content Include="Content\Messenger.css" />
     <Content Include="Content\Site.css" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
+    <Content Include="Modules\Messenger\Default.aspx" />
     <Content Include="Modules\Registration\Default.aspx" />
     <Content Include="Modules\Scheduler\ManageEvent.aspx" />
     <Content Include="Modules\Scheduler\Default.aspx" />
@@ -253,6 +255,7 @@
     <Compile Include="Controllers\AddressesController.cs" />
     <Compile Include="Controllers\Scoping\TeamsController.Partial.cs" />
     <Content Include="Modules\Scheduler\Scheduler.master" />
+    <Content Include="Modules\Messenger\Messenger.master" />
     <None Include="Properties\PublishProfiles\Stage.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -339,6 +342,20 @@
     <Compile Include="Controllers\Scoping\ProgramsController.Partial.cs" />
     <Compile Include="Controllers\GuardiansController.cs" />
     <Compile Include="Controllers\EmailAddressesController.cs" />
+    <Compile Include="Modules\Messenger\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Messenger\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Messenger\Messenger.master.cs">
+      <DependentUpon>Messenger.master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Messenger\Messenger.master.designer.cs">
+      <DependentUpon>Messenger.master</DependentUpon>
+    </Compile>
     <Compile Include="Modules\Registration\Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

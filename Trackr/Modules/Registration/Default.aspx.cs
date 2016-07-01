@@ -202,37 +202,37 @@ namespace Trackr.Modules.Registration
 
                                     TeamPlayer tp = tpc.GetWhere(i => i.TeamPlayerID == addedTeamPlayer.TeamPlayerID, fetchTeam).First();
 
-                                    List<Messenger.EmailRecipient> recipients = new List<Messenger.EmailRecipient>();
+                                    List<Trackr.Utils.Messenger.EmailRecipient> recipients = new List<Trackr.Utils.Messenger.EmailRecipient>();
 
                                     guardians.ForEach(i => 
                                     {
                                         string name = (i.FName + " " + i.LName).Trim();
-                                        i.EmailAddresses.Where(j => j.Active).Select(j => j.Email).Distinct().ToList().ForEach(j => recipients.Add(new Messenger.EmailRecipient()
+                                        i.EmailAddresses.Where(j => j.Active).Select(j => j.Email).Distinct().ToList().ForEach(j => recipients.Add(new Trackr.Utils.Messenger.EmailRecipient()
                                         {
                                             Email = j,
                                             Name = name,
-                                            RecipientType = Messenger.EmailRecipientType.TO
+                                            RecipientType = Trackr.Utils.Messenger.EmailRecipientType.TO
                                         }));
                                     });
 
-                                    List<Messenger.TemplateVariable> variables = new List<Messenger.TemplateVariable>();
-                                    variables.Add(new Messenger.TemplateVariable()
+                                    List<Trackr.Utils.Messenger.TemplateVariable> variables = new List<Trackr.Utils.Messenger.TemplateVariable>();
+                                    variables.Add(new Trackr.Utils.Messenger.TemplateVariable()
                                     {
                                         VariableName = "GuardianNames",
                                         VariableContent = toName
                                     });
-                                    variables.Add(new Messenger.TemplateVariable()
+                                    variables.Add(new Trackr.Utils.Messenger.TemplateVariable()
                                     {
                                         VariableName = "TeamName",
                                         VariableContent = tp.Team.TeamName
                                     });
-                                    variables.Add(new Messenger.TemplateVariable()
+                                    variables.Add(new Trackr.Utils.Messenger.TemplateVariable()
                                     {
                                         VariableName = "ChildName",
                                         VariableContent = tp.Player.Person.FName
                                     });
 
-                                    Messenger.SendEmail("registration-successful", null, variables, recipients, false, false);
+                                    Trackr.Utils.Messenger.SendEmail("registration-successful", null, variables, recipients, false, false);
                                 }
                             }
                         }
