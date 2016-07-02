@@ -13,5 +13,11 @@ namespace Trackr.Modules.Messenger
         {
 
         }
+
+        protected void lnkCompose_Click(object sender, EventArgs e)
+        {
+            divCompose.Visible = true;
+            ScriptManager.RegisterStartupScript(divCompose, divCompose.GetType(), "ToggleCompose", "$('.compose-message').modal('toggle');", true);
+        }
     }
 }

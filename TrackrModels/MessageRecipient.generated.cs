@@ -22,8 +22,21 @@ using TrackrModels;
 
 namespace TrackrModels	
 {
-	public partial class WebUser
+	public partial class MessageRecipient
 	{
+		private long _recipientID;
+		public virtual long RecipientID
+		{
+			get
+			{
+				return this._recipientID;
+			}
+			set
+			{
+				this._recipientID = value;
+			}
+		}
+		
 		private int _userID;
 		public virtual int UserID
 		{
@@ -37,69 +50,68 @@ namespace TrackrModels
 			}
 		}
 		
-		private string _email;
-		public virtual string Email
+		private long _messageID;
+		public virtual long MessageID
 		{
 			get
 			{
-				return this._email;
+				return this._messageID;
 			}
 			set
 			{
-				this._email = value;
+				this._messageID = value;
 			}
 		}
 		
-		private string _password;
-		public virtual string Password
+		private DateTime? _readDate;
+		public virtual DateTime? ReadDate
 		{
 			get
 			{
-				return this._password;
+				return this._readDate;
 			}
 			set
 			{
-				this._password = value;
+				this._readDate = value;
 			}
 		}
 		
-		private int _clubID;
-		public virtual int ClubID
+		private bool _isStarred;
+		public virtual bool IsStarred
 		{
 			get
 			{
-				return this._clubID;
+				return this._isStarred;
 			}
 			set
 			{
-				this._clubID = value;
+				this._isStarred = value;
 			}
 		}
 		
-		private IList<ScopeAssignment> _scopeAssignments = new List<ScopeAssignment>();
-		public virtual IList<ScopeAssignment> ScopeAssignments
+		private DateTime _sentDate;
+		public virtual DateTime SentDate
 		{
 			get
 			{
-				return this._scopeAssignments;
+				return this._sentDate;
+			}
+			set
+			{
+				this._sentDate = value;
 			}
 		}
 		
-		private IList<MessageRecipient> _messageRecipients = new List<MessageRecipient>();
-		public virtual IList<MessageRecipient> MessageRecipients
+		private Message _message;
+		public virtual Message Message
 		{
 			get
 			{
-				return this._messageRecipients;
+				return this._message;
 			}
-		}
-		
-		private IList<Message> _messages = new List<Message>();
-		public virtual IList<Message> Messages
-		{
-			get
+			set
 			{
-				return this._messages;
+				this._message = value;
 			}
 		}
 		

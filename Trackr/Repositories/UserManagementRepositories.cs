@@ -30,6 +30,16 @@ namespace Trackr
 
     }
 
+    public partial class MessageRepository : OpenAccessBaseRepository<TrackrModels.Message, TrackrModels.UserManagement>
+    {
+
+    }
+
+    public partial class MessageRecipientRepository : OpenAccessBaseRepository<TrackrModels.MessageRecipient, TrackrModels.UserManagement>
+    {
+
+    }
+
     public partial class NewUserMappingRepository : OpenAccessBaseRepository<TrackrModels.NewUserMapping, TrackrModels.UserManagement>
     {
 

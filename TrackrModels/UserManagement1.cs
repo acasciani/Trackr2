@@ -130,6 +130,22 @@ namespace TrackrModels
 			}
 		}
 		
+		public IQueryable<Message> Messages 
+		{
+			get
+			{
+				return this.GetAll<Message>();
+			}
+		}
+		
+		public IQueryable<MessageRecipient> MessageRecipients 
+		{
+			get
+			{
+				return this.GetAll<MessageRecipient>();
+			}
+		}
+		
 		public static BackendConfiguration GetBackendConfiguration()
 		{
 			BackendConfiguration backend = new BackendConfiguration();
@@ -188,6 +204,14 @@ namespace TrackrModels
 			get;
 		}
 		IQueryable<NewUserMapping> NewUserMappings
+		{
+			get;
+		}
+		IQueryable<Message> Messages
+		{
+			get;
+		}
+		IQueryable<MessageRecipient> MessageRecipients
 		{
 			get;
 		}

@@ -121,6 +121,12 @@
     <Compile Include="LinkPermission.generated.cs">
       <DependentUpon>UserManagement.rlinq</DependentUpon>
     </Compile>
+    <Compile Include="Message.generated.cs">
+      <DependentUpon>UserManagement.rlinq</DependentUpon>
+    </Compile>
+    <Compile Include="MessageRecipient.generated.cs">
+      <DependentUpon>UserManagement.rlinq</DependentUpon>
+    </Compile>
     <Compile Include="ModelPartials\Address.Partial.cs" />
     <Compile Include="ModelPartials\EmailAddress.Partial.cs" />
     <Compile Include="ModelPartials\Guardian.Partial.cs" />

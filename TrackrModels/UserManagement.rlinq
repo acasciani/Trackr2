@@ -26,6 +26,16 @@
         <orm:field name="_scopeAssignments" property="ScopeAssignments" behavior="readwrite" uniqueId="5f013196-918a-47d6-9235-d616983dff06" type="TrackrModels.ScopeAssignment">
           <orm:collection element-class="TrackrModels.ScopeAssignment" inverse-field="_webUser" order-by="" uniqueId="f3bde9fa-95cd-4b6c-b1d2-62aed54621c2" />
         </orm:field>
+        <orm:field name="_messageRecipients" property="MessageRecipients" behavior="readwrite" uniqueId="d7668207-eee7-4b4f-be00-dd5d00469be4" type="TrackrModels.MessageRecipient">
+          <orm:collection element-class="TrackrModels.MessageRecipient" order-by="" uniqueId="cfa56afe-089d-40ec-a684-8ffd63e2ed80">
+            <orm:sharedfield name="_userID" target-class="TrackrModels.WebUser" target-field="_userID" />
+          </orm:collection>
+        </orm:field>
+        <orm:field name="_messages" property="Messages" behavior="readwrite" uniqueId="9a1eb361-f6d2-448f-a0d8-070848ed7836" type="TrackrModels.Message">
+          <orm:collection element-class="TrackrModels.Message" order-by="" uniqueId="2a4c777a-f39a-493a-bd30-db8cb84e89d2">
+            <orm:sharedfield name="_fromID" target-class="TrackrModels.WebUser" target-field="_userID" />
+          </orm:collection>
+        </orm:field>
       </orm:class>
       <orm:class name="Scope" uniqueId="f4317e2f-ade7-4bf9-ae12-7cc7b5ceb026">
         <orm:table name="Scopes" />
@@ -336,6 +346,76 @@
           </orm:reference>
         </orm:field>
       </orm:class>
+      <orm:class name="Message" uniqueId="87317677-2ff3-498c-bfa9-fe866f34a964">
+        <orm:table name="Messages" />
+        <orm:identity>
+          <orm:key-generator name="autoinc">
+            <orm:key-generator-member property-name="MessageID" />
+          </orm:key-generator>
+          <orm:single-field field-name="_messageID" />
+        </orm:identity>
+        <orm:concurrency strategy="changed" />
+        <orm:field name="_messageID" property="MessageID" behavior="readwrite" uniqueId="23c8a928-af52-4413-ba6a-f9e5b41b2791" type="System.Int64">
+          <orm:column name="MessageID" sql-type="bigint" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int64" />
+        </orm:field>
+        <orm:field name="_body" property="Body" behavior="readwrite" uniqueId="b8b91553-23b8-47cc-a4ab-3e000da44083" type="System.String">
+          <orm:column name="Message" sql-type="varchar" nullable="true" length="2000" scale="0" ado-type="StringVariableLength" />
+        </orm:field>
+        <orm:field name="_parentMessageID" property="ParentMessageID" behavior="readwrite" uniqueId="5dbf9717-a2a8-461b-b662-498db5dfc4ea" type="System.Nullable`1[[System.Int64, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
+          <orm:column name="ParentMessageID" sql-type="bigint" nullable="true" length="0" scale="0" ado-type="Int64" />
+        </orm:field>
+        <orm:field name="_fromID" property="FromID" behavior="readwrite" uniqueId="7db7b58c-0d78-460d-aa02-ed128b07cfe5" type="System.Nullable`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
+          <orm:column name="FromID" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_createDate" property="CreateDate" behavior="readwrite" uniqueId="84dd81da-61c1-4a3d-bac3-b6b525bdf6a4" type="System.DateTime">
+          <orm:column name="CreateDate" sql-type="datetime" nullable="false" length="0" scale="0" ado-type="DateTime" />
+        </orm:field>
+        <orm:field name="_message2" property="ParentMessage" behavior="readwrite" uniqueId="2c032cd7-83c6-4766-812d-fec2dcc071e6" type="TrackrModels.Message">
+          <orm:reference uniqueId="451db33e-f72e-41ab-900a-6e073914febb" association-name="MessageHasMessage">
+            <orm:sharedfield name="_parentMessageID" target-class="TrackrModels.Message" target-field="_messageID" />
+            <orm:constraint name="FK_Messages_Messages" delete-action="dbdefaultrule" destination-table="Messages" />
+          </orm:reference>
+        </orm:field>
+        <orm:field name="_messages" property="Messages" behavior="readwrite" uniqueId="c5f08eca-36d8-4e69-a4b0-0b1c20e9f125" type="TrackrModels.Message">
+          <orm:collection element-class="TrackrModels.Message" inverse-field="_message2" order-by="" uniqueId="451db33e-f72e-41ab-900a-6e073914febb" />
+        </orm:field>
+        <orm:field name="_messageRecipients" property="MessageRecipients" behavior="readwrite" uniqueId="79490184-ace5-4ad9-a8c9-0a0f6152676c" type="TrackrModels.MessageRecipient">
+          <orm:collection element-class="TrackrModels.MessageRecipient" inverse-field="_message" order-by="" uniqueId="64a5752f-b26d-4873-bd03-097d86f6cb61" />
+        </orm:field>
+      </orm:class>
+      <orm:class name="MessageRecipient" uniqueId="23ddd66e-a1af-4c58-8471-3215e43a361a">
+        <orm:table name="MessageRecipients" />
+        <orm:identity>
+          <orm:key-generator name="autoinc">
+            <orm:key-generator-member property-name="RecipientID" />
+          </orm:key-generator>
+          <orm:single-field field-name="_recipientID" />
+        </orm:identity>
+        <orm:concurrency strategy="changed" />
+        <orm:field name="_recipientID" property="RecipientID" behavior="readwrite" uniqueId="d8c21ed6-de6f-4925-a598-e57b99db1dd0" type="System.Int64">
+          <orm:column name="RecipientID" sql-type="bigint" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int64" />
+        </orm:field>
+        <orm:field name="_userID" property="UserID" behavior="readwrite" uniqueId="82ba8dcb-a85e-48ef-8608-363e7cecf2a7" type="System.Int32">
+          <orm:column name="UserID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_messageID" property="MessageID" behavior="readwrite" uniqueId="7525a512-bc95-4efc-9f77-d07c4b6a5210" type="System.Int64">
+          <orm:column name="MessageID" sql-type="bigint" nullable="false" length="0" scale="0" ado-type="Int64" />
+        </orm:field>
+        <orm:field name="_readDate" property="ReadDate" behavior="readwrite" uniqueId="eb0d5110-8a22-4f15-a8a6-c4720e771397" type="System.Nullable`1[[System.DateTime, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
+          <orm:column name="ReadDate" sql-type="datetime" nullable="true" length="0" scale="0" ado-type="DateTime" />
+        </orm:field>
+        <orm:field name="_isStarred" property="IsStarred" behavior="readwrite" uniqueId="2f333dc2-ace1-43f8-b919-394bbe7cc70b" type="System.Boolean">
+          <orm:column name="IsStarred" sql-type="bit" nullable="false" length="0" scale="0" ado-type="Bit" />
+        </orm:field>
+        <orm:field name="_sentDate" property="SentDate" behavior="readwrite" uniqueId="94c769d8-ce4d-4905-b2e9-bc8980b378e4" type="System.DateTime">
+          <orm:column name="SentDate" sql-type="datetime" nullable="false" length="0" scale="0" ado-type="DateTime" />
+        </orm:field>
+        <orm:field name="_message" property="Message" behavior="readwrite" uniqueId="a959f758-6ab0-4625-9a30-4fe0c7a2e4f1" type="TrackrModels.Message">
+          <orm:reference uniqueId="64a5752f-b26d-4873-bd03-097d86f6cb61" association-name="MessageRecipientHasMessage">
+            <orm:sharedfield name="_messageID" target-class="TrackrModels.Message" target-field="_messageID" />
+          </orm:reference>
+        </orm:field>
+      </orm:class>
     </orm:namespace>
     <orm:schema schema="">
       <orm:table name="WebUsers">
@@ -440,6 +520,33 @@
           <orm:column name="RoleID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
         </orm:constraint>
       </orm:table>
+      <orm:table name="Messages">
+        <orm:column name="MessageID" sql-type="bigint" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int64" />
+        <orm:column name="Message" sql-type="varchar" nullable="true" length="2000" scale="0" ado-type="StringVariableLength" />
+        <orm:column name="ParentMessageID" sql-type="bigint" nullable="true" length="0" scale="0" ado-type="Int64" />
+        <orm:column name="FromID" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        <orm:column name="CreateDate" sql-type="datetime" nullable="false" length="0" scale="0" ado-type="DateTime" />
+        <orm:constraint name="FK_Messages_WebUsers" delete-action="dbdefaultrule" destination-table="WebUsers">
+          <orm:column name="FromID" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        </orm:constraint>
+        <orm:constraint name="FK_Messages_Messages" delete-action="dbdefaultrule" destination-table="Messages">
+          <orm:column name="ParentMessageID" sql-type="bigint" nullable="true" length="0" scale="0" ado-type="Int64" />
+        </orm:constraint>
+      </orm:table>
+      <orm:table name="MessageRecipients">
+        <orm:column name="RecipientID" sql-type="bigint" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int64" />
+        <orm:column name="UserID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        <orm:column name="MessageID" sql-type="bigint" nullable="false" length="0" scale="0" ado-type="Int64" />
+        <orm:column name="ReadDate" sql-type="datetime" nullable="true" length="0" scale="0" ado-type="DateTime" />
+        <orm:column name="IsStarred" sql-type="bit" nullable="false" length="0" scale="0" ado-type="Bit" />
+        <orm:column name="SentDate" sql-type="datetime" nullable="false" length="0" scale="0" ado-type="DateTime" />
+        <orm:constraint name="FK_MessageRecipients_WebUsers" delete-action="dbdefaultrule" destination-table="WebUsers">
+          <orm:column name="UserID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:constraint>
+        <orm:constraint name="FK_MessageRecipients_Messages" delete-action="dbdefaultrule" destination-table="Messages">
+          <orm:column name="MessageID" sql-type="bigint" nullable="false" length="0" scale="0" ado-type="Int64" />
+        </orm:constraint>
+      </orm:table>
     </orm:schema>
     <orm:relational-naming-settings>
       <orm:source-strategy>Property</orm:source-strategy>
@@ -484,6 +591,12 @@
       <navigationalProperties>
         <classHasNavigationalProperties Id="11bc889f-6326-480c-b769-1463f46e37c9">
           <NavigationalProperty Id="5f013196-918a-47d6-9235-d616983dff06" name="ScopeAssignments" type="IList&lt;ScopeAssignment&gt;" label="ScopeAssignments : IList&lt;ScopeAssignment&gt;" nullable="true" kind="Persistent" fieldName="_scopeAssignments" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+        <classHasNavigationalProperties Id="d2a1608e-d3cc-4042-8889-5f8d7788172d">
+          <NavigationalProperty Id="9a1eb361-f6d2-448f-a0d8-070848ed7836" name="Messages" type="IList&lt;Message&gt;" label="Messages : IList&lt;Message&gt;" nullable="true" kind="Persistent" fieldName="_messages" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+        <classHasNavigationalProperties Id="ad0a5f00-502e-46ac-996e-a6fb9ec13d50">
+          <NavigationalProperty Id="d7668207-eee7-4b4f-be00-dd5d00469be4" name="MessageRecipients" type="IList&lt;MessageRecipient&gt;" label="MessageRecipients : IList&lt;MessageRecipient&gt;" nullable="true" kind="Persistent" fieldName="_messageRecipients" isDependent="false" isManaged="false" />
         </classHasNavigationalProperties>
       </navigationalProperties>
     </DomainClass>
@@ -779,6 +892,83 @@
         </classHasNavigationalProperties>
       </navigationalProperties>
     </DomainClass>
+    <DomainClass Id="87317677-2ff3-498c-bfa9-fe866f34a964" name="Message" namespace="TrackrModels" showPropertiesCompartment="true" identityMechanism="DatabaseServerCalculated" concurrencyMode="Changed" showNavigationCompartment="true" showImplementationCompartment="true" identityMechanismMember="MessageID">
+      <Property Id="23c8a928-af52-4413-ba6a-f9e5b41b2791" name="MessageID" type="Int64" label="MessageID : Int64" kind="Persistent" identity="true" fieldName="_messageID" />
+      <Property Id="84dd81da-61c1-4a3d-bac3-b6b525bdf6a4" name="CreateDate" type="DateTime" label="CreateDate : DateTime" kind="Persistent" fieldName="_createDate" />
+      <Property Id="7db7b58c-0d78-460d-aa02-ed128b07cfe5" name="FromID" type="Int32" label="FromID : Int32" nullable="true" kind="Persistent" fieldName="_fromID" />
+      <Property Id="b8b91553-23b8-47cc-a4ab-3e000da44083" name="Body" label="Body : String" kind="Persistent" fieldName="_body" />
+      <Property Id="5dbf9717-a2a8-461b-b662-498db5dfc4ea" name="ParentMessageID" type="Int64" label="ParentMessageID : Int64" nullable="true" kind="Persistent" fieldName="_parentMessageID" />
+      <AssociationTargets>
+        <Association Id="2a4c777a-f39a-493a-bd30-db8cb84e89d2" SourceMultiplicity="ZeroOne" name="MessageHasWebUser">
+          <DomainClassMoniker name="/UserManagement/WebUser" />
+          <targetNavigationalProperty>
+            <associationDefinesTargetProperty Id="348fbefb-0747-4b9b-af13-f865f457632a">
+              <NavigationalPropertyMoniker name="/UserManagement/WebUser/Messages" />
+            </associationDefinesTargetProperty>
+          </targetNavigationalProperty>
+        </Association>
+        <Association Id="451db33e-f72e-41ab-900a-6e073914febb" SourceMultiplicity="ZeroOne" name="MessageHasMessage">
+          <DomainClassMoniker name="/UserManagement/Message" />
+          <targetNavigationalProperty>
+            <associationDefinesTargetProperty Id="68faae0a-9c42-4ef7-8ea9-1faa342bd927">
+              <NavigationalPropertyMoniker name="/UserManagement/Message/Messages" />
+            </associationDefinesTargetProperty>
+          </targetNavigationalProperty>
+          <sourceNavigationalProperty>
+            <associationDefinesSourceProperty Id="44467536-2aa9-4729-9c6a-e47fad9baab2">
+              <NavigationalPropertyMoniker name="/UserManagement/Message/ParentMessage" />
+            </associationDefinesSourceProperty>
+          </sourceNavigationalProperty>
+        </Association>
+      </AssociationTargets>
+      <navigationalProperties>
+        <classHasNavigationalProperties Id="a9941ea8-35fc-4fa9-b400-dfcdd40a83bf">
+          <NavigationalProperty Id="2c032cd7-83c6-4766-812d-fec2dcc071e6" name="ParentMessage" type="Message" label="ParentMessage : Message" nullable="true" kind="Persistent" fieldName="_message2" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+        <classHasNavigationalProperties Id="2d055e78-a6fb-4f25-9ebe-1e9e68624e63">
+          <NavigationalProperty Id="c5f08eca-36d8-4e69-a4b0-0b1c20e9f125" name="Messages" type="IList&lt;Message&gt;" label="Messages : IList&lt;Message&gt;" nullable="true" kind="Persistent" fieldName="_messages" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+        <classHasNavigationalProperties Id="4cbe2f56-1fa7-4dff-9c5b-9bf29d5c35d6">
+          <NavigationalProperty Id="79490184-ace5-4ad9-a8c9-0a0f6152676c" name="MessageRecipients" type="IList&lt;MessageRecipient&gt;" label="MessageRecipients : IList&lt;MessageRecipient&gt;" nullable="true" kind="Persistent" fieldName="_messageRecipients" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+      </navigationalProperties>
+    </DomainClass>
+    <DomainClass Id="23ddd66e-a1af-4c58-8471-3215e43a361a" name="MessageRecipient" namespace="TrackrModels" showPropertiesCompartment="true" identityMechanism="DatabaseServerCalculated" concurrencyMode="Changed" showNavigationCompartment="true" showImplementationCompartment="true" identityMechanismMember="RecipientID">
+      <Property Id="d8c21ed6-de6f-4925-a598-e57b99db1dd0" name="RecipientID" type="Int64" label="RecipientID : Int64" kind="Persistent" identity="true" fieldName="_recipientID" />
+      <Property Id="2f333dc2-ace1-43f8-b919-394bbe7cc70b" name="IsStarred" type="Boolean" label="IsStarred : Boolean" kind="Persistent" fieldName="_isStarred" />
+      <Property Id="7525a512-bc95-4efc-9f77-d07c4b6a5210" name="MessageID" type="Int64" label="MessageID : Int64" kind="Persistent" fieldName="_messageID" />
+      <Property Id="eb0d5110-8a22-4f15-a8a6-c4720e771397" name="ReadDate" type="DateTime" label="ReadDate : DateTime" nullable="true" kind="Persistent" fieldName="_readDate" />
+      <Property Id="82ba8dcb-a85e-48ef-8608-363e7cecf2a7" name="UserID" type="Int32" label="UserID : Int32" kind="Persistent" fieldName="_userID" />
+      <Property Id="94c769d8-ce4d-4905-b2e9-bc8980b378e4" name="SentDate" type="DateTime" label="SentDate : DateTime" kind="Persistent" fieldName="_sentDate" />
+      <AssociationTargets>
+        <Association Id="cfa56afe-089d-40ec-a684-8ffd63e2ed80" SourceMultiplicity="ZeroOne" name="MessageRecipientHasWebUser">
+          <DomainClassMoniker name="/UserManagement/WebUser" />
+          <targetNavigationalProperty>
+            <associationDefinesTargetProperty Id="606bb319-a8a1-4d10-941d-1d4b2cadcbb6">
+              <NavigationalPropertyMoniker name="/UserManagement/WebUser/MessageRecipients" />
+            </associationDefinesTargetProperty>
+          </targetNavigationalProperty>
+        </Association>
+        <Association Id="64a5752f-b26d-4873-bd03-097d86f6cb61" SourceMultiplicity="ZeroOne" name="MessageRecipientHasMessage">
+          <DomainClassMoniker name="/UserManagement/Message" />
+          <targetNavigationalProperty>
+            <associationDefinesTargetProperty Id="3faa7493-a42f-45e1-86b4-166f16cade98">
+              <NavigationalPropertyMoniker name="/UserManagement/Message/MessageRecipients" />
+            </associationDefinesTargetProperty>
+          </targetNavigationalProperty>
+          <sourceNavigationalProperty>
+            <associationDefinesSourceProperty Id="5fe1ce92-74c4-4aee-a6e8-270e799096f7">
+              <NavigationalPropertyMoniker name="/UserManagement/MessageRecipient/Message" />
+            </associationDefinesSourceProperty>
+          </sourceNavigationalProperty>
+        </Association>
+      </AssociationTargets>
+      <navigationalProperties>
+        <classHasNavigationalProperties Id="028fd4b1-dd4c-4fd3-a4a4-864ae5897e10">
+          <NavigationalProperty Id="a959f758-6ab0-4625-9a30-4fe0c7a2e4f1" name="Message" type="Message" label="Message : Message" nullable="true" kind="Persistent" fieldName="_message" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+      </navigationalProperties>
+    </DomainClass>
   </Types>
   <domainContext>
     <domainModelHasDomainContext Id="c6dd559c-9940-444f-ad43-e37bbf671b13">
@@ -793,6 +983,8 @@
         <entitySetProperty name="LinkGroups" namespace="TrackrModels" type="LinkGroup" label="LinkGroups : IQueryable&lt;TrackrModels.LinkGroup&gt;" />
         <entitySetProperty name="Glyphicons" namespace="TrackrModels" type="Glyphicon" label="Glyphicons : IQueryable&lt;TrackrModels.Glyphicon&gt;" />
         <entitySetProperty name="NewUserMappings" namespace="TrackrModels" type="NewUserMapping" label="NewUserMappings : IQueryable&lt;TrackrModels.NewUserMapping&gt;" />
+        <entitySetProperty name="Messages" namespace="TrackrModels" type="Message" label="Messages : IQueryable&lt;TrackrModels.Message&gt;" />
+        <entitySetProperty name="MessageRecipients" namespace="TrackrModels" type="MessageRecipient" label="MessageRecipients : IQueryable&lt;TrackrModels.MessageRecipient&gt;" />
       </domainContainer>
     </domainModelHasDomainContext>
   </domainContext>

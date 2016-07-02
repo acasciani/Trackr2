@@ -22,75 +22,83 @@ using TrackrModels;
 
 namespace TrackrModels	
 {
-	public partial class WebUser
+	public partial class Message
 	{
-		private int _userID;
-		public virtual int UserID
+		private long _messageID;
+		public virtual long MessageID
 		{
 			get
 			{
-				return this._userID;
+				return this._messageID;
 			}
 			set
 			{
-				this._userID = value;
+				this._messageID = value;
 			}
 		}
 		
-		private string _email;
-		public virtual string Email
+		private string _body;
+		public virtual string Body
 		{
 			get
 			{
-				return this._email;
+				return this._body;
 			}
 			set
 			{
-				this._email = value;
+				this._body = value;
 			}
 		}
 		
-		private string _password;
-		public virtual string Password
+		private long? _parentMessageID;
+		public virtual long? ParentMessageID
 		{
 			get
 			{
-				return this._password;
+				return this._parentMessageID;
 			}
 			set
 			{
-				this._password = value;
+				this._parentMessageID = value;
 			}
 		}
 		
-		private int _clubID;
-		public virtual int ClubID
+		private int? _fromID;
+		public virtual int? FromID
 		{
 			get
 			{
-				return this._clubID;
+				return this._fromID;
 			}
 			set
 			{
-				this._clubID = value;
+				this._fromID = value;
 			}
 		}
 		
-		private IList<ScopeAssignment> _scopeAssignments = new List<ScopeAssignment>();
-		public virtual IList<ScopeAssignment> ScopeAssignments
+		private DateTime _createDate;
+		public virtual DateTime CreateDate
 		{
 			get
 			{
-				return this._scopeAssignments;
+				return this._createDate;
+			}
+			set
+			{
+				this._createDate = value;
 			}
 		}
 		
-		private IList<MessageRecipient> _messageRecipients = new List<MessageRecipient>();
-		public virtual IList<MessageRecipient> MessageRecipients
+		private Message _message2;
+		public virtual Message ParentMessage
 		{
 			get
 			{
-				return this._messageRecipients;
+				return this._message2;
+			}
+			set
+			{
+				this._message2 = value;
 			}
 		}
 		
@@ -100,6 +108,15 @@ namespace TrackrModels
 			get
 			{
 				return this._messages;
+			}
+		}
+		
+		private IList<MessageRecipient> _messageRecipients = new List<MessageRecipient>();
+		public virtual IList<MessageRecipient> MessageRecipients
+		{
+			get
+			{
+				return this._messageRecipients;
 			}
 		}
 		
