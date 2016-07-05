@@ -24,8 +24,58 @@
     </div>
 </div>
 
-    <!-- Large modal -->
+    <!-- compose -->
     <div style="position:absolute;" runat="server" id="divCompose" visible="false">
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var recipientsSource = new Bloodhound({
+                datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                prefetch: '/webhandlers/messenger/recipients.ashx',
+                remote: {
+                    url: '/webhandlers/messenger/recipients.ashx?query=%QUERY',
+                    wildcard: '%QUERY'
+                }
+            });
+
+            recipientsSource.initialize();
+
+
+            $('#<%=txtRecipients.ClientID%>')
+
+              .on('tokenfield:createtoken', function (e) {
+                  var data = e.attrs.value.split('|')
+                  e.attrs.value = data[1] || data[0]
+                  e.attrs.label = data[1] ? data[0] + ' (' + data[1] + ')' : data[0]
+              })
+
+              .on('tokenfield:createdtoken', function (e) {
+                  // Über-simplistic e-mail validation
+                  var re = /\S+@\S+\.\S+/
+                  var valid = re.test(e.attrs.value)
+                  if (!valid) {
+                      $(e.relatedTarget).addClass('invalid')
+                  }
+              })
+
+              .on('tokenfield:edittoken', function (e) {
+                  if (e.attrs.label !== e.attrs.value) {
+                      var label = e.attrs.label.split(' (')
+                      e.attrs.value = label[0] + '|' + e.attrs.value
+                  }
+              })
+
+              .on('tokenfield:removedtoken', function (e) {
+              
+              })
+
+              .tokenfield({
+                  typeahead: [null, { name: 'recipients', displayKey: 'Email', source: recipientsSource.ttAdapter() }]
+              });
+        });
+    </script>
+
+
         <div class="modal fade compose-message" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
           <div class="modal-dialog modal-lg">
             <div class="modal-content">

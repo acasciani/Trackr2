@@ -45,6 +45,9 @@
                 <asp:ScriptReference Path="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js" />
                 <asp:ScriptReference Path="https://cdnjs.cloudflare.com/ajax/libs/jquery-dateFormat/1.0/jquery.dateFormat.min.js" />
                 <asp:ScriptReference Path="~/Scripts/clndr.min.js" />
+                <asp:ScriptReference Path="~/Scripts/bloodhound.min.js" />
+                <asp:ScriptReference Path="~/Scripts/typeahead.bundle.min.js" />
+                <asp:ScriptReference Path="~/Scripts/bootstrap-tokenfield.js" />
                 <%--Site Scripts--%>
             </Scripts>
         </asp:ScriptManager>
