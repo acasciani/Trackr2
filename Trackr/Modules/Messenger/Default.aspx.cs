@@ -59,7 +59,9 @@ namespace Trackr.Modules.Messenger
             rptEmail.DataBind();
 
             litResultsPPMin.Text = ((PageIndex - 1) * ResultsPerPage + 1).ToString();
-            litResultsPPMax.Text = ((PageIndex - 1) * ResultsPerPage + ResultsPerPage).ToString();
+
+            int max = (PageIndex - 1) * ResultsPerPage + ResultsPerPage;
+            litResultsPPMax.Text = (max < messages.Count() ? max : messages.Count()).ToString();
             litResultsPPTotal.Text = messages.Count().ToString();
             divResultsPP.Visible = messages.Count() > 0;
             divNoMessages.Visible = messages.Count() == 0;

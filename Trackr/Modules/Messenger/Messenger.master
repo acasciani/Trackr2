@@ -7,7 +7,7 @@
 
     <div class="Messenger">
         <div class="row">
-            <div class="col-sm-3 col-md-2">
+            <div class="col-md-3 col-lg-2">
                 <asp:LinkButton runat="server" ID="lnkCompose" OnClick="lnkCompose_Click" CssClass="btn btn-danger btn-sm btn-block" CausesValidation="false">COMPOSE</asp:LinkButton>
                 <hr />
                 <ul class="nav nav-pills nav-stacked">
@@ -19,7 +19,7 @@
                     <li><a href="http://www.jquery2dotnet.com"><span class="badge pull-right">3</span>Drafts</a></li>
                 </ul>
             </div>
-            <div class="col-sm-9 col-md-10">
+            <div class="col-md-9 col-lg-10">
                 <asp:ContentPlaceHolder ID="NestedContent" runat="server"></asp:ContentPlaceHolder>
             </div>
         </div>

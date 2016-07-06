@@ -9,12 +9,8 @@
             <div class="col-sm-12">
                 <!-- Split button -->
                 <div class="btn-group">
-                    <button type="button" class="btn btn-default">
-                        <div class="checkbox" style="margin: 0;">
-                            <label>
-                                <input type="checkbox">
-                            </label>
-                        </div>
+                    <button type="button" class="btn btn-default" style="line-height: 16px;">
+                            <input type="checkbox">
                     </button>
                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                         <span class="caret"></span><span class="sr-only">Toggle Dropdown</span>
@@ -117,15 +113,7 @@
                 <div class="tab-pane fade in" id="settings">
                     This tab is empty.</div>
             </div>
-            <!-- Ad -->
-            <div class="row-md-12">
-                <div class="ad">
-                    <a href="http://www.jquery2dotnet.com" class="title">jQuery2DotNet</a>
-                    <div>
-                        Cool jQuery, CSS3, HTML5, Bootstrap, and MVC tutorial</div>
-                    <a href="http://www.jquery2dotnet.com" class="url">www.jquery2dotnet.com</a>
-                </div>
-            </div>
+
                 </div>
             </div>
 

@@ -72,10 +72,10 @@ namespace Trackr.Modules.Messenger
                     txtMessage.Text = "";
 
 
-                    //Master.AddAlert("Successfully sent message.", UI.AlertBoxType.Success);
+                    Master.AddAlert("Successfully sent message.", UI.AlertBoxType.Success);
                     divCompose.Visible = false;
                     upNested.Update();
-                    ScriptManager.RegisterStartupScript(this, this.GetType(), "modal", "$('.modal-backdrop').remove()", true);
+                    ScriptManager.RegisterStartupScript(upModal, upModal.GetType(), "ToggleCompose", "$('.modal-backdrop').remove()", true);
                 }
             }
             catch (Exception ex)
@@ -95,14 +95,22 @@ namespace Trackr.Modules.Messenger
 
                 int clubID = (Page as Trackr.Page).CurrentUser.ClubID;
 
-                List<string> emailRecipients = txtRecipients.Text.Split(',').Select(i => i.Trim().ToUpper()).Distinct().ToList();
+                List<string> emailRecipients = txtRecipients.Text.Split(',').Select(i => i.Trim()).Distinct().ToList();
+                List<string> emailRecipientsUpper = emailRecipients.Select(i => i.Trim().ToUpper()).Distinct().ToList();
 
                 using (TrackrModels.UserManagement um = new TrackrModels.UserManagement())
                 {
-                    List<string> recipientsNotAuthorizedFor = um.WebUsers.Where(i => i.ClubID != clubID && emailRecipients.Contains(i.Email.ToUpper())).Select(i => i.Email).Distinct().ToList();
 
-                    validatorRecipientListOK.ErrorMessage = string.Format(validatorRecipientListOK.ErrorMessage, string.Join(", ", recipientsNotAuthorizedFor));
-                    args.IsValid = recipientsNotAuthorizedFor.Count() == 0;
+                    List<string> recipientsNotAuthorizedFor = um.WebUsers.Where(i => emailRecipientsUpper.Contains(i.Email.ToUpper()) && i.ClubID != clubID)
+                        .Select(i => i.Email).Distinct().ToList();
+
+                    List<string> existingEmails = um.WebUsers.Where(i => emailRecipientsUpper.Contains(i.Email.ToUpper())).Select(i => i.Email.ToUpper()).Distinct().ToList();
+
+                    List<string> nonExistantEmails = emailRecipients.Where(i => !existingEmails.Contains(i.ToUpper())).Distinct().ToList();
+
+
+                    validatorRecipientListOK.ErrorMessage = string.Format(validatorRecipientListOK.ErrorMessage, string.Join(", ", recipientsNotAuthorizedFor.Union(nonExistantEmails).OrderBy(i => i)));
+                    args.IsValid = recipientsNotAuthorizedFor.Count() == 0 && nonExistantEmails.Count() == 0;
                 }
             }
             catch (Exception ex)
