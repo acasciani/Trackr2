@@ -1,105 +1,125 @@
 ﻿<%@ Master Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Messenger.master.cs" Inherits="Trackr.Modules.Messenger.Messenger" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
-    
+    <asp:UpdatePanel runat="server" ID="upNested" UpdateMode="Conditional">
+        <ContentTemplate>
 
-<div class="Messenger">
 
-    <div class="row">
-        <div class="col-sm-3 col-md-2">
-            <asp:LinkButton runat="server" ID="lnkCompose" OnClick="lnkCompose_Click" CssClass="btn btn-danger btn-sm btn-block">COMPOSE</asp:LinkButton>
-            <hr />
-            <ul class="nav nav-pills nav-stacked">
-                <li class="active"><a href="#"><span class="badge pull-right">42</span> Inbox </a>
-                </li>
-                <li><a href="http://www.jquery2dotnet.com">Starred</a></li>
-                <li><a href="http://www.jquery2dotnet.com">Important</a></li>
-                <li><a href="http://www.jquery2dotnet.com">Sent Mail</a></li>
-                <li><a href="http://www.jquery2dotnet.com"><span class="badge pull-right">3</span>Drafts</a></li>
-            </ul>
-        </div>
-        <div class="col-sm-9 col-md-10">
-            <asp:ContentPlaceHolder ID="NestedContent" runat="server"></asp:ContentPlaceHolder>
+    <div class="Messenger">
+        <div class="row">
+            <div class="col-sm-3 col-md-2">
+                <asp:LinkButton runat="server" ID="lnkCompose" OnClick="lnkCompose_Click" CssClass="btn btn-danger btn-sm btn-block" CausesValidation="false">COMPOSE</asp:LinkButton>
+                <hr />
+                <ul class="nav nav-pills nav-stacked">
+                    <li class="active"><a href="#"><span class="badge pull-right">42</span> Inbox </a>
+                    </li>
+                    <li><a href="http://www.jquery2dotnet.com">Starred</a></li>
+                    <li><a href="http://www.jquery2dotnet.com">Important</a></li>
+                    <li><a href="http://www.jquery2dotnet.com">Sent Mail</a></li>
+                    <li><a href="http://www.jquery2dotnet.com"><span class="badge pull-right">3</span>Drafts</a></li>
+                </ul>
+            </div>
+            <div class="col-sm-9 col-md-10">
+                <asp:ContentPlaceHolder ID="NestedContent" runat="server"></asp:ContentPlaceHolder>
+            </div>
         </div>
     </div>
-</div>
 
     <!-- compose -->
-    <div style="position:absolute;" runat="server" id="divCompose" visible="false">
-    <script type="text/javascript">
-        $(document).ready(function () {
-            var recipientsSource = new Bloodhound({
-                datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
-                queryTokenizer: Bloodhound.tokenizers.whitespace,
-                prefetch: '/webhandlers/messenger/recipients.ashx',
-                remote: {
-                    url: '/webhandlers/messenger/recipients.ashx?query=%QUERY',
-                    wildcard: '%QUERY'
-                }
-            });
-
-            recipientsSource.initialize();
-
-
-            $('#<%=txtRecipients.ClientID%>')
-
-              .on('tokenfield:createtoken', function (e) {
-                  var data = e.attrs.value.split('|')
-                  e.attrs.value = data[1] || data[0]
-                  e.attrs.label = data[1] ? data[0] + ' (' + data[1] + ')' : data[0]
-              })
-
-              .on('tokenfield:createdtoken', function (e) {
-                  // Über-simplistic e-mail validation
-                  var re = /\S+@\S+\.\S+/
-                  var valid = re.test(e.attrs.value)
-                  if (!valid) {
-                      $(e.relatedTarget).addClass('invalid')
-                  }
-              })
-
-              .on('tokenfield:edittoken', function (e) {
-                  if (e.attrs.label !== e.attrs.value) {
-                      var label = e.attrs.label.split(' (')
-                      e.attrs.value = label[0] + '|' + e.attrs.value
-                  }
-              })
-
-              .on('tokenfield:removedtoken', function (e) {
-              
-              })
-
-              .tokenfield({
-                  typeahead: [null, { name: 'recipients', displayKey: 'Email', source: recipientsSource.ttAdapter() }]
-              });
-        });
-    </script>
-
+    <div style="position: absolute;" runat="server" id="divCompose">
 
         <div class="modal fade compose-message" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
-          <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Compose New Message</h4>
-              </div>
-              <div class="modal-body">
-                  <div class="row form-group">
-                                <label for="<%=txtRecipients.ClientID %>" class="col-sm-12 control-label">Recipients</label>
-                                <div class="col-sm-12">
-                                    <asp:TextBox runat="server" ID="txtRecipients" CssClass="form-control" TextMode="MultiLine" Rows="2" />
-                                    <asp:RequiredFieldValidator Display="Dynamic" runat="server" ID="validatorFirstNameRequired" ControlToValidate="txtRecipients" CssClass="text-danger" ErrorMessage="At least one recipient is required." />
-                                </div>
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <asp:UpdatePanel runat="server" ID="upModal" UpdateMode="Conditional">
+                        <ContentTemplate>
+                            <script type="text/javascript">
+                                function pageLoad() {
+                                    var recipientsSource = new Bloodhound({
+                                        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('label'),
+                                        queryTokenizer: Bloodhound.tokenizers.whitespace,
+                                        prefetch: '/webhandlers/messenger/recipients.ashx',
+                                        remote: {
+                                            url: '/webhandlers/messenger/recipients.ashx?query=%QUERY',
+                                            wildcard: '%QUERY'
+                                        }
+                                    });
+
+                                    recipientsSource.initialize();
+
+
+                                    $('#<%=txtRecipients.ClientID%>')
+                                        .on('tokenfield:createtoken', function (e) {
+                                            e.attrs.label = e.attrs.label;
+                                        })
+
+                                        .on('tokenfield:createdtoken', function (e) {
+                                            var re = /\S+@\S+\.\S+/
+                                            var valid = re.test(e.attrs.value)
+                                            if (!valid) {
+                                                $(e.relatedTarget).addClass('invalid')
+                                            }
+                                        })
+
+                                        .on('tokenfield:edittoken', function (e) {
+                                            if (e.attrs.label !== e.attrs.value) {
+                                                var label = e.attrs.label;
+                                                var startPOS = label.indexOf('<') + 1;
+                                                var endPOS = label.indexOf('>', startPOS);
+                                                e.attrs.value = label.substring(startPOS, endPOS);
+                                            }
+                                        })
+
+                                        .on('tokenfield:removedtoken', function (e) {
+                                        })
+
+                                        .tokenfield({
+                                            typeahead: [null, { name: 'recipients', displayKey: 'label', source: recipientsSource.ttAdapter(), limit: 20, classNames: { menu: 'tt-dropdown-menu' } }],
+                                            delimiter: [',', ';'],
+                                            createTokensOnBlur: true,
+                                        });
+                                }
+                            </script>
+
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="myModalLabel">Compose New Message</h4>
                             </div>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
-              </div>
+                            <div class="modal-body">
+
+                                <div class="row form-group">
+                                    <label for="<%=txtRecipients.ClientID %>" class="col-sm-12 control-label">Recipients</label>
+                                    <div class="col-sm-12">
+                                        <asp:TextBox runat="server" ID="txtRecipients" CssClass="form-control" TextMode="MultiLine" />
+                                        <asp:RequiredFieldValidator Display="Dynamic" runat="server" ID="validatorRecipientRequired" ControlToValidate="txtRecipients" CssClass="text-danger" ErrorMessage="At least one recipient is required." />
+                                        <asp:CustomValidator Display="Dynamic" runat="server" ID="validatorRecipientListOK" ControlToValidate="txtRecipients" CssClass="text-danger" ErrorMessage="You are not allowed to send messages to the following emails: {0}. You may only send messages to recipients in your club." OnServerValidate="validatorRecipientListOK_ServerValidate" />
+                                    </div>
+                                </div>
+
+                                <div class="row form-group">
+                                    <label for="<%=txtMessage.ClientID %>" class="col-sm-12 control-label">Message</label>
+                                    <div class="col-sm-12">
+                                        <asp:TextBox runat="server" ID="txtMessage" CssClass="form-control" TextMode="MultiLine" Rows="4" />
+                                        <asp:RegularExpressionValidator Display="Dynamic" runat="server" ID="validatorMessageValid" ControlToValidate="txtMessage" CssClass="text-danger" ErrorMessage="The message can not exceed 1,000 characters." ValidationExpression="^[\S\s]{0,1000}$" />
+                                        <asp:RequiredFieldValidator Display="Dynamic" runat="server" ID="validatorMessageRequired" ControlToValidate="txtMessage" CssClass="text-danger" ErrorMessage="Please enter a message." />
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                <asp:Button runat="server" ID="btnSendMessage" CssClass="btn btn-success" Text="Send Message" OnClick="btnSendMessage_Click" CausesValidation="true" />
+                            </div>
+                        </ContentTemplate>
+                    </asp:UpdatePanel>
+                </div>
             </div>
-          </div>
         </div>
     </div>
+
+                    </ContentTemplate>
+    </asp:UpdatePanel>
 </asp:Content>
 
 

@@ -33,7 +33,7 @@ namespace Trackr.Modules.Messenger
             get { return 50; }
         }
 
-        private int Page
+        private int PageIndex
         {
             get { return ViewState["Page"] as int? ?? 1; }
             set { ViewState["Page"] = value; }
@@ -51,15 +51,15 @@ namespace Trackr.Modules.Messenger
                     IsStarred = i.IsStarred,
                     FromID = i.Message.FromID,
                     SentDate = i.SentDate
-                }).OrderByDescending(i => i.SentDate).Skip(ResultsPerPage * (Page - 1)).Take(ResultsPerPage).ToList();
+                }).OrderByDescending(i => i.SentDate).Skip(ResultsPerPage * (PageIndex - 1)).Take(ResultsPerPage).ToList();
 
                 rptEmail.DataSource = messages;
             }
 
             rptEmail.DataBind();
 
-            litResultsPPMin.Text = ((Page - 1) * ResultsPerPage + 1).ToString();
-            litResultsPPMax.Text = ((Page - 1) * ResultsPerPage + ResultsPerPage).ToString();
+            litResultsPPMin.Text = ((PageIndex - 1) * ResultsPerPage + 1).ToString();
+            litResultsPPMax.Text = ((PageIndex - 1) * ResultsPerPage + ResultsPerPage).ToString();
             litResultsPPTotal.Text = messages.Count().ToString();
             divResultsPP.Visible = messages.Count() > 0;
             divNoMessages.Visible = messages.Count() == 0;

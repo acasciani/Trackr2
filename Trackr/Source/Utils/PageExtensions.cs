@@ -30,6 +30,40 @@ namespace Trackr.Utils
             }
         }
 
+        public static void AddAlert(this MasterPage master, string message, UI.AlertBoxType boxType)
+        {
+            MasterPage rootMaster = master;
+
+            while (rootMaster.Master != null)
+            {
+                rootMaster = rootMaster.Master;
+            }
+
+            AlertBox ExceptionAlerts = rootMaster.FindControl("ExceptionAlerts") as AlertBox;
+
+            if (ExceptionAlerts != null)
+            {
+                ExceptionAlerts.AddAlert(message, false, boxType);
+            }
+        }
+
+        public static void UpdateSiteMasterPanel(this MasterPage master)
+        {
+            MasterPage rootMaster = master;
+
+            while (rootMaster.Master != null)
+            {
+                rootMaster = rootMaster.Master;
+            }
+
+            UpdatePanel up = rootMaster.FindControl("upMain") as UpdatePanel;
+
+            if (up != null)
+            {
+                up.Update();
+            }
+        }
+
         public static WebUser GetCurrentWebUser()
         {
             int userID;

@@ -16,9 +16,8 @@ namespace Trackr.WebHandlers.Messenger
         [Serializable]
         public class DTO
         {
-            public DateTime LastCorrespondance { get; set; }
-            public string PersonName { get; set; }
-            public string Email { get; set; }
+            public string label { get; set; }
+            public string value { get; set; }
         }
 
 
@@ -62,9 +61,8 @@ namespace Trackr.WebHandlers.Messenger
                 // get users this person recently sent to
                 return mrc.GetMatchingEmailRecipients(query, um.WebUsers.Single(i => i.UserID == currentUserID).ClubID).Select(i => new DTO()
                 {
-                    Email = i.Email,
-                    LastCorrespondance = DateTime.MinValue,
-                    PersonName = i.FirstName + " " + i.LastName
+                    value = i.Email,
+                    label = string.IsNullOrWhiteSpace(i.FirstName + " " + i.LastName) ? i.Email : string.Format("{0} <{1}>", i.FirstName + " " + i.LastName, i.Email)
                 }).ToList();
             }
         }
@@ -114,12 +112,19 @@ namespace Trackr.WebHandlers.Messenger
                 }).ToDictionary(i => i.UserID, i => i.Email);
             }
 
-            var data = userIDs.Select(i => new DTO()
+            var data = userIDs.Select(i => new
             {
                 LastCorrespondance = MostRecentCorrespondance[i],
-                PersonName = UserNames[i],
-                Email = Emails[i]
-            }).OrderByDescending(i => i.LastCorrespondance).ToList();
+                PersonName = UserNames.ContainsKey(i) ? UserNames[i] : null,
+                Email = Emails[i],
+                UserID = i
+            })
+            .OrderByDescending(i => i.LastCorrespondance)
+            .Select(i=> new DTO(){
+                 label = string.IsNullOrWhiteSpace(i.PersonName) ? i.Email : string.Format("{0} <{1}>", i.PersonName, i.Email),
+                 value = i.Email
+            })
+            .ToList();
 
             return data;
         }

@@ -111,9 +111,9 @@
             </header>
 
             <div class="col-sm-12">
-                <ui:AlertBox runat="server" Id="ExceptionAlerts" />
+                        <ui:AlertBox runat="server" Id="ExceptionAlerts" />
 
-                <asp:ContentPlaceHolder ID="MainContent" runat="server"></asp:ContentPlaceHolder>
+                        <asp:ContentPlaceHolder ID="MainContent" runat="server"></asp:ContentPlaceHolder>
             </div>
         </div>
 

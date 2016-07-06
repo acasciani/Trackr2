@@ -380,7 +380,7 @@
           <orm:collection element-class="TrackrModels.Message" inverse-field="_message2" order-by="" uniqueId="451db33e-f72e-41ab-900a-6e073914febb" />
         </orm:field>
         <orm:field name="_messageRecipients" property="MessageRecipients" behavior="readwrite" uniqueId="79490184-ace5-4ad9-a8c9-0a0f6152676c" type="TrackrModels.MessageRecipient">
-          <orm:collection element-class="TrackrModels.MessageRecipient" inverse-field="_message" order-by="" uniqueId="64a5752f-b26d-4873-bd03-097d86f6cb61" />
+          <orm:collection element-class="TrackrModels.MessageRecipient" inverse-field="_message" managed="true" order-by="" uniqueId="64a5752f-b26d-4873-bd03-097d86f6cb61" />
         </orm:field>
       </orm:class>
       <orm:class name="MessageRecipient" uniqueId="23ddd66e-a1af-4c58-8471-3215e43a361a">
@@ -929,7 +929,7 @@
           <NavigationalProperty Id="c5f08eca-36d8-4e69-a4b0-0b1c20e9f125" name="Messages" type="IList&lt;Message&gt;" label="Messages : IList&lt;Message&gt;" nullable="true" kind="Persistent" fieldName="_messages" isDependent="false" isManaged="false" />
         </classHasNavigationalProperties>
         <classHasNavigationalProperties Id="4cbe2f56-1fa7-4dff-9c5b-9bf29d5c35d6">
-          <NavigationalProperty Id="79490184-ace5-4ad9-a8c9-0a0f6152676c" name="MessageRecipients" type="IList&lt;MessageRecipient&gt;" label="MessageRecipients : IList&lt;MessageRecipient&gt;" nullable="true" kind="Persistent" fieldName="_messageRecipients" isDependent="false" isManaged="false" />
+          <NavigationalProperty Id="79490184-ace5-4ad9-a8c9-0a0f6152676c" name="MessageRecipients" type="IList&lt;MessageRecipient&gt;" label="MessageRecipients : IList&lt;MessageRecipient&gt;" nullable="true" kind="Persistent" fieldName="_messageRecipients" isDependent="false" isManaged="true" />
         </classHasNavigationalProperties>
       </navigationalProperties>
     </DomainClass>
@@ -965,7 +965,7 @@
       </AssociationTargets>
       <navigationalProperties>
         <classHasNavigationalProperties Id="028fd4b1-dd4c-4fd3-a4a4-864ae5897e10">
-          <NavigationalProperty Id="a959f758-6ab0-4625-9a30-4fe0c7a2e4f1" name="Message" type="Message" label="Message : Message" nullable="true" kind="Persistent" fieldName="_message" isDependent="false" isManaged="false" />
+          <NavigationalProperty Id="a959f758-6ab0-4625-9a30-4fe0c7a2e4f1" name="Message" type="Message" label="Message : Message" nullable="true" kind="Persistent" fieldName="_message" isDependent="false" isManaged="true" />
         </classHasNavigationalProperties>
       </navigationalProperties>
     </DomainClass>

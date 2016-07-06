@@ -187,7 +187,7 @@
           <elementListCompartment Id="cc97dc38-dbb6-4d32-9c85-d06efdbe886c" absoluteBounds="8.265, 14.682587890625, 1.4700000000000002, 0.44169108072916652" name="NavigationCompartment" titleTextColor="Black" itemTextColor="Black" />
         </nestedChildShapes>
       </classShape>
-      <associationConnector edgePoints="[(5.25 : 11.7082902018229); (2.125 : 11.7082902018229)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <associationConnector edgePoints="[(5.25 : 11.7082902018229); (2.125 : 11.7082902018229)]" fixedFrom="NotFixed" fixedTo="NotFixed">
         <AssociationMoniker Id="2a4c777a-f39a-493a-bd30-db8cb84e89d2" />
         <relativeChildShapes />
         <nodes>
@@ -203,7 +203,7 @@
           <classShapeMoniker Id="ad310a59-65df-47f3-9473-e3678050d91b" />
         </nodes>
       </associationConnector>
-      <associationConnector edgePoints="[(8.25 : 13.2579296875); (5.56804237179487 : 13.2579296875 : JumpStart); (5.40137570512821 : 13.2579296875 : JumpEnd); (2.125 : 13.2579296875)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <associationConnector edgePoints="[(8.25 : 13.2579296875); (5.56804237179487 : 13.2579296875 : JumpStart); (5.40137570512821 : 13.2579296875 : JumpEnd); (2.125 : 13.2579296875)]" fixedFrom="NotFixed" fixedTo="NotFixed">
         <AssociationMoniker Id="cfa56afe-089d-40ec-a684-8ffd63e2ed80" />
         <relativeChildShapes />
         <nodes>
@@ -211,7 +211,7 @@
           <classShapeMoniker Id="1038cf44-610f-4dfa-9cc8-f04ea7b5d551" />
         </nodes>
       </associationConnector>
-      <associationConnector edgePoints="[(8.25 : 14.2723568294271); (5.48470903846154 : 14.2723568294271); (5.48470903846154 : 12.6665804036458)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <associationConnector edgePoints="[(8.25 : 14.2723568294271); (5.48470903846154 : 14.2723568294271); (5.48470903846154 : 12.6665804036458)]" fixedFrom="NotFixed" fixedTo="NotFixed">
         <AssociationMoniker Id="64a5752f-b26d-4873-bd03-097d86f6cb61" />
         <relativeChildShapes />
         <nodes>

@@ -13,6 +13,15 @@ namespace Trackr.Modules.Messenger {
     public partial class Messenger {
         
         /// <summary>
+        /// upNested control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.UpdatePanel upNested;
+        
+        /// <summary>
         /// lnkCompose control.
         /// </summary>
         /// <remarks>
@@ -40,6 +49,15 @@ namespace Trackr.Modules.Messenger {
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl divCompose;
         
         /// <summary>
+        /// upModal control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.UpdatePanel upModal;
+        
+        /// <summary>
         /// txtRecipients control.
         /// </summary>
         /// <remarks>
@@ -49,12 +67,57 @@ namespace Trackr.Modules.Messenger {
         protected global::System.Web.UI.WebControls.TextBox txtRecipients;
         
         /// <summary>
-        /// validatorFirstNameRequired control.
+        /// validatorRecipientRequired control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator validatorFirstNameRequired;
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator validatorRecipientRequired;
+        
+        /// <summary>
+        /// validatorRecipientListOK control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CustomValidator validatorRecipientListOK;
+        
+        /// <summary>
+        /// txtMessage control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtMessage;
+        
+        /// <summary>
+        /// validatorMessageValid control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RegularExpressionValidator validatorMessageValid;
+        
+        /// <summary>
+        /// validatorMessageRequired control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator validatorMessageRequired;
+        
+        /// <summary>
+        /// btnSendMessage control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnSendMessage;
     }
 }

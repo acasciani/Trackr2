@@ -88,10 +88,10 @@
                                     </div>
                                     <span class="glyphicon <%# (bool)Eval("IsStarred") ? "glyphicon-star" : "glyphicon-star-empty" %>"></span>
                                         <span class="name" style="min-width: 120px; display: inline-block;">
-                                            <%#Eval("Sender") %>
+                                            <%#Eval("From") %>
                                         </span>
                                     <span class="text-muted" style="font-size: 11px;"><%#Eval("Message") %></span> <span
-                                        class="badge"><%#Eval("DateSent") %></span> <span class="pull-right"><span class="glyphicon glyphicon-paperclip">
+                                        class="badge"><%#Eval("SentDate") %></span> <span class="pull-right"><span class="glyphicon glyphicon-paperclip">
                                         </span></span></a>
                                 </ItemTemplate>
 
