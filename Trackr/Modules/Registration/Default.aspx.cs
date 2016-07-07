@@ -328,26 +328,84 @@ namespace Trackr.Modules.Registration
             {
                 DateTime currentTime = DateTime.Now.ToUniversalTime();
 
-                List<RegistrationRule> allOpenTeams = cm.RegistrationRules.Where(i => i.RegistrationOpens <= currentTime && currentTime <= i.RegistrationCloses && i.NewTeam.Program.ClubID == ClubID).ToList();
+                var allOpenTeams = cm.RegistrationRules.Where(i => i.RegistrationOpens <= currentTime && currentTime <= i.RegistrationCloses && i.NewTeam.Program.ClubID == ClubID)
+                    .Select(i => new
+                    {
+                        NewTeamID = i.NewTeamID,
+                        DateOfBirthCutoff = i.DateOfBirthCutoff,
+                        NewTeamName = i.NewTeam.TeamName,
+                        NewTeamProgramName = i.NewTeam.Program.ProgramName,
+                        NewTeamMaxRoster = i.NewTeam.MaxRosterSize,
+                        NewTeamActivePlayerCount = 0, // needs to be fixed
+                        NewTeamStartYear = i.NewTeam.StartYear,
+                        NewTeamEndYear = i.NewTeam.EndYear,
+                        MaxCoRegistrationsPerProgram = i.NewTeam.Program.MaxCoRegistrationsPerSeason,
+                        SeasonStart = i.NewTeam.StartYear,
+                        SeasonEnd = i.NewTeam.EndYear,
+                        ProgramID = i.NewTeam.ProgramID
+                    })
+                    .ToList();
 
-                List<int> teamIDsOn = cm.PlayerPasses.Where(i => i.PlayerID == playerID && i.Active).SelectMany(i => i.TeamPlayers).Select(i => i.TeamID).Union(cm.TeamPlayers.Where(i => i.PlayerID == playerID && i.Active).Select(i => i.TeamID)).Distinct().ToList();
-                List<int> teamIDsExcludingUpcomingTeams = teamIDsOn.Except(allOpenTeams.Select(i => i.NewTeamID)).Distinct().ToList();
+                var teamsOn = cm.PlayerPasses.Where(i => i.PlayerID == playerID && i.Active).SelectMany(i => i.TeamPlayers).Union(cm.TeamPlayers.Where(i => i.PlayerID == playerID && i.Active))
+                    .Select(i => new
+                    {
+                        TeamID = i.TeamID,
+                        ProgramID = i.Team.ProgramID,
+                        SeasonStart = i.Team.StartYear,
+                        SeasonEnd = i.Team.EndYear
+                    })
+                    .Distinct()
+                    .ToList();
+
+                List<int> teamIDsOn = teamsOn.Select(i => i.TeamID).Distinct().ToList();
 
                 Player player = cm.Players.Where(i => i.PlayerID == playerID).First();
 
-                var newTeams = allOpenTeams.Where(i => !teamIDsOn.Contains(i.NewTeamID) && i.DateOfBirthCutoff.HasValue && player.Person.DateOfBirth.HasValue && player.Person.DateOfBirth.Value > i.DateOfBirthCutoff.Value).OrderByDescending(i => i.DateOfBirthCutoff.Value).Take(1);//take the youngest one
+                // incorporate max co registration count
+
+                var newTeams = allOpenTeams
+                    // We first want to get New teams to register to, those can only be teams the Player meets the age qualification (they are younger than the date of birth cutoff)
+                    // We then group by the ProgramID and Max co registrations per program (for instance, for travel soccer, you can only be registered to 1 team per program, for a development program it may 
+                    // be more)... We do this based on the season of the team (e.g. Aug 1- Jul 31). That means if one program, like Travel Boys has 2 teams in different season (e.g. Jul 1-Aug 31 and Aug 1 - Jul 31),
+                    // then this logic check is INVALID... if this becomes a problem, we may need to add another column called "FunctionalSeasonStart" and "FunctionalSeasonEnd" and have a separate column
+                    // for display purposes. Once we group by, we then select the new teams to register ordering by eligible age (youngest teams first), and take (i.e. in SQL "SELECT TOP X") 
+                    // the max registrations per program MINUS the number of teams currently registered for that program..
+                    .Where(i => !teamIDsOn.Contains(i.NewTeamID) && i.DateOfBirthCutoff.HasValue && player.Person.DateOfBirth.HasValue &&
+                                player.Person.DateOfBirth.Value > i.DateOfBirthCutoff.Value)
+                    .GroupBy(i => new { i.ProgramID, i.MaxCoRegistrationsPerProgram, i.SeasonStart, i.SeasonEnd })
+                    .SelectMany(i =>
+                        i.OrderByDescending(j => j.DateOfBirthCutoff.Value).Take(i.Key.MaxCoRegistrationsPerProgram - teamsOn.Count(j => j.ProgramID == i.Key.ProgramID && j.SeasonEnd == i.Key.SeasonEnd && j.SeasonStart == i.Key.SeasonStart))
+                     )
+                    .OrderByDescending(i => i.DateOfBirthCutoff.Value);
 
                 var possibleTeams = newTeams
                     .Select(i => new
                     {
-                        TeamName = i.NewTeam.TeamName,
-                        ProgramName = i.NewTeam.Program.ProgramName,
-                        PercentRegistered = decimal.Divide(Convert.ToDecimal(i.NewTeam.TeamPlayers.Where(j => j.Active).Count()), Convert.ToDecimal(i.NewTeam.MaxRosterSize))*100,
-                        IsTeamFull = i.NewTeam.TeamPlayers.Where(j=>j.Active).Count() == i.NewTeam.MaxRosterSize,
+                        TeamName = i.NewTeamName,
+                        ProgramName = i.NewTeamProgramName,
+                        PercentRegistered = decimal.Divide(Convert.ToDecimal(i.NewTeamActivePlayerCount), Convert.ToDecimal(i.NewTeamMaxRoster))*100,
+                        IsTeamFull = i.NewTeamActivePlayerCount == i.NewTeamMaxRoster,
                         TeamID = i.NewTeamID,
-                        TeamStart = i.NewTeam.StartYear,
-                        TeamEnd = i.NewTeam.EndYear
-                    }).Distinct().ToList().OrderBy(i => i.TeamName);
+                        TeamStart = i.NewTeamStartYear,
+                        TeamEnd = i.NewTeamEndYear,
+                        AlreadyRegistered = false
+                    }).Distinct().OrderBy(i => i.TeamName).ToList();
+
+                var alreadyRegisteredButOpen = allOpenTeams.Where(i => teamIDsOn.Contains(i.NewTeamID))
+                    .Select(i => new
+                    {
+                        TeamName = i.NewTeamName,
+                        ProgramName = i.NewTeamProgramName,
+                        PercentRegistered = decimal.Divide(Convert.ToDecimal(i.NewTeamActivePlayerCount), Convert.ToDecimal(i.NewTeamMaxRoster)) * 100,
+                        IsTeamFull = i.NewTeamActivePlayerCount == i.NewTeamMaxRoster,
+                        TeamID = i.NewTeamID,
+                        TeamStart = i.NewTeamStartYear,
+                        TeamEnd = i.NewTeamEndYear,
+                        AlreadyRegistered = true
+                    })
+                    .Distinct().OrderBy(i => i.TeamName);
+                
+                possibleTeams.AddRange(alreadyRegisteredButOpen);
 
                 gvTeamsToRegisterFor.DataSource = possibleTeams;
                 gvTeamsToRegisterFor.DataBind();

@@ -154,12 +154,12 @@
                                     <Columns>
                                         <asp:TemplateField HeaderText="Team">
                                             <ItemTemplate>
-                                                <strong><%# Eval("TeamName") %></strong> <%# ((DateTime)Eval("TeamStart")).ToString("MMM yyyy") %> to <%# ((DateTime)Eval("TeamEnd")).ToString("MMM yyyy") %> - <%# Eval("ProgramName") %> <%#GetPercentageFilled((decimal)Eval("PercentRegistered")).ToString() %>
+                                                <strong><%# Eval("TeamName") %></strong> <%# ((DateTime)Eval("TeamStart")).ToString("MMM yyyy") %> to <%# ((DateTime)Eval("TeamEnd")).ToString("MMM yyyy") %> - <%# Eval("ProgramName") %> <%# (bool)Eval("AlreadyRegistered") ? "<span class=\"label label-success\">Already Registered</span>" : GetPercentageFilled((decimal)Eval("PercentRegistered")).ToString() %>
                                             </ItemTemplate>
                                         </asp:TemplateField>
                                         <asp:TemplateField ItemStyle-CssClass="col-xs-1 text-center">
                                             <ItemTemplate>
-                                                <%# !(bool)Eval("IsTeamFull") ? "<input type=\"radio\" name=\"SelectedTeam\" value='" + Eval("TeamID") + "' />" : "" %>
+                                                <%# !(bool)Eval("IsTeamFull") && !(bool)Eval("AlreadyRegistered") ? "<input type=\"radio\" name=\"SelectedTeam\" value='" + Eval("TeamID") + "' />" : "" %>
                                             </ItemTemplate>
                                         </asp:TemplateField>
                                     </Columns>

@@ -64,6 +64,19 @@ namespace TrackrModels
 			}
 		}
 		
+		private int _maxCoRegistrationsPerSeason;
+		public virtual int MaxCoRegistrationsPerSeason
+		{
+			get
+			{
+				return this._maxCoRegistrationsPerSeason;
+			}
+			set
+			{
+				this._maxCoRegistrationsPerSeason = value;
+			}
+		}
+		
 		private Club _club;
 		public virtual Club Club
 		{
@@ -97,6 +110,7 @@ namespace TrackrModels
 			this.ProgramID = info.GetInt32("ProgramID");
 			this.ProgramName = info.GetString("ProgramName");
 			this.ClubID = info.GetInt32("ClubID");
+			this.MaxCoRegistrationsPerSeason = info.GetInt32("MaxCoRegistrationsPerSeason");
 			CustomizeDeserializationProcess(info, context);
 		}
 		
@@ -105,6 +119,7 @@ namespace TrackrModels
 			info.AddValue("ProgramID", this.ProgramID, typeof(int));
 			info.AddValue("ProgramName", this.ProgramName, typeof(string));
 			info.AddValue("ClubID", this.ClubID, typeof(int));
+			info.AddValue("MaxCoRegistrationsPerSeason", this.MaxCoRegistrationsPerSeason, typeof(int));
 			CustomizeSerializationProcess(info, context);
 		}
 		

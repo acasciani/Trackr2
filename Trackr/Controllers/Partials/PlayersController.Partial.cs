@@ -65,8 +65,8 @@ namespace Trackr
                     LastName = i.Person.LName,
                     PlayerID = i.PlayerID,
 
-                    TeamIDs = i.TeamPlayers.Select(j => j.TeamID).Union(i.PlayerPasses.SelectMany(j => j.TeamPlayers).Select(j => j.TeamID)).Distinct(),
-                    ProgramIDs = i.TeamPlayers.Select(j => j.Team.ProgramID).Union(i.PlayerPasses.SelectMany(j => j.TeamPlayers).Select(j => j.Team.ProgramID)).Distinct(),
+                    TeamIDs = i.TeamPlayers.Where(j => j.Active).Select(j => j.TeamID).Union(i.PlayerPasses.Where(j => j.Active).SelectMany(j => j.TeamPlayers).Where(j => j.Active).Select(j => j.TeamID)).Distinct(),
+                    ProgramIDs = i.TeamPlayers.Where(j => j.Active).Select(j => j.Team.ProgramID).Union(i.PlayerPasses.Where(j => j.Active).SelectMany(j => j.TeamPlayers).Where(j => j.Active).Select(j => j.Team.ProgramID)).Distinct(),
                 }).ToList();
 
                 return players;

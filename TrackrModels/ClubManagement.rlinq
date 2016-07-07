@@ -186,6 +186,9 @@
         <orm:field name="_clubID" property="ClubID" behavior="readwrite" uniqueId="87d1f808-c653-4a98-8d87-d48ef322ec49" type="System.Int32">
           <orm:column name="ClubID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
         </orm:field>
+        <orm:field name="_maxCoRegistrationsPerSeason" property="MaxCoRegistrationsPerSeason" behavior="readwrite" uniqueId="7dbfd875-0b80-4332-9f08-5874fb8be74b" type="System.Int32">
+          <orm:column name="MaxCoRegistrationsPerSeason" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
         <orm:field name="_club" property="Club" behavior="readwrite" uniqueId="532b00fe-e2e1-4eeb-ba18-cdd3ecf24e5c" type="TrackrModels.Club">
           <orm:reference uniqueId="d5abb3e9-2dd5-4453-a355-45918f1fef23" association-name="ProgramHasClub">
             <orm:sharedfield name="_clubID" target-class="TrackrModels.Club" target-field="_clubID" />
@@ -773,6 +776,7 @@
         <orm:column name="ProgramID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
         <orm:column name="ProgramName" sql-type="varchar" nullable="false" length="100" scale="0" ado-type="StringVariableLength" />
         <orm:column name="ClubID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        <orm:column name="MaxCoRegistrationsPerSeason" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
         <orm:constraint name="FK_Programs_Clubs" delete-action="dbdefaultrule" destination-table="Clubs">
           <orm:column name="ClubID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
         </orm:constraint>
@@ -1169,6 +1173,7 @@
       <Property Id="495452e3-38bd-4314-aadd-d3bc5f0b0331" name="ProgramID" type="Int32" label="ProgramID : Int32" kind="Persistent" identity="true" fieldName="_programID" />
       <Property Id="87d1f808-c653-4a98-8d87-d48ef322ec49" name="ClubID" type="Int32" label="ClubID : Int32" kind="Persistent" fieldName="_clubID" />
       <Property Id="544e73c1-e8ed-4cc1-a511-d16f6bab3fe1" name="ProgramName" label="ProgramName : String" kind="Persistent" fieldName="_programName" />
+      <Property Id="7dbfd875-0b80-4332-9f08-5874fb8be74b" name="MaxCoRegistrationsPerSeason" type="Int32" label="MaxCoRegistrationsPerSeason : Int32" kind="Persistent" fieldName="_maxCoRegistrationsPerSeason" />
       <AssociationTargets>
         <Association Id="d5abb3e9-2dd5-4453-a355-45918f1fef23" SourceMultiplicity="One" name="ProgramHasClub">
           <DomainClassMoniker name="/ClubManagement/Club" />
