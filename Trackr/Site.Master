@@ -115,6 +115,8 @@
 
                         <asp:ContentPlaceHolder ID="MainContent" runat="server"></asp:ContentPlaceHolder>
             </div>
+
+            <div class="clearfix"></div>
         </div>
 
         <div class="footer" runat="server" visible="true">
