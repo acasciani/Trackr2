@@ -21,6 +21,7 @@ namespace Trackr
         {
             public const string CreatePlayer = "PlayerManagement.CreatePlayer";
             public const string EditPlayer = "PlayerManagement.EditPlayer";
+            public const string EditPlayerBasic = "PlayerManagement.EditPlayer.Basic";
             public const string ViewPlayers = "PlayerManagement.ViewPlayers";
 
             public const string RegisterNewPlayer = "PlayerManagement.RegisterNewPlayer";

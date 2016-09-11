@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Security;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
@@ -39,7 +40,15 @@ namespace Trackr.Modules.UserManagement
                 });
             }
 
-            return users.Select(i=>new {Label = i.Value, value= i.Key})
+            return users.Select(i => new { Label = i.Value, Value = i.Key, HasName = i.Value.IndexOf(" - ") > -1 })
+                .OrderBy(i=>i.HasName).ThenBy(i=>i.Label).AsQueryable();
+        }
+
+        protected void btnSpoof_Click(object sender, EventArgs e)
+        {
+            int userID = int.Parse(ddlUsers.SelectedValue);
+
+            FormsAuthentication.RedirectFromLoginPage(userID.ToString(), false);
         }
     }
 }

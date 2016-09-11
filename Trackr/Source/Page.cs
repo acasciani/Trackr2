@@ -20,25 +20,52 @@ namespace Trackr
 
         public void CheckAllowed(string permission)
         {
-            using (WebUsersController wuc = new WebUsersController())
+            if (!IsAllowed(permission))
             {
-                if (!wuc.IsAllowed(CurrentUser.UserID, permission))
-                {
-                    // optionally we can just make them go back to original page?
-                    Response.Redirect("~/Default.aspx", true);
-                }
+                // optionally we can just make them go back to original page?
+                Response.Redirect("~/Default.aspx", true);
             }
         }
 
-        public void CheckAllowed<T, K>(string permission, K resourceID)
+        public bool IsAllowed(string permission)
+        {
+            using (WebUsersController wuc = new WebUsersController())
+            {
+                return wuc.IsAllowed(CurrentUser.UserID, permission);
+            }
+        }
+
+
+        public void CheckAllowed<T, K>(K resourceID, bool useOrLogic, params string[] permissions)
             where K : struct
             where T : IScopableController<K>, IDisposable, new()
         {
             using (T c = new T())
             {
-                if (!c.IsUserScoped(CurrentUser.UserID, permission, resourceID))
+                int counter = 0;
+
+                foreach (string permission in permissions)
                 {
+                    if (c.IsUserScoped(CurrentUser.UserID, permission, resourceID))
+                    {
+                        counter += 1;
+                    }
+                }
+
+                if (counter == 0)
+                {
+                    // passes neither and nor or logic
                     Response.Redirect("~/Default.aspx", true);
+                }
+                else
+                {
+                    if (counter < permissions.Length && !useOrLogic)
+                    {
+                        //and logic
+                        Response.Redirect("~/Default.aspx", true);
+                    }
+
+                    // or logic passed if we get here
                 }
             }
         }

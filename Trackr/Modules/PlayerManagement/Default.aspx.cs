@@ -42,6 +42,9 @@ namespace Trackr.Modules.PlayerManagement
             }
 
             CheckAllowed(Permissions.PlayerManagement.ViewPlayers);
+
+            // show the create link if allowed to create new player
+            lnkCreatePlayer.Visible = IsAllowed(Permissions.PlayerManagement.CreatePlayer);
         }
 
         public IQueryable gvAllPlayers_GetData()

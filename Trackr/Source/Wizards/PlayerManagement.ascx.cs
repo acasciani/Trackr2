@@ -38,35 +38,30 @@ namespace Trackr.Source.Wizards
         public event EventHandler PlayerSavedSuccess;
         public event EventHandler PlayerSavedError;
 
-        protected void Page_Init(object sender, EventArgs e)
-        {
-            if (IsPostBack)
-            {
-                return;
-            }
-
-            using (PlayersController pc = new PlayersController())
-            using (WebUsersController wuc = new WebUsersController())
-            {
-                if (IsNew)
-                {
-                    if (!wuc.IsAllowed(CurrentUser.UserID, string.IsNullOrWhiteSpace(CreatePermission) ? Permissions.PlayerManagement.CreatePlayer : CreatePermission))
-                    {
-                        throw new UserUnauthorizedException("You do not have permission to create a new player.");
-                    }
-                }
-                else
-                {
-                    if (pc.GetScopedEntity(CurrentUser.UserID, string.IsNullOrWhiteSpace(EditPermission) ? Permissions.PlayerManagement.EditPlayer : EditPermission, PrimaryKey.Value) == null)
-                    {
-                        throw new UserNotScopedException("You are not allowed to edit the selected player.");
-                    }
-                }
-            }
-        }
-
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (!IsPostBack)
+            {
+                using (PlayersController pc = new PlayersController())
+                using (WebUsersController wuc = new WebUsersController())
+                {
+                    if (IsNew)
+                    {
+                        if (!wuc.IsAllowed(CurrentUser.UserID, string.IsNullOrWhiteSpace(CreatePermission) ? Permissions.PlayerManagement.CreatePlayer : CreatePermission))
+                        {
+                            throw new UserUnauthorizedException("You do not have permission to create a new player.");
+                        }
+                    }
+                    else
+                    {
+                        if (pc.GetScopedEntity(CurrentUser.UserID, string.IsNullOrWhiteSpace(EditPermission) ? Permissions.PlayerManagement.EditPlayer : EditPermission, PrimaryKey.Value) == null)
+                        {
+                            throw new UserNotScopedException("You are not allowed to edit the selected player.");
+                        }
+                    }
+                }
+            }
+
             if (IsNew)
             {
                 if (!string.IsNullOrWhiteSpace(CreatePermission) && CreatePermission != Permissions.PlayerManagement.CreatePlayer)

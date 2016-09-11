@@ -9,7 +9,7 @@
             <h4>Player Management - <%= PlayerManagement.WasNew ? "Create Player" : "Edit Player" %></h4>
         </div>
         <div class="panel-body">
-            <ui:PlayerManagement runat="server" ID="PlayerManagement" />
+            <ui:PlayerManagement runat="server" ID="PlayerManagement" EditPermission="PlayerManagement.EditPlayer.Basic" />
         </div>
     </div>
 

@@ -42,6 +42,14 @@ namespace Trackr
                         case "Team":
                             IDs.AddRange(cm.Teams.Where(i => i.TeamID == scopeAssignment.ResourceID).Select(i => i.TeamID).Distinct());
                             break;
+
+                        case "Player":
+                            List<int> teamIDs = cm.TeamPlayers.Where(i => i.PlayerID == scopeAssignment.ResourceID && i.Active).Select(j => j.TeamID)
+                                .Union(cm.PlayerPasses.Where(i => i.PlayerID == scopeAssignment.ResourceID && i.Active).SelectMany(j => j.TeamPlayers).Select(j => j.TeamID))
+                                .Distinct().ToList();
+
+                            IDs.AddRange(teamIDs);
+                            break;
                     }
 
                     return IDs;

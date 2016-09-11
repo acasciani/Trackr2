@@ -9,6 +9,19 @@ namespace Trackr.Modules.PlayerManagement
 {
     public partial class Manage : Page
     {
+        protected void Page_Init(object sender, EventArgs e)
+        {
+            if (IsAllowed(Permissions.PlayerManagement.EditPlayer))
+            {
+                PlayerManagement.EditPermission = Permissions.PlayerManagement.EditPlayer;
+            }
+            else
+            {
+                PlayerManagement.EditPermission = Permissions.PlayerManagement.EditPlayerBasic;
+            }
+        }
+
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (IsPostBack)
@@ -20,7 +33,7 @@ namespace Trackr.Modules.PlayerManagement
             if (int.TryParse(Request.QueryString["id"], out playerID))
             {
                 // edit
-                CheckAllowed<PlayersController, int>(Permissions.PlayerManagement.EditPlayer, playerID);
+                CheckAllowed<PlayersController, int>(playerID, true, Permissions.PlayerManagement.EditPlayer, Permissions.PlayerManagement.EditPlayerBasic);
             }
             else
             {

@@ -33,7 +33,7 @@
             </div>
             
 
-            <a href="Manage.aspx" title="Create new player">Create New Player</a>
+            <a href="Manage.aspx" title="Create new player" runat="server" id="lnkCreatePlayer">Create New Player</a>
         </div>
     </div>
 
