@@ -99,10 +99,45 @@ namespace Trackr.Utils
             }
         }
 
+        private static string _EmailAPI_MessengerProdEmail = null;
+        private static string EmailAPI_MessengerProdEmail
+        {
+            get
+            {
+                if (_EmailAPI_MessengerProdEmail == null)
+                {
+                    _EmailAPI_MessengerProdEmail = ConfigurationManager.AppSettings["MessengerProdEmail"];
+                }
+
+                return _EmailAPI_MessengerProdEmail;
+            }
+        }
+
         private static List<EmailRecipient> GetDevelopmentRecipients()
         {
             //get all as unique people
-            string[] recipients = EmailAPI_MessengerDevEmail.Split(new string[] { "||" },StringSplitOptions.RemoveEmptyEntries);
+            string[] recipients = EmailAPI_MessengerDevEmail.Split(new string[] { "||" }, StringSplitOptions.RemoveEmptyEntries);
+
+            List<EmailRecipient> emailRecipients = new List<EmailRecipient>();
+
+            foreach (string recipient in recipients)
+            {
+                string[] data = recipient.Split('|');
+                emailRecipients.Add(new EmailRecipient()
+                {
+                    Email = data[0],
+                    Name = data[1],
+                    RecipientType = data[2] == "cc" ? EmailRecipientType.CC : data[2] == "bcc" ? EmailRecipientType.BCC : EmailRecipientType.TO
+                });
+            }
+
+            return emailRecipients;
+        }
+
+        private static List<EmailRecipient> GetAdditionalProductionRecipients()
+        {
+            //get all as unique people
+            string[] recipients = EmailAPI_MessengerProdEmail.Split(new string[] { "||" }, StringSplitOptions.RemoveEmptyEntries);
 
             List<EmailRecipient> emailRecipients = new List<EmailRecipient>();
 
@@ -133,6 +168,10 @@ namespace Trackr.Utils
                 if (!MessengerMode_IsProduction)
                 {
                     ToRecipients = GetDevelopmentRecipients();
+                }
+                else
+                {
+                    ToRecipients.AddRange(GetAdditionalProductionRecipients());
                 }
 
                 var messageStruct = new

@@ -5,22 +5,13 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using Trackr;
+using Trackr.Source.Controls.TGridView;
 using TrackrModels;
 
 namespace Trackr.Modules.TeamManagement
 {
     public partial class Default : Page
     {
-        [Serializable]
-        private class TeamResult
-        {
-            public string ProgramName { get; set; }
-            public string TeamName { get; set; }
-            public string Coach { get; set; }
-            public int PlayerCount { get; set; }
-            public int TeamID { get; set; }
-        }
-
         protected void Page_Load(object sender, EventArgs e)
         {
             if (IsPostBack)
@@ -29,23 +20,28 @@ namespace Trackr.Modules.TeamManagement
             }
 
             CheckAllowed(Permissions.TeamManagement.ViewTeams);
+
+            BindTeams();
         }
 
-        public IQueryable gvAllTeams_GetData()
+        private void BindTeams()
         {
+            List<TeamsController.TeamViewObject> data = null;
             using (TeamsController tc = new TeamsController())
             {
-                var allInfo = tc.Get().Select(i => new TeamResult
-                {
-                    Age = i.Person.DateOfBirth.HasValue ? DateTime.Today.Year - i.Person.DateOfBirth.Value.Year : (int?)null,
-                    BirthDate = i.Person.DateOfBirth.HasValue ? i.Person.DateOfBirth.Value : (DateTime?)null,
-                    FirstName = i.Person.FName,
-                    LastName = i.Person.LName,
-                    PlayerID = i.PlayerID
-                });
-
-                return allInfo.OrderBy(i => i.LastName).ThenBy(i => i.FirstName).AsQueryable<PlayerResult>();
+                data = tc.GetScopedTeamViewObject(CurrentUser.UserID, Permissions.TeamManagement.ViewTeams).ToList();
             }
+
+            GridViewData gvd = new GridViewData(typeof(TeamsController.TeamViewObject));
+            gvd.AddData(data);
+            gvAllTeams.GridViewItems = gvd;
+            gvAllTeams.DataSource = data;
+            gvAllTeams.DataBind();
+        }
+
+        protected void lnkFilter_Click(object sender, EventArgs e)
+        {
+            gvAllTeams.DataBind();
         }
 
     }

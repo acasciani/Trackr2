@@ -42,6 +42,10 @@
       <HintPath>..\packages\AspNet.ScriptManager.bootstrap.3.3.6\lib\net45\AspNet.ScriptManager.bootstrap.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="EPPlus, Version=4.1.0.0, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
+      <HintPath>..\packages\EPPlus.4.1.0\lib\net40\EPPlus.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="ImageResizer">
       <HintPath>..\packages\ImageResizer.4.0.4\lib\net45\ImageResizer.dll</HintPath>
     </Reference>
@@ -238,6 +242,7 @@
     <Compile Include="Controllers\Partials\PeopleController.Partial.cs" />
     <Compile Include="Controllers\Partials\PlayersController.Partial.cs" />
     <Compile Include="Controllers\Partials\TeamSchedulesController.Partial.cs" />
+    <Compile Include="Controllers\Partials\TeamsController.Partial.cs" />
     <Compile Include="Controllers\Scoping\IScopableController.cs" />
     <Compile Include="Controllers\Scoping\TeamPlayersController.Partial.cs" />
     <Compile Include="Controllers\Scoping\TeamSchedulesController.Partial.cs" />
@@ -250,6 +255,47 @@
     <Compile Include="Controllers\NewUserMappingsController.cs" />
     <Compile Include="Controllers\MessageRecipientsController.cs" />
     <Compile Include="Controllers\MessagesController.cs" />
+    <Compile Include="Modules\TeamManagement\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\TeamManagement\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\TeamManagement\TeamManagement.master.cs">
+      <DependentUpon>TeamManagement.master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\TeamManagement\TeamManagement.master.designer.cs">
+      <DependentUpon>TeamManagement.master</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\UserManagement\Spoof.aspx.cs">
+      <DependentUpon>Spoof.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\UserManagement\Spoof.aspx.designer.cs">
+      <DependentUpon>Spoof.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Controls\TrackrGridView\Common.cs" />
+    <Compile Include="Source\Controls\TrackrGridView\Expander\TrackrGridViewExpander.cs" />
+    <Compile Include="Source\Controls\TrackrGridView\TrackrGridView.cs" />
+    <Compile Include="Source\Controls\TrackrGridView\TrackrGridView.ExportExcelPartial.cs" />
+    <Compile Include="Source\Controls\TrackrGridView\TrackrGridView.PagePartial.cs" />
+    <Compile Include="Source\Controls\TrackrGridView\TrackrGridView.PinPartial.cs" />
+    <Compile Include="Source\Controls\TrackrGridView\TrackrGridView.SortPartial.cs" />
+    <Compile Include="Source\Controls\TrackrGridView\TrackrGridViewData.cs" />
+    <Compile Include="Source\Controls\TrackrGridView\TrackrGridViewEvents.cs" />
+    <Compile Include="Source\Controls\TrackrGridView\RowFields\IBoundField.cs" />
+    <Compile Include="Source\Controls\TrackrGridView\RowFields\ITemplateField.cs" />
+    <Compile Include="Source\Controls\TrackrGridView\RowFields\IDataControlField.cs" />
+    <Compile Include="Source\Utils\CollectionExtensions.cs" />
+    <Compile Include="Source\Wizards\TeamManagement.ascx.cs">
+      <DependentUpon>TeamManagement.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Source\Wizards\TeamManagement.ascx.designer.cs">
+      <DependentUpon>TeamManagement.ascx</DependentUpon>
+    </Compile>
     <Compile Include="WebHandlers\Messenger\Recipients.ashx.cs">
       <DependentUpon>Recipients.ashx</DependentUpon>
     </Compile>
@@ -276,9 +322,11 @@
     <Content Include="Modules\Scheduler\Default.aspx" />
     <Content Include="Modules\PlayerManagement\Default.aspx" />
     <Content Include="Modules\PlayerManagement\Manage.aspx" />
+    <Content Include="Modules\TeamManagement\Default.aspx" />
     <Content Include="Modules\UserManagement\Default.aspx" />
     <Content Include="Modules\UserManagement\Manage.aspx" />
     <Content Include="Modules\UserManagement\NonUserGuardians.aspx" />
+    <Content Include="Modules\UserManagement\Spoof.aspx" />
     <Content Include="packages.config" />
     <Content Include="Account\Web.config" />
     <Content Include="Modules\PlayerManagement\PlayerManagement.master" />
@@ -298,6 +346,7 @@
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\bootstrap-tokenfield\tokenfield-typeahead.less" />
     <Content Include="Content\bootstrap-tokenfield\bootstrap-tokenfield.less" />
+    <Content Include="Modules\TeamManagement\TeamManagement.master" />
     <None Include="Properties\PublishProfiles\Stage.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\bloodhound.js" />
@@ -356,6 +405,7 @@
     <Content Include="Source\Controls\PhoneNumberBook.ascx" />
     <Content Include="Source\Controls\ProgramTeamPlayerPicker.ascx" />
     <Content Include="Source\Wizards\PlayerManagement.ascx" />
+    <Content Include="Source\Wizards\TeamManagement.ascx" />
     <Content Include="Source\Wizards\UserManagement.ascx" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>

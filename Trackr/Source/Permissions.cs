@@ -14,6 +14,7 @@ namespace Trackr
             public const string ViewUsers = "UserManagement.ViewUsers";
 
             public const string CreateUsersFromGuardians = "UserManagement.CreateUsersFromGuardians";
+            public const string SpoofUsers = "UserManagement.SpoofUsers";
         }
 
         public class PlayerManagement
@@ -29,6 +30,11 @@ namespace Trackr
         public class Scheduler
         {
             public const string ViewSchedule = "Scheduler.ViewSchedule";
+        }
+
+        public class TeamManagement
+        {
+            public const string ViewTeams = "TeamManagement.ViewTeams";
         }
     }
 }

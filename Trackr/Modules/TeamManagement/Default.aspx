@@ -1,26 +1,42 @@
 ﻿<%@ Page Title="View All Teams" Language="C#" MasterPageFile="~/Modules/TeamManagement/TeamManagement.master" AutoEventWireup="true" CodeBehind="Default.aspx.cs" Inherits="Trackr.Modules.TeamManagement.Default" %>
 
-<asp:Content ID="Content1" ContentPlaceHolderID="NestedContent" runat="server">
+<asp:Content ID="Content2" ContentPlaceHolderID="NestedContent" runat="server">
 
     <div class="panel panel-default">
         <div class="panel-heading">
-            <h4>Player Management - View All Teams</h4>
+            <h4>Team Management - View All Players</h4>
         </div>
         <div class="panel-body">
+            <ui:ProgramTeamPlayerPicker runat="server" ID="ptpPicker" Permission="TeamManagement.ViewTeams" />
+            
+            <div class="row">
+                <div class="col-sm-12">
+                    <asp:LinkButton runat="server" ID="lnkFilter" CssClass="btn btn-default" OnClick="lnkFilter_Click">Filter</asp:LinkButton>
+                </div>
+            </div>
+            <hr />
+            <div class="row">
+                <div class="col-sm-12 table-responsive">
+                    <ui:TrackrGridView runat="server" ID="gvAllTeams" AutoGenerateColumns="false" CssClass="table table-striped" AllowSorting="true" AllowPaging="true" DisplayResultsPerPageOptions="true" DisplayPagingSummary="true" IsPinnable="true">
+                        <Columns>
+                            <ui:TrackrBoundField DataField="ProgramName" SortExpression="ProgramName" HeaderText="Program Name" ItemStyle-CssClass="col-xs-3" AllowPinnable="true" IsPinnable="true" />
+                            <ui:TrackrBoundField DataField="TeamName" SortExpression="TeamName" HeaderText="Team name"  AllowPinnable="true" IsPinnable="true"/>
+                            <ui:TrackrBoundField DataField="Start" SortExpression="Start" HeaderText="Starts" DataFormatString="{0:MM/dd/yyyy}" ItemStyle-CssClass="col-xs-2" AllowPinnable="true" IsPinnable="true" />
+                            <ui:TrackrBoundField DataField="End" SortExpression="End" HeaderText="Ends" DataFormatString="{0:MM/dd/yyyy}" ItemStyle-CssClass="col-xs-2" AllowPinnable="true" IsPinnable="true" />
+                            <asp:TemplateField ItemStyle-CssClass="col-xs-1">
+                                <ItemTemplate>
+                                    <a href="Manage.aspx?id=<%#Eval("TeamID") %>" class="glyphicon glyphicon-edit" title="Edit team"></a>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                        </Columns>
+                    </ui:TrackrGridView>
+                </div>
+            </div>
+            
+
             <a href="Manage.aspx" title="Create new team">Create New Team</a>
-            <asp:GridView runat="server" ID="gvAllTeams" AutoGenerateColumns="false" CssClass="table table-striped" SelectMethod="gvAllTeams_GetData" AllowSorting="true">
-                <Columns>
-                    <asp:BoundField DataField="LastName" SortExpression="LastName" HeaderText="Last name" ItemStyle-CssClass="col-xs-3" />
-                    <asp:BoundField DataField="FirstName" SortExpression="FirstName" HeaderText="First name" ItemStyle-CssClass="col-xs-3" />
-                    <asp:BoundField DataField="BirthDate" SortExpression="BirthDate" HeaderText="Birth Date" DataFormatString="{0:MM/dd/yyyy}" />
-                    <asp:TemplateField ItemStyle-CssClass="col-xs-1">
-                        <ItemTemplate>
-                            <a href="Manage.aspx?id=<%#Eval("TeamID") %>" class="glyphicon glyphicon-edit" title="Edit team"></a>
-                        </ItemTemplate>
-                    </asp:TemplateField>
-                </Columns>
-            </asp:GridView>
         </div>
     </div>
+
 
 </asp:Content>
