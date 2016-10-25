@@ -26,5 +26,31 @@ namespace Trackr.Utils
             }
             return (T?)null;
         }
+
+        public static string FromListToCSV<T>(this List<T> input) where T : struct
+        {
+            if (input == null)
+            {
+                return null;
+            }
+
+            return string.Join(",", input);
+        }
+
+        public static List<T> FromCSVToList<T>(this string input) where T : struct
+        {
+            List<T> results = new List<T>();
+
+            if (input == null)
+            {
+                return results;
+            }
+
+            // can have nullables
+            var allParsedValues = input.Split(',').Select(i => TryParse<T>(i.Trim()));
+
+            // return only those that actually have values
+            return allParsedValues.Where(i => i.HasValue).Select(i => i.Value).Distinct().ToList();
+        }
     }
 }

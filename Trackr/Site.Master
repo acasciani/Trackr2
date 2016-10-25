@@ -20,6 +20,8 @@
     <!-- glyphicons -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
 
+    <!-- loaders -->
+    <link rel="stylesheet" href="Content/loaders/three-circles.css" />
 </head>
 <body>
     <form runat="server">
@@ -111,9 +113,10 @@
             </header>
 
             <div class="col-sm-12">
-                        <ui:AlertBox runat="server" Id="ExceptionAlerts" />
+                <ui:AlertBox runat="server" ID="ExceptionAlerts" />
+                <ui:AlertBox runat="server" ID="NotificationTooltips" />
 
-                        <asp:ContentPlaceHolder ID="MainContent" runat="server"></asp:ContentPlaceHolder>
+                <asp:ContentPlaceHolder ID="MainContent" runat="server"></asp:ContentPlaceHolder>
             </div>
 
             <div class="clearfix"></div>

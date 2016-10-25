@@ -38,5 +38,23 @@ namespace Trackr.Modules.TeamManagement {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Trackr.Source.Controls.TrackrGridView gvAllTeams;
+        
+        /// <summary>
+        /// lnkShowHideRegProg control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton lnkShowHideRegProg;
+        
+        /// <summary>
+        /// rptWidgets control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Repeater rptWidgets;
     }
 }

@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <DomainModel xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" dslVersion="2.0.0.0" name="UserManagement" namespace="TrackrModels" showPropertiesCompartment="true" xmlns="http://www.telerik.com/ORM">
-  <orm:orm name="UserManagement" backend="mssql" default-schema="dbo" xmlns:orm="http://tempuri.org/ORM">
+  <orm:orm name="UserManagement" backend="mysql" default-schema="dbo" xmlns:orm="http://tempuri.org/ORM">
     <orm:namespace name="TrackrModels" default="true">
       <orm:class name="WebUser" uniqueId="af528235-fa30-4a48-83ec-c830227ba074">
         <orm:table name="WebUsers" />
@@ -549,6 +549,7 @@
       </orm:table>
     </orm:schema>
     <orm:relational-naming-settings>
+      <orm:remove-leading-underscore>False</orm:remove-leading-underscore>
       <orm:source-strategy>Property</orm:source-strategy>
       <orm:remove-camel-case>False</orm:remove-camel-case>
     </orm:relational-naming-settings>
@@ -574,11 +575,16 @@
     <CodeGenerationSettings>
       <MappingDefinitionType>Xml</MappingDefinitionType>
     </CodeGenerationSettings>
-    <SchemaUpdateSettings />
+    <SchemaUpdateSettings>
+      <DeploymentProject>TrackrModels</DeploymentProject>
+    </SchemaUpdateSettings>
     <BackendConfigurationSettings>
       <BackendConfiguration>
-        <Backend>MsSql</Backend>
-        <ProviderName>System.Data.SqlClient</ProviderName>
+        <Backend>MySql</Backend>
+        <ProviderName>MySql.Data.MySqlClient</ProviderName>
+        <Logging>
+          <MetricStoreSnapshotInterval>0</MetricStoreSnapshotInterval>
+        </Logging>
       </BackendConfiguration>
     </BackendConfigurationSettings>
   </ModelSettings>

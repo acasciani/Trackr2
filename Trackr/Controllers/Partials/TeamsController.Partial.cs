@@ -16,6 +16,7 @@ namespace Trackr
             public string ProgramName { get; set; }
             public DateTime Start { get; set; }
             public DateTime End { get; set; }
+            public DateTime AgeCutoff { get; set; }
         }
 
 
@@ -32,7 +33,8 @@ namespace Trackr
                             TeamID = i.TeamID,
                             TeamName = i.TeamName,
                             Start = i.StartYear,
-                            End = i.EndYear
+                            End = i.EndYear,
+                            AgeCutoff = i.AgeCutoff
                         }).ToList();
             }
         }

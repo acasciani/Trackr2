@@ -189,8 +189,8 @@ namespace TrackrModels
 		public static BackendConfiguration GetBackendConfiguration()
 		{
 			BackendConfiguration backend = new BackendConfiguration();
-			backend.Backend = "MsSql";
-			backend.ProviderName = "System.Data.SqlClient";
+			backend.Backend = "MySql";
+			backend.ProviderName = "MySql.Data.MySqlClient";
 			backend.Logging.LogEvents = LoggingLevel.Normal;
 			backend.Logging.EventStoreCapacity = 10000;
 			backend.Logging.MetricStoreCapacity = 3600;

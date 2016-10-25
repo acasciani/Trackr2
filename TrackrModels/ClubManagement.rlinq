@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <DomainModel xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" dslVersion="2.0.0.0" name="ClubManagement" namespace="TrackrModels" showPropertiesCompartment="true" xmlns="http://www.telerik.com/ORM">
-  <orm:orm name="ClubManagement" backend="mssql" default-schema="dbo" xmlns:orm="http://tempuri.org/ORM">
+  <orm:orm name="ClubManagement" backend="mysql" default-schema="dbo" xmlns:orm="http://tempuri.org/ORM">
     <orm:namespace name="TrackrModels" default="true">
       <orm:class name="WebUserInfo" uniqueId="0664256c-b54b-43fd-945c-6d2959ecdc6f">
         <orm:table name="WebUserInfo" />
@@ -1027,8 +1027,8 @@
     </SchemaUpdateSettings>
     <BackendConfigurationSettings>
       <BackendConfiguration>
-        <Backend>MsSql</Backend>
-        <ProviderName>System.Data.SqlClient</ProviderName>
+        <Backend>MySql</Backend>
+        <ProviderName>MySql.Data.MySqlClient</ProviderName>
         <Logging>
           <LogLevel>Normal</LogLevel>
           <EventStoreCapacity>10000</EventStoreCapacity>

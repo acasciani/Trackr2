@@ -149,8 +149,9 @@ namespace TrackrModels
 		public static BackendConfiguration GetBackendConfiguration()
 		{
 			BackendConfiguration backend = new BackendConfiguration();
-			backend.Backend = "MsSql";
-			backend.ProviderName = "System.Data.SqlClient";
+			backend.Backend = "MySql";
+			backend.ProviderName = "MySql.Data.MySqlClient";
+			backend.Logging.MetricStoreSnapshotInterval = 0;
 		
 			CustomizeBackendConfiguration(ref backend);
 		

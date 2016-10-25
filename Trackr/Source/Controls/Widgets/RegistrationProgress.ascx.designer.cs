@@ -7,63 +7,45 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Trackr {
+namespace Trackr.Source.Controls.Widgets {
     
     
-    public partial class SiteMaster {
+    public partial class RegistrationProgress {
         
         /// <summary>
-        /// navLeftNavigation control.
+        /// UpdatePanel control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::Trackr.Source.Controls.LeftNavigation navLeftNavigation;
+        protected global::System.Web.UI.UpdatePanel UpdatePanel;
         
         /// <summary>
-        /// top control.
+        /// chart control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl top;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl chart;
         
         /// <summary>
-        /// navTopNavigation control.
+        /// lnkShowChange control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::Trackr.Source.Controls.LeftNavigation navTopNavigation;
+        protected global::System.Web.UI.WebControls.LinkButton lnkShowChange;
         
         /// <summary>
-        /// ExceptionAlerts control.
+        /// lnkHideTeam control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::Trackr.UI.AlertBox ExceptionAlerts;
-        
-        /// <summary>
-        /// NotificationTooltips control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::Trackr.UI.AlertBox NotificationTooltips;
-        
-        /// <summary>
-        /// MainContent control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.ContentPlaceHolder MainContent;
+        protected global::System.Web.UI.WebControls.LinkButton lnkHideTeam;
     }
 }

@@ -85,7 +85,12 @@ namespace Trackr
 
         public List<int> GetScopedIDs(int UserID, string permission)
         {
-            return ScopeController<PlayersScopeController, Player, int>.GetScopedIDList(UserID, permission, i => true == true);
+            return GetScopedIDs(UserID, permission, i => true == true);
+        }
+
+        public List<int> GetScopedIDs(int UserID, string permission, Expression<Func<Player, bool>> preFilter)
+        {
+            return ScopeController<PlayersScopeController, Player, int>.GetScopedIDList(UserID, permission, preFilter);
         }
 
         public bool IsUserScoped(int UserID, string permission, int entityID)

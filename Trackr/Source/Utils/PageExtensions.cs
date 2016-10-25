@@ -30,6 +30,23 @@ namespace Trackr.Utils
             }
         }
 
+        public static void AddNotificationTooltip(this MasterPage master, string message, UI.AlertBoxType boxType)
+        {
+            MasterPage rootMaster = master;
+
+            while (rootMaster.Master != null)
+            {
+                rootMaster = rootMaster.Master;
+            }
+
+            AlertBox NotificationTooltips = rootMaster.FindControl("NotificationTooltips") as AlertBox;
+
+            if (NotificationTooltips != null)
+            {
+                NotificationTooltips.AddAlert(message, false, boxType);
+            }
+        }
+
         public static void AddAlert(this MasterPage master, string message, UI.AlertBoxType boxType)
         {
             MasterPage rootMaster = master;

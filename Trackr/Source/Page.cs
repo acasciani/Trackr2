@@ -5,11 +5,29 @@ using System.Web;
 using TrackrModels;
 using Trackr.Utils;
 using Microsoft.AspNet.FriendlyUrls.Resolvers;
+using System.Web.Profile;
+using Trackr.Controls;
+using System.Web.UI;
+using Trackr.Providers.Profiles;
 
 namespace Trackr
 {
     public class Page : System.Web.UI.Page
     {
+        private UserProfile _profile = null;
+        public UserProfile Profile
+        {
+            get
+            {
+                if (_profile == null)
+                {
+                    _profile = UserProfile.GetUserProfile(CurrentUser.UserID.ToString());
+                }
+
+                return _profile;
+            }
+        }
+
         public WebUser CurrentUser
         {
             get

@@ -6,10 +6,12 @@ using System.Web;
 using Telerik.OpenAccess.FetchOptimization;
 using TrackrModels;
 using Telerik.OpenAccess;
-using System.Data.SqlClient;
 using System.Configuration;
 using System.Data;
 using Trackr.Utils;
+using System.Web.Http;
+using Newtonsoft.Json.Linq;
+using MySql.Data.MySqlClient;
 
 namespace Trackr
 {
@@ -52,9 +54,9 @@ namespace Trackr
                 playerPassFetch.LoadWith<Player>(i => i.Person);
                 playerPassFetch.LoadWith<Player>(i => i.TeamPlayers);
                 playerPassFetch.LoadWith<TeamPlayer>(i => i.Team);
-
                 // player pass possibility first
                 var players = cm.Players
+                    .Where(filter)
                     .LoadWith(playerPassFetch)
                     .Where(i => playerIDs.Contains(i.PlayerID))
                     .Select(i => new PlayerViewObject()
@@ -77,8 +79,8 @@ namespace Trackr
         {
             try
             {
-                using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["ClubManagementConnection"].ConnectionString))
-                using (SqlCommand cmd = new SqlCommand("GetPossiblePlayerMatches", conn))
+                using (MySqlConnection conn = new MySqlConnection(ConfigurationManager.ConnectionStrings["ClubManagementConnection"].ConnectionString))
+                using (MySqlCommand cmd = new MySqlCommand("GetPossiblePlayerMatches", conn))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.AddWithValue("@ClubID", clubID);

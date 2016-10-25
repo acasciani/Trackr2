@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MySql.Data.MySqlClient;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -30,12 +31,12 @@ namespace Trackr
         {
             try
             {
-                using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["UserManagementConnection"].ConnectionString))
-                using (SqlCommand cmd = new SqlCommand("GetMatchingEmailRecipients", conn))
+                using (MySqlConnection conn = new MySqlConnection(ConfigurationManager.ConnectionStrings["UserManagementConnection"].ConnectionString))
+                using (MySqlCommand cmd = new MySqlCommand("GetMatchingEmailRecipients", conn))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.AddWithValue("@ClubID", clubID);
-                    cmd.Parameters.AddWithValue("@Query", query);
+                    cmd.Parameters.AddWithValue("@Qry", query);
 
                     conn.Open();
 
