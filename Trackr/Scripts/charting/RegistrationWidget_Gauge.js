@@ -32,13 +32,10 @@
         ],
         lineWidth: 0,
         minorTickInterval: null,
-        tickAmount: 2,
+        tickAmount: 1,
         title: {
             y: -70
         },
-        labels: {
-            y: 16
-        }
     },
 
     plotOptions: {
@@ -47,7 +44,8 @@
                 y: 5,
                 borderWidth: 0,
                 useHTML: true
-            }
+            },
+
         }
     }
 };
@@ -60,7 +58,8 @@ function UpdateGauge(element, title, value, min, max, valueLabel, valueSuffix) {
             max: max,
             title: {
                 text: title
-            }
+            },
+            tickInterval: (max / 4)
         },
 
         credits: {

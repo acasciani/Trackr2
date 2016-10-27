@@ -22,13 +22,22 @@ namespace Trackr.Source.Controls.Widgets {
         protected global::System.Web.UI.UpdatePanel UpdatePanel;
         
         /// <summary>
-        /// chart control.
+        /// divHolder control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl chart;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl divHolder;
+        
+        /// <summary>
+        /// chartGauge control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Trackr.Controls.Charts.Gauge chartGauge;
         
         /// <summary>
         /// lnkShowChange control.
@@ -47,5 +56,14 @@ namespace Trackr.Source.Controls.Widgets {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.LinkButton lnkHideTeam;
+        
+        /// <summary>
+        /// lnkUnHideTeam control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton lnkUnHideTeam;
     }
 }

@@ -16,17 +16,6 @@ namespace Trackr.Modules.TeamManagement
 {
     public partial class Default : Page
     {
-        private bool ShowHidden
-        {
-            get { return ((Trackr.Page)Page).Profile.TeamManagement.RegistrationProgress_ShowHidden; }
-            set
-            {
-                Trackr.Providers.Profiles.UserProfile profile = ((Trackr.Page)Page).Profile;
-                profile.TeamManagement.RegistrationProgress_ShowHidden = value;
-                profile.Save();
-            }
-        }
-
         protected void Page_Load(object sender, EventArgs e)
         {
             if (IsPostBack)
@@ -36,16 +25,9 @@ namespace Trackr.Modules.TeamManagement
 
             CheckAllowed(Permissions.TeamManagement.ViewTeams);
 
-            if (ShowHidden)
-            {
-                lnkShowHideRegProg.Text = "Hide Hidden Teams";
-            }
-            else
-            {
-                lnkShowHideRegProg.Text = "Show Hidden Teams";
-            }
-
             BindTeams();
+
+            DisplayHidden(false);
         }
 
         private void BindTeams()
@@ -63,7 +45,11 @@ namespace Trackr.Modules.TeamManagement
             gvAllTeams.DataBind();
 
             // bind widgets
-            BindRegistrationProgressWidgets(ShowHidden);            
+
+            rptWidgets.DataSource = data.Where(i => DateTime.Today <= i.End)
+                .OrderBy(i => i.ProgramName).ThenByDescending(i => i.AgeCutoff)
+                .Select(i => i.TeamID);
+            rptWidgets.DataBind();            
         }
 
         
@@ -73,15 +59,26 @@ namespace Trackr.Modules.TeamManagement
             gvAllTeams.DataBind();
         }
 
-        protected void Page_Init(object sender, EventArgs e)
+        private void DisplayHidden(bool display)
         {
-            if (IsPostBack)
+            foreach (Control rptItem in rptWidgets.Controls)
             {
-                LinkButton btn = FindControl(Request.Params.Get("__EVENTTARGET")) as LinkButton;
+                Trackr.Source.Controls.Widgets.RegistrationProgress control = rptItem.Controls[1] as Trackr.Source.Controls.Widgets.RegistrationProgress;
 
-                if (btn == lnkShowHideRegProg)
+                if (display)
                 {
-                    BindRegistrationProgressWidgets(ShowHidden);
+                    control.Show(true);
+                }
+                else
+                {
+                    if (Profile.TeamManagement.RegistrationProgress_TeamIDsHide.Contains(control.TeamID))
+                    {
+                        control.Show(false);
+                    }
+                    else
+                    {
+                        control.Show(true);
+                    }
                 }
             }
         }
@@ -90,28 +87,18 @@ namespace Trackr.Modules.TeamManagement
         {
             LinkButton btn = sender as LinkButton;
 
-            if (ShowHidden)
+            if (btn.CommandArgument == "show")
             {
+                DisplayHidden(true);
                 btn.Text = "Hide Hidden Teams";
+                btn.CommandArgument = "hide";
             }
             else
             {
+                DisplayHidden(false);
                 btn.Text = "Show Hidden Teams";
+                btn.CommandArgument = "show";
             }
-
-            ShowHidden = !ShowHidden;
-        }
-
-        private void BindRegistrationProgressWidgets(bool isShow)
-        {
-            List<int> hiddenTeamIDsRegProg = isShow ? new List<int>() : Profile.TeamManagement.RegistrationProgress_TeamIDsHide;
-
-            IEnumerable<TeamsController.TeamViewObject> data = gvAllTeams.GridViewItems.Data.Cast<TeamsController.TeamViewObject>().ToList();
-
-            rptWidgets.DataSource = data.Where(i => DateTime.Today <= i.End && !hiddenTeamIDsRegProg.Contains(i.TeamID))
-                .OrderBy(i => i.ProgramName).ThenByDescending(i => i.AgeCutoff)
-                .Select(i => i.TeamID);
-            rptWidgets.DataBind();
         }
     }
 }

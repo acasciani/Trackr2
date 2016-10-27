@@ -37,7 +37,7 @@ namespace Trackr.Source.Controls
             if (Rows.Count > 0) HeaderRow.TableSection = TableRowSection.TableHeader;
             if (base.CssClass.Length == 0)//if we didn't get a CSSClass from the tag, add the default
             {
-                base.CssClass = "table table-hover table-striped";
+                base.CssClass = "table table-hover table-striped trackrgridview";
             }
 
             base.GridLines = System.Web.UI.WebControls.GridLines.None;
@@ -48,7 +48,7 @@ namespace Trackr.Source.Controls
             }
 
             PagerSettings.Mode = PagerButtons.NumericFirstLast;
-            PagerStyle.CssClass = "gridview-pager";
+            PagerStyle.CssClass = "trackrgridview-pager";
         }
 
         protected override int CreateChildControls(System.Collections.IEnumerable dataSource, bool dataBinding)

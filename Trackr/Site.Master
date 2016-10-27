@@ -22,6 +22,7 @@
 
     <!-- loaders -->
     <link rel="stylesheet" href="Content/loaders/three-circles.css" />
+    <link rel="stylesheet" href="Content/gridview/style.css" />
 </head>
 <body>
     <form runat="server">
@@ -50,6 +51,7 @@
                 <asp:ScriptReference Path="~/Scripts/bloodhound.min.js" />
                 <asp:ScriptReference Path="~/Scripts/typeahead.bundle.min.js" />
                 <asp:ScriptReference Path="~/Scripts/bootstrap-tokenfield.js" />
+                <asp:ScriptReference Path="~/Scripts/progress/bounce.js" />
                 <%--Site Scripts--%>
             </Scripts>
         </asp:ScriptManager>
@@ -113,6 +115,7 @@
             </header>
 
             <div class="col-sm-12">
+
                 <ui:AlertBox runat="server" ID="ExceptionAlerts" />
                 <ui:AlertBox runat="server" ID="NotificationTooltips" />
 

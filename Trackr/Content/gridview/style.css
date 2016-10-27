@@ -1,0 +1,65 @@
+﻿/* normal, non-print */
+.trackrgridview-expander.trackrgridview-expanded {
+    position:fixed;
+    width:100%;
+    overflow-y:auto;
+    height:100%;
+    left:0;
+    top:0;
+    background-color:rgba(0,0,0,0.7);
+    z-index:1050;
+}
+
+.trackrgridview-expander.trackrgridview-expanded > .trackrgridview-expanded-container {
+    width: 96%;
+    background-color: white;
+    margin: 2%;
+    padding: 15px;
+}
+
+.trackrgridview-expander .top-level > div, .trackrgridview-expander .bottom-level > div {
+    text-align: right;
+}
+
+.trackrgridview-expander .top-level .glyphicons, .trackrgridview-expander .bottom-level .glyphicons {
+    margin-right: 5px;
+}
+
+/* gridview */
+tr.trackrgridview-pager > td > table td {
+    /* gives pager pages space between each other */
+    padding: 0 5px;
+}
+
+/* print setup */
+@media print {
+    .trackrgridview-expander.trackrgridview-expanded {
+        position: initial;
+        width: initial;
+        overflow-y: initial;
+        height: initial;
+        left: initial;
+        top: initial;
+        background-color: initial;
+        z-index: initial;
+    }
+    
+    .trackrgridview-expander.trackrgridview-expanded > .trackrgridview-expanded-container {
+        width: initial;
+        background-color: initial;
+        margin: initial;
+        padding: initial;
+    }
+
+    .trackrgridview {
+        margin-bottom: 0px;
+    }
+
+    .trackrgridview.table > thead > tr > th, .trackrgridview.table > tbody > tr > th, .trackrgridview.table > tfoot > tr > th, .trackrgridview.table > thead > tr > td, .trackrgridview.table > tbody > tr > td, .trackrgridview.table > tfoot > tr > td {
+        padding: 1px;
+    }
+
+    .trackrgridview-export-row, .trackrgridview-summary-resultsperpage, .trackrgridview-summary-expandcontrol, .trackrgridview-expander .top-level, .trackrgridview-expander .bottom-level {
+        display: none;
+    }
+}

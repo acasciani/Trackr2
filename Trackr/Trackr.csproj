@@ -287,6 +287,20 @@
     <Compile Include="Source\Cache\Scope\Players.Scope.cs" />
     <Compile Include="Source\Cache\Scope\ScopeCache.cs" />
     <Compile Include="Source\Cache\Scope\Teams.Scope.cs" />
+    <Compile Include="Source\Controls\Charts\Gauge.ascx.cs">
+      <DependentUpon>Gauge.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Source\Controls\Charts\Gauge.ascx.designer.cs">
+      <DependentUpon>Gauge.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Controls\ProgressLoaders\Bounce.ascx.cs">
+      <DependentUpon>Bounce.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Source\Controls\ProgressLoaders\Bounce.ascx.designer.cs">
+      <DependentUpon>Bounce.ascx</DependentUpon>
+    </Compile>
     <Compile Include="Source\Controls\TrackrGridView\Common.cs" />
     <Compile Include="Source\Controls\TrackrGridView\Expander\TrackrGridViewExpander.cs" />
     <Compile Include="Source\Controls\TrackrGridView\TrackrGridView.cs" />
@@ -329,6 +343,7 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\Calendar.css" />
+    <Content Include="Content\gridview\style.css" />
     <Content Include="Content\images\arrow.png" />
     <Content Include="Content\images\ganandalogo.png" />
     <Content Include="Content\images\highlight.png" />
@@ -388,6 +403,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\menu\left-full.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="Scripts\progress\bounce.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\typeahead.bundle.js" />
@@ -423,10 +439,12 @@
     <Content Include="Source\Controls\Alert.ascx" />
     <Content Include="Source\Controls\AlertBox.ascx" />
     <Content Include="Source\Controls\AttendanceTrackingWidget.ascx" />
+    <Content Include="Source\Controls\Charts\Gauge.ascx" />
     <Content Include="Source\Controls\EmailAddressBook.ascx" />
     <Content Include="Source\Controls\LeftNavigation.ascx" />
     <Content Include="Source\Controls\PhoneNumberBook.ascx" />
     <Content Include="Source\Controls\ProgramTeamPlayerPicker.ascx" />
+    <Content Include="Source\Controls\ProgressLoaders\Bounce.ascx" />
     <Content Include="Source\Controls\Widgets\RegistrationProgress.ascx" />
     <Content Include="Source\Wizards\PlayerManagement.ascx" />
     <Content Include="Source\Wizards\TeamManagement.ascx" />
