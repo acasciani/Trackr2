@@ -81,7 +81,7 @@
                 <li class="<%= mvPlayerInfoTabs.ActiveViewIndex == 2 ? "active" : !lnkPlayerEmails.Enabled ? "disabled" : "" %>"><asp:LinkButton runat="server" ID="lnkPlayerEmails" Text="Emails" OnClick="lnkPlayerTab_Click" CommandArgument="2" CausesValidation="false" /></li>
                 <li class="<%= mvPlayerInfoTabs.ActiveViewIndex == 3 ? "active" : !lnkPlayerPhones.Enabled ? "disabled" : "" %>"><asp:LinkButton runat="server" ID="lnkPlayerPhones" Text="Phones" OnClick="lnkPlayerTab_Click" CommandArgument="3" CausesValidation="false" /></li>
             </ul>
-
+            
             <!-- Tab panes -->
             <div class="tab-content">
                 <div class="tab-pane active">

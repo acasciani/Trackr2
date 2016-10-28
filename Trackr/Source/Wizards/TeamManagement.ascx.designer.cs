@@ -40,85 +40,67 @@ namespace Trackr.Source.Wizards {
         protected global::System.Web.UI.WebControls.WizardStep Step1_Info;
         
         /// <summary>
-        /// txtFirstName control.
+        /// ptpPicker control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtFirstName;
+        protected global::Trackr.Source.Controls.ProgramTeamPlayerPicker ptpPicker;
         
         /// <summary>
-        /// validatorFirstNameRequired control.
+        /// txtTeamName control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator validatorFirstNameRequired;
+        protected global::System.Web.UI.WebControls.TextBox txtTeamName;
         
         /// <summary>
-        /// txtMiddleInitial control.
+        /// txtActiveFrom control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtMiddleInitial;
+        protected global::System.Web.UI.WebControls.TextBox txtActiveFrom;
         
         /// <summary>
-        /// txtLastName control.
+        /// txtActiveTo control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtLastName;
+        protected global::System.Web.UI.WebControls.TextBox txtActiveTo;
         
         /// <summary>
-        /// validatorLastNameRequired control.
+        /// txtMinRosterSize control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator validatorLastNameRequired;
+        protected global::System.Web.UI.WebControls.TextBox txtMinRosterSize;
         
         /// <summary>
-        /// txtDateOfBirth control.
+        /// txtMaxRosterSize control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtDateOfBirth;
+        protected global::System.Web.UI.WebControls.TextBox txtMaxRosterSize;
         
         /// <summary>
-        /// validatorDOBParses control.
+        /// txtMaxDOB control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CustomValidator validatorDOBParses;
-        
-        /// <summary>
-        /// validatorDOBRequired control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator validatorDOBRequired;
-        
-        /// <summary>
-        /// lnkSaveTeam control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton lnkSaveTeam;
+        protected global::System.Web.UI.WebControls.TextBox txtMaxDOB;
         
         /// <summary>
         /// Step2_RegistrationRule control.
@@ -128,5 +110,77 @@ namespace Trackr.Source.Wizards {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.WizardStep Step2_RegistrationRule;
+        
+        /// <summary>
+        /// gvRegRules control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView gvRegRules;
+        
+        /// <summary>
+        /// lnkAddRegistrationRule control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton lnkAddRegistrationRule;
+        
+        /// <summary>
+        /// pnlAddRegistrationRule control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlAddRegistrationRule;
+        
+        /// <summary>
+        /// ptpPicker_PreviousTeam control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Trackr.Source.Controls.ProgramTeamPlayerPicker ptpPicker_PreviousTeam;
+        
+        /// <summary>
+        /// txtRegistrationOpenFrom control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtRegistrationOpenFrom;
+        
+        /// <summary>
+        /// txtRegistrationOpenTo control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtRegistrationOpenTo;
+        
+        /// <summary>
+        /// lnkSaveRegistrationRule control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton lnkSaveRegistrationRule;
+        
+        /// <summary>
+        /// lnkAddEditRegistrationRuleClose control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton lnkAddEditRegistrationRuleClose;
     }
 }

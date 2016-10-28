@@ -6,7 +6,7 @@
 
     <div class="panel panel-default">
         <div class="panel-heading">
-            <h4>Team Management - <%= TeamManagement.WasNew ? "Create Player" : "Edit Player" %></h4>
+            <h4>Team Management - <%= TeamManagement.WasNew ? "Create Team" : "Edit Team" %></h4>
         </div>
         <div class="panel-body">
             <ui:TeamManagement runat="server" ID="TeamManagement" EditPermission="TeamManagement.EditTeam" />

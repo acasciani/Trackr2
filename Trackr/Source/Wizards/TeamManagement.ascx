@@ -57,57 +57,139 @@
     
 
     <WizardSteps>
-        <asp:WizardStep runat="server" ID="Step1_Info" StepType="Start" Title="Team Information" OnActivate="Step1_Info_Activate">
+        <asp:WizardStep runat="server" ID="Step1_Info" StepType="Start" Title="Team Information">
+            <ui:ProgramTeamPlayerPicker runat="server" ID="ptpPicker" RequiredSelectOf="Program" />
 
-            <!-- Tab panes -->
-            <div class="tab-content">
-                <div class="tab-pane active">
+            <div class="row form-group">
+                <label for="<%=txtTeamName.ClientID %>" class="col-sm-12 control-label">Team Name</label>
+                <div class="col-sm-12">
+                    <asp:TextBox runat="server" ID="txtTeamName" MaxLength="100" CssClass="form-control" />
+                    <asp:RequiredFieldValidator Display="Dynamic" runat="server" ControlToValidate="txtTeamName" CssClass="text-danger" ErrorMessage="A team name is required." />
+                    <asp:RegularExpressionValidator Display="Dynamic" runat="server" ControlToValidate="txtTeamName" CssClass="text-danger" ErrorMessage="The team name must be between 2 and 100 characters long." ValidationExpression="^(.){2,100}$" />
+                </div>
+            </div>
 
+            <div class="row form-group">
+                <label for="<%=txtActiveFrom.ClientID %>" class="control-label col-sm-12">Active Range</label>
+                <div class="col-xs-5">
+                    <asp:TextBox runat="server" ID="txtActiveFrom" CssClass="form-control" MaxLength="30" TextMode="Date" />
+                </div>
+                <div class="col-xs-2 text-center">
+                    <label class="form-control-static" for="<%= txtActiveTo.ClientID %>">to</label>
+                </div>
+                <div class="col-xs-5">
+                    <asp:TextBox runat="server" ID="txtActiveTo" CssClass="form-control" MaxLength="30" TextMode="Date" />
+                </div>
 
-                            <div class="row form-group">
-                                <label for="<%=txtFirstName.ClientID %>" class="col-sm-12 control-label">First name</label>
-                                <div class="col-sm-12">
-                                    <asp:TextBox runat="server" ID="txtFirstName" CssClass="form-control" MaxLength="30" />
-                                    <asp:RequiredFieldValidator Display="Dynamic" runat="server" ID="validatorFirstNameRequired" ControlToValidate="txtFirstName" CssClass="text-danger" ErrorMessage="A first name is required." />
-                                </div>
-                            </div>
+                <div class="col-sm-12">
+                    <asp:CustomValidator Display="Dynamic" runat="server" ControlToValidate="txtActiveFrom" CssClass="text-danger" ErrorMessage="The active from date must be entered in the format: MM/DD/YYYY and must be greater than or equal to January 1, 1900 and less than or equal to January 1, 2200." OnServerValidate="validatorDateTimeParses_ServerValidate" />
+                    <asp:CustomValidator Display="Dynamic" runat="server" ControlToValidate="txtActiveTo" CssClass="text-danger" ErrorMessage="The active to date must be entered in the format: MM/DD/YYYY and must be greater than or equal to January 1, 1900 and less than or equal to January 1, 2200." OnServerValidate="validatorDateTimeParses_ServerValidate" />
+                    <asp:RequiredFieldValidator Display="Dynamic" runat="server" ControlToValidate="txtActiveFrom" CssClass="text-danger" ErrorMessage="The active from date is required." />
+                    <asp:RequiredFieldValidator Display="Dynamic" runat="server" ControlToValidate="txtActiveTo" CssClass="text-danger" ErrorMessage="The active to date is required." />
+                    <asp:CompareValidator Display="Dynamic" runat="server" ControlToValidate="txtActiveTo" CssClass="text-danger" ErrorMessage="The active to date must be greater than or equal to the active from date." ControlToCompare="txtActiveFrom" Operator="GreaterThanEqual" Type="Date" />
+                </div>
+            </div>
 
-                            <div class="row form-group">
-                                <label for="<%=txtMiddleInitial.ClientID %>" class="col-sm-12 control-label">Middle initial</label>
-                                <div class="col-sm-12">
-                                    <asp:TextBox runat="server" ID="txtMiddleInitial" MaxLength="1" CssClass="form-control" />
-                                </div>
-                            </div>
+            <div class="row form-group">
+                <label for="<%=txtMinRosterSize.ClientID %>" class="col-sm-12 control-label">Min. Roster Size</label>
+                <div class="col-sm-12">
+                    <asp:TextBox runat="server" ID="txtMinRosterSize" CssClass="form-control" MaxLength="4" TextMode="Number" />
+                    <asp:RequiredFieldValidator Display="Dynamic" runat="server" ControlToValidate="txtMinRosterSize" CssClass="text-danger" ErrorMessage="Please specify a minimum roster size." />
+                    <asp:RangeValidator Display="Dynamic" runat="server" ControlToValidate="txtMinRosterSize" CssClass="text-danger" ErrorMessage="The minimum roster size must be greater than 0 and less than 10,000." MinimumValue="1" MaximumValue="9999" Type="Integer" />
+                </div>
+            </div>
 
-                            <div class="row form-group">
-                                <label for="<%=txtLastName.ClientID %>" class="control-label col-sm-12">Last name</label>
-                                <div class="col-sm-12">
-                                    <asp:TextBox runat="server" ID="txtLastName" CssClass="form-control" MaxLength="30" />
-                                    <asp:RequiredFieldValidator Display="Dynamic" runat="server" ID="validatorLastNameRequired" ControlToValidate="txtLastName" CssClass="text-danger" ErrorMessage="A last name is required." />
-                                </div>
-                            </div>
+            <div class="row form-group">
+                <label for="<%=txtMaxRosterSize.ClientID %>" class="col-sm-12 control-label">Max. Roster Size</label>
+                <div class="col-sm-12">
+                    <asp:TextBox runat="server" ID="txtMaxRosterSize" CssClass="form-control" MaxLength="4" TextMode="Number" />
+                    <asp:RequiredFieldValidator Display="Dynamic" runat="server" ControlToValidate="txtMaxRosterSize" CssClass="text-danger" ErrorMessage="Please specify a maximum roster size." />
+                    <asp:RangeValidator Display="Dynamic" runat="server" ControlToValidate="txtMaxRosterSize" CssClass="text-danger" ErrorMessage="The maximum roster size must be greater than 0 and less than 10,000." MinimumValue="1" MaximumValue="9999" Type="Integer" />
+                    <asp:CompareValidator Display="Dynamic" runat="server" ControlToValidate="txtMaxRosterSize" CssClass="text-danger" ErrorMessage="The maximum roster size must be greater than or equal to the minimum roster size." ControlToCompare="txtMinRosterSize" Operator="GreaterThanEqual" Type="Integer" />
+                </div>
+            </div>
 
-                            <div class="row form-group">
-                                <label for="<%=txtDateOfBirth.ClientID %>" class="col-sm-12 control-label">Date of birth</label>
-                                <div class="col-sm-12">
-                                    <asp:TextBox runat="server" ID="txtDateOfBirth" CssClass="form-control" MaxLength="30" TextMode="Date" />
-                                    <asp:CustomValidator Display="Dynamic" runat="server" ID="validatorDOBParses" ControlToValidate="txtDateOfBirth" CssClass="text-danger" ErrorMessage="The date of birth must be entered in the format: MM/DD/YYYY and the date of birth must be greater than or equal to January 1, 1900 and less than or equal to January 1, 2200." OnServerValidate="validatorDateTimeParses_ServerValidate" />
-                                    <asp:RequiredFieldValidator Display="Dynamic" runat="server" ID="validatorDOBRequired" ControlToValidate="txtDateOfBirth" CssClass="text-danger" ErrorMessage="Player's date of birth is required." />
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <asp:LinkButton runat="server" ID="lnkSaveTeam" CausesValidation="true" OnClick="lnkSaveTeam_Click" Visible="false"><span class="glyphicon glyphicon-save"></span> Save General Information</asp:LinkButton>
-                                </div>
-                            </div>
+            <div class="row form-group">
+                <label for="<%=txtMaxDOB.ClientID %>" class="control-label col-sm-12">Max. Date of Birth</label>
+                <div class="col-sm-12">
+                    <asp:TextBox runat="server" ID="txtMaxDOB" CssClass="form-control" MaxLength="30" TextMode="Date" />
+                    <asp:CustomValidator Display="Dynamic" runat="server" ControlToValidate="txtMaxDOB" CssClass="text-danger" ErrorMessage="The maximum date of birth must be entered in the format: MM/DD/YYYY and must be greater than or equal to January 1, 1900 and less than or equal to January 1, 2200." OnServerValidate="validatorDateTimeParses_ServerValidate" />
+                    <asp:RequiredFieldValidator Display="Dynamic" runat="server" ControlToValidate="txtMaxDOB" CssClass="text-danger" ErrorMessage="The maximum date of birth is required." />
                 </div>
             </div>
         </asp:WizardStep>
 
 
         <asp:WizardStep runat="server" ID="Step2_RegistrationRule" StepType="Step" Title="Registration Rules">
-            TODO
+            <asp:GridView runat="server" ID="gvRegRules" AutoGenerateColumns="false" SelectMethod="gvRegRules_GetData" EmptyDataText="This team does not have any registration rules." CssClass="table table-striped table-hover" 
+                OnRowEditing="gvRegRules_RowEditing" OnRowCancelingEdit="gvRegRules_RowCancelingEdit" DeleteMethod="gvRegRules_DeleteItem" DataKeyNames="EditToken">
+                <Columns>
+                    <asp:BoundField DataField="TeamName" HeaderText="Previous Team" ReadOnly="true" />
+
+                    <asp:TemplateField>
+                        <ItemTemplate>
+                            <asp:LinkButton runat="server" ID="lnkRemoveRegistrationRule" Visible='<%# (bool)Eval("IsRemovable") %>' CommandName="Delete" ToolTip="Remove registration rule" CssClass="glyphicon glyphicon-trash" CausesValidation="false"></asp:LinkButton><span runat="server" visible='<%# (bool)Eval("IsRemovable") %>'>&nbsp;&nbsp;</span>
+                            <asp:LinkButton runat="server" ID="lnkEditRegistrationRule" CommandName="Edit" ToolTip="Edit registration rule" CssClass="glyphicon glyphicon-edit" CausesValidation="false"></asp:LinkButton>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                </Columns>
+            </asp:GridView>
+
+            <div class="row margin-bottom-5-px">
+                <div class="col-sm-12">
+                    <asp:LinkButton runat="server" ID="lnkAddRegistrationRule" OnClick="lnkAddRegistrationRule_Click" CausesValidation="false">
+                        <i class="glyphicon glyphicon-plus-sign"></i>Add Registration Rule
+                    </asp:LinkButton>
+                </div>
+            </div>
+
+            <asp:Panel runat="server" ID="pnlAddRegistrationRule" Visible="false">
+                <div class="well">
+
+                    <div class="form-group row">
+                        <label class="col-sm-12 control-label">Previous Team</label>
+                        <div class="col-sm-12">
+                            If players on a previous team should be allowed to join this team, then select the previous team. If anyone should be allowed to join this team regardless of their previous 
+                                            team association, then do not select a team.
+                        </div>
+                        <div class="col-xs-offset-1 col-xs-11">
+                            <ui:ProgramTeamPlayerPicker runat="server" ID="ptpPicker_PreviousTeam" EnableTeamSelect="true" />
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <label for="<%=txtRegistrationOpenFrom.ClientID %>" class="control-label col-sm-12">Registration Active</label>
+                        <div class="col-xs-5">
+                            <asp:TextBox runat="server" ID="txtRegistrationOpenFrom" CssClass="form-control" MaxLength="30" TextMode="Date" />
+                        </div>
+                        <div class="col-xs-2 text-center">
+                            <label class="form-control-static" for="<%= txtRegistrationOpenTo.ClientID %>">to</label>
+                        </div>
+                        <div class="col-xs-5">
+                            <asp:TextBox runat="server" ID="txtRegistrationOpenTo" CssClass="form-control" MaxLength="30" TextMode="Date" />
+                        </div>
+
+                        <div class="col-sm-12">
+                            <asp:CustomValidator Display="Dynamic" runat="server" ControlToValidate="txtRegistrationOpenFrom" CssClass="text-danger" ErrorMessage="The registraion open from date must be entered in the format: MM/DD/YYYY and must be greater than or equal to January 1, 1900 and less than or equal to January 1, 2200." OnServerValidate="validatorDateTimeParses_ServerValidate" />
+                            <asp:CustomValidator Display="Dynamic" runat="server" ControlToValidate="txtRegistrationOpenTo" CssClass="text-danger" ErrorMessage="The registration open to date must be entered in the format: MM/DD/YYYY and must be greater than or equal to January 1, 1900 and less than or equal to January 1, 2200." OnServerValidate="validatorDateTimeParses_ServerValidate" />
+                            <asp:RequiredFieldValidator Display="Dynamic" runat="server" ControlToValidate="txtRegistrationOpenFrom" CssClass="text-danger" ErrorMessage="The registration open from date is required." />
+                            <asp:RequiredFieldValidator Display="Dynamic" runat="server" ControlToValidate="txtRegistrationOpenTo" CssClass="text-danger" ErrorMessage="The registration open to date is required." />
+                            <asp:CompareValidator Display="Dynamic" runat="server" ControlToValidate="txtRegistrationOpenTo" CssClass="text-danger" ErrorMessage="The registration open to date must be greater than or equal to the registration open from date." ControlToCompare="txtRegistrationOpenFrom" Operator="GreaterThanEqual" Type="Date" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-6 text-left">
+                            <asp:LinkButton runat="server" ID="lnkSaveRegistrationRule" CausesValidation="true" OnClick="lnkSaveRegistrationRule_Click"><span class="glyphicon glyphicon-save"></span>Save Registration Rule Information</asp:LinkButton>
+                        </div>
+                    </div>
+
+                    <asp:LinkButton runat="server" ID="lnkAddEditRegistrationRuleClose" CausesValidation="false" OnClick="lnkAddEditRegistrationRuleClose_Click">
+                        <span class="glyphicon glyphicon-folder-close"></span>Cancel
+                    </asp:LinkButton>
+                </div>
+            </asp:Panel>
+
         </asp:WizardStep>
 
 
