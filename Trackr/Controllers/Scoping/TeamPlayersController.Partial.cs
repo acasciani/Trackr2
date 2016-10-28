@@ -12,7 +12,7 @@ using System.Linq.Expressions;
 
 namespace Trackr
 {
-    public partial class TeamPlayersController : OpenAccessBaseApiController<TrackrModels.TeamPlayer, TrackrModels.ClubManagement>, IScopableController<int>
+    public partial class TeamPlayersController : OpenAccessBaseApiController<TrackrModels.TeamPlayer, TrackrModels.ClubManagement>, IScopableController<TeamPlayer, int>
     {
         private class TeamPlayersScopeController : IScopable<TeamPlayer, int>
         {
@@ -74,6 +74,17 @@ namespace Trackr
         public List<int> GetScopedIDs(int UserID, string permission)
         {
             return GetScopedIDs(UserID, permission, i => true == true);
+        }
+
+        public TeamPlayer GetScopedEntity(int UserID, string permission, int primaryKey)
+        {
+            return GetScopedEntity(UserID, permission, primaryKey, new FetchStrategy());
+        }
+
+        public TeamPlayer GetScopedEntity(int UserID, string permission, int primaryKey, FetchStrategy fetch)
+        {
+            List<int> teamPlayerIDs = ScopeController<TeamPlayersScopeController, TeamPlayer, int>.GetScopedIDList(UserID, permission, i => i.TeamPlayerID == primaryKey);
+            return GetWhere(i => i.TeamPlayerID == primaryKey && teamPlayerIDs.Contains(i.TeamPlayerID), fetch).FirstOrDefault();
         }
     }
 }

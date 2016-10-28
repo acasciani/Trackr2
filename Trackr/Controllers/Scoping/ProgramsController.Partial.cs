@@ -12,7 +12,7 @@ using System.Linq.Expressions;
 
 namespace Trackr
 {
-    public partial class ProgramsController : OpenAccessBaseApiController<TrackrModels.Program, TrackrModels.ClubManagement>, IScopableController<int>
+    public partial class ProgramsController : OpenAccessBaseApiController<TrackrModels.Program, TrackrModels.ClubManagement>, IScopableController<Program, int>
     {
         public class ProgramsScopeController : IScopable<Program, int>
         {
@@ -71,6 +71,17 @@ namespace Trackr
         public List<int> GetScopedIDs(int UserID, string permission)
         {
             return ScopeController<ProgramsScopeController, Program, int>.GetScopedIDList(UserID, permission, i => true == true);
+        }
+
+        public Program GetScopedEntity(int UserID, string permission, int primaryKey)
+        {
+            return GetScopedEntity(UserID, permission, primaryKey, new FetchStrategy());
+        }
+
+        public Program GetScopedEntity(int UserID, string permission, int primaryKey, FetchStrategy fetch)
+        {
+            List<int> programIDs = ScopeController<ProgramsScopeController, Program, int>.GetScopedIDList(UserID, permission, i => i.ProgramID == primaryKey);
+            return GetWhere(i => i.ProgramID == primaryKey && programIDs.Contains(i.ProgramID), fetch).FirstOrDefault();
         }
     }
 }

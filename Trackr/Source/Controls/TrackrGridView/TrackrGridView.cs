@@ -10,11 +10,11 @@ using Trackr.Source.Controls.TGridView;
 namespace Trackr.Source.Controls
 {
     [ToolboxData("<{0}:TrackrGridView runat=server></{0}:TrackrGridView>")]
-    public partial class TrackrGridView : GridView
+    public partial class TrackrGridView<T> : GridView
     {
-        public GridViewData GridViewItems
+        public GridViewData<T> GridViewItems
         {
-            get { return HttpContext.Current.Session["TrackrGridViewResults"] as GridViewData; }
+            get { return HttpContext.Current.Session["TrackrGridViewResults"] as GridViewData<T>; }
             set { HttpContext.Current.Session["TrackrGridViewResults"] = value; }
         }
 

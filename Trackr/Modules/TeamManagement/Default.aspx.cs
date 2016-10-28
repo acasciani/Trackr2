@@ -11,6 +11,7 @@ using Trackr.Source.Controls.TGridView;
 using TrackrModels;
 using Trackr.Utils;
 using Trackr.Providers;
+using Trackr.Source.Controls;
 
 namespace Trackr.Modules.TeamManagement
 {
@@ -38,7 +39,7 @@ namespace Trackr.Modules.TeamManagement
                 data = tc.GetScopedTeamViewObject(CurrentUser.UserID, Permissions.TeamManagement.ViewTeams).ToList();
             }
 
-            GridViewData gvd = new GridViewData(typeof(TeamsController.TeamViewObject));
+            GridViewData<TeamsController.TeamViewObject> gvd = new GridViewData<TeamsController.TeamViewObject>(typeof(TeamsController.TeamViewObject));
             gvd.AddData(data);
             gvAllTeams.GridViewItems = gvd;
             gvAllTeams.DataSource = data;
@@ -56,6 +57,9 @@ namespace Trackr.Modules.TeamManagement
 
         protected void lnkFilter_Click(object sender, EventArgs e)
         {
+            var data = gvAllTeams.GridViewItems.ManipulateOriginal(i => (!ptpPicker.SelectedTeamID.HasValue || ptpPicker.SelectedTeamID == i.TeamID) && (!ptpPicker.SelectedProgramID.HasValue || ptpPicker.SelectedProgramID == i.ProgramID));
+
+            gvAllTeams.DataSource = data;
             gvAllTeams.DataBind();
         }
 

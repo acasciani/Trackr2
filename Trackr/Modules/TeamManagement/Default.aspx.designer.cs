@@ -46,7 +46,16 @@ namespace Trackr.Modules.TeamManagement {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::Trackr.Source.Controls.TrackrGridView gvAllTeams;
+        protected global::Trackr.Source.Controls.TrackrGridView_TeamViewObject gvAllTeams;
+        
+        /// <summary>
+        /// pnlRegistrationProgress control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.UpdatePanel pnlRegistrationProgress;
         
         /// <summary>
         /// lnkShowHideRegProg control.

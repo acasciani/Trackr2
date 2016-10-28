@@ -14,7 +14,7 @@ using Trackr.Source.Controls.TGridView;
 
 namespace Trackr.Source.Controls
 {
-    public partial class TrackrGridView : GridView
+    public partial class TrackrGridView<T> : GridView
     {
         public bool DisplayExcelExportButton { get; set; }
 

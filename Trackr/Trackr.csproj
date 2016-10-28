@@ -270,6 +270,13 @@
     <Compile Include="Modules\TeamManagement\Default.aspx.designer.cs">
       <DependentUpon>Default.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Modules\TeamManagement\Manage.aspx.cs">
+      <DependentUpon>Manage.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\TeamManagement\Manage.aspx.designer.cs">
+      <DependentUpon>Manage.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Modules\TeamManagement\TeamManagement.master.cs">
       <DependentUpon>TeamManagement.master</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -303,6 +310,7 @@
     </Compile>
     <Compile Include="Source\Controls\TrackrGridView\Common.cs" />
     <Compile Include="Source\Controls\TrackrGridView\Expander\TrackrGridViewExpander.cs" />
+    <Compile Include="Source\Controls\TrackrGridView\Generics\TrackrGridView.cs" />
     <Compile Include="Source\Controls\TrackrGridView\TrackrGridView.cs" />
     <Compile Include="Source\Controls\TrackrGridView\TrackrGridView.ExportExcelPartial.cs" />
     <Compile Include="Source\Controls\TrackrGridView\TrackrGridView.PagePartial.cs" />
@@ -331,6 +339,7 @@
     <Compile Include="Source\Wizards\TeamManagement.ascx.designer.cs">
       <DependentUpon>TeamManagement.ascx</DependentUpon>
     </Compile>
+    <Compile Include="Source\Wizards\TeamManager.cs" />
     <Compile Include="WebHandlers\Messenger\Recipients.ashx.cs">
       <DependentUpon>Recipients.ashx</DependentUpon>
     </Compile>
@@ -360,6 +369,7 @@
     <Content Include="Modules\PlayerManagement\Default.aspx" />
     <Content Include="Modules\PlayerManagement\Manage.aspx" />
     <Content Include="Modules\TeamManagement\Default.aspx" />
+    <Content Include="Modules\TeamManagement\Manage.aspx" />
     <Content Include="Modules\UserManagement\Default.aspx" />
     <Content Include="Modules\UserManagement\Manage.aspx" />
     <Content Include="Modules\UserManagement\NonUserGuardians.aspx" />

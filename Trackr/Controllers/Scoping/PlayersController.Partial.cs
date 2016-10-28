@@ -12,7 +12,7 @@ using Telerik.OpenAccess;
 
 namespace Trackr
 {
-    public partial class PlayersController : OpenAccessBaseApiController<TrackrModels.Player, TrackrModels.ClubManagement>, IScopableController<int>
+    public partial class PlayersController : OpenAccessBaseApiController<TrackrModels.Player, TrackrModels.ClubManagement>, IScopableController<Player, int>
     {
         private class PlayersScopeController : IScopable<Player, int>
         {

@@ -9,9 +9,9 @@ using System.Web.UI.WebControls;
 namespace Trackr.Source.Controls.TGridView
 {
     [ParseChildren(true), PersistChildren(true)]
-    public class TrackrGridViewExpander : WebControl, INamingContainer
+    public class TrackrGridViewExpander<T> : WebControl, INamingContainer
     {
-        private TrackrGridView _gridView = null;
+        private TrackrGridView<T> _gridView = null;
         private List<LinkButton> _toggleButtons = new List<LinkButton>();
 
         /// <summary>Display the controls in the top level row</summary>
@@ -36,8 +36,8 @@ namespace Trackr.Source.Controls.TGridView
             set { ViewState["IsGridViewExpanded"] = value; }
         }
 
-        [Browsable(false), DefaultValue(null), Description("The TrackrGridView control"), TemplateContainer(typeof(TrackrGridView)), PersistenceMode(PersistenceMode.InnerProperty)]
-        public virtual TrackrGridView TrackrGridView
+        //[Browsable(false), DefaultValue(null), Description("The TrackrGridView control"), TemplateContainer(typeof(TrackrGridView<T>)), PersistenceMode(PersistenceMode.InnerProperty)]
+        public virtual TrackrGridView<T> TrackrGridView
         {
             get
             {

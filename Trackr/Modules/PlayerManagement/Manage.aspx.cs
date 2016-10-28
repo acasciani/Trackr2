@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using TrackrModels;
 
 namespace Trackr.Modules.PlayerManagement
 {
@@ -33,7 +34,7 @@ namespace Trackr.Modules.PlayerManagement
             if (int.TryParse(Request.QueryString["id"], out playerID))
             {
                 // edit
-                CheckAllowed<PlayersController, int>(playerID, true, Permissions.PlayerManagement.EditPlayer, Permissions.PlayerManagement.EditPlayerBasic);
+                CheckAllowed<PlayersController, int, Player>(playerID, true, Permissions.PlayerManagement.EditPlayer, Permissions.PlayerManagement.EditPlayerBasic);
             }
             else
             {

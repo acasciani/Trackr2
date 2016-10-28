@@ -9,11 +9,10 @@ using Telerik.OpenAccess.FetchOptimization;
 using TrackrModels;
 using Telerik.OpenAccess;
 using System.Linq.Expressions;
-using Telerik.OpenAccess;
 
 namespace Trackr
 {
-    public partial class TeamSchedulesController : OpenAccessBaseApiController<TrackrModels.TeamSchedule, TrackrModels.ClubManagement>, IScopableController<int>
+    public partial class TeamSchedulesController : OpenAccessBaseApiController<TrackrModels.TeamSchedule, TrackrModels.ClubManagement>, IScopableController<TeamSchedule, int>
     {
         private class TeamSchedulesScopeController : IScopable<TeamSchedule, int>
         {
@@ -66,6 +65,22 @@ namespace Trackr
         public List<int> GetScopedIDs(int UserID, string permission)
         {
             return ScopeController<TeamSchedulesScopeController, TeamSchedule, int>.GetScopedIDList(UserID, permission, i => true == true);
+        }
+
+
+        public TeamSchedule GetScopedEntity(int UserID, string permission, int primaryKey)
+        {
+            throw new NotImplementedException();
+        }
+
+        public TeamSchedule GetScopedEntity(int UserID, string permission, int primaryKey, FetchStrategy fetch)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<TeamSchedule> GetScopedEntities(int UserID, string permission, FetchStrategy fetch)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -54,9 +54,10 @@ namespace Trackr
         }
 
 
-        public void CheckAllowed<T, K>(K resourceID, bool useOrLogic, params string[] permissions)
+        public void CheckAllowed<T, K, Q>(K resourceID, bool useOrLogic, params string[] permissions)
             where K : struct
-            where T : IScopableController<K>, IDisposable, new()
+            where T : IScopableController<Q, K>, IDisposable, new()
+            where Q : class
         {
             using (T c = new T())
             {

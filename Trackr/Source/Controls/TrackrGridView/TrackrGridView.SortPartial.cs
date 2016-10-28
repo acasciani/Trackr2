@@ -9,7 +9,7 @@ using Trackr.Utils;
 
 namespace Trackr.Source.Controls
 {
-    public partial class TrackrGridView : GridView
+    public partial class TrackrGridView<T> : GridView
     {
         protected override void OnSorting(GridViewSortEventArgs e)
         {
@@ -34,7 +34,7 @@ namespace Trackr.Source.Controls
                 sortCriteria.Add(new KeyValuePair<string, bool>(e.SortExpression, IsLastSortedColumnAscending));
             }
 
-            List<object> sorted = OrderObjects(sortCriteria).ToList();
+            List<T> sorted = OrderObjects(sortCriteria).ToList();
 
             GridViewItems.ResetData();
             GridViewItems.AddData(sorted);
@@ -56,12 +56,12 @@ namespace Trackr.Source.Controls
             set { ViewState["GridViewResults_SortDirection"] = value; }
         }
 
-        private IOrderedEnumerable<object> OrderObjects(List<KeyValuePair<string, bool>> sortBys)
+        private IOrderedEnumerable<T> OrderObjects(List<KeyValuePair<string, bool>> sortBys)
         {
             Type viewModelType = GridViewItems.DataType;
-            List<object> unordered = GridViewItems.Data;
+            List<T> unordered = GridViewItems.Data;
 
-            IOrderedEnumerable<object> Ordered = null;
+            IOrderedEnumerable<T> Ordered = null;
 
             foreach (KeyValuePair<string, bool> sortBy in sortBys)
             {

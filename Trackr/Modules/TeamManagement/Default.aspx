@@ -13,7 +13,7 @@
 
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h4>Team Management - View All Players</h4>
+                    <h4>Team Management - View All Teams</h4>
                 </div>
                 <div class="panel-body">
                     <ui:ProgramTeamPlayerPicker runat="server" ID="ptpPicker" Permission="TeamManagement.ViewTeams" />
@@ -26,7 +26,7 @@
                     <hr />
                     <div class="row">
                         <div class="col-sm-12 table-responsive">
-                            <ui:TrackrGridView runat="server" ID="gvAllTeams" AutoGenerateColumns="false" CssClass="table table-striped trackrgridview" AllowSorting="true" AllowPaging="true" DisplayResultsPerPageOptions="true" DisplayPagingSummary="true" IsPinnable="true">
+                            <ui:TrackrGridView_TeamViewObject runat="server" ID="gvAllTeams" AutoGenerateColumns="false" CssClass="table table-striped trackrgridview" AllowSorting="true" AllowPaging="true" DisplayResultsPerPageOptions="true" DisplayPagingSummary="true" IsPinnable="true">
                                 <Columns>
                                     <ui:TrackrBoundField DataField="ProgramName" SortExpression="ProgramName" HeaderText="Program Name" ItemStyle-CssClass="col-xs-3" AllowPinnable="true" IsPinnable="true" />
                                     <ui:TrackrBoundField DataField="TeamName" SortExpression="TeamName" HeaderText="Team name" AllowPinnable="true" IsPinnable="true" />
@@ -38,7 +38,7 @@
                                         </ItemTemplate>
                                     </asp:TemplateField>
                                 </Columns>
-                            </ui:TrackrGridView>
+                            </ui:TrackrGridView_TeamViewObject>
                         </div>
                     </div>
 
@@ -50,8 +50,14 @@
     </asp:UpdatePanel>
 
 
-    <asp:UpdatePanel runat="server" UpdateMode="Conditional">
+    <asp:UpdatePanel runat="server" UpdateMode="Conditional" ID="pnlRegistrationProgress">
         <ContentTemplate>
+            <asp:UpdateProgress runat="server" AssociatedUpdatePanelID="pnlRegistrationProgress">
+                <ProgressTemplate>
+                    <progress:Bounce runat="server" />
+                </ProgressTemplate>
+            </asp:UpdateProgress>
+
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h4>Team Management - Registration Progress (<asp:LinkButton runat="server" ID="lnkShowHideRegProg" OnClick="lnkShowHideRegProg_Click" CommandArgument="show" Text="Show Hidden Teams" />)</h4>

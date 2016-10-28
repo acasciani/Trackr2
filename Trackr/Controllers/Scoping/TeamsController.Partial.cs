@@ -12,7 +12,7 @@ using System.Linq.Expressions;
 
 namespace Trackr
 {
-    public partial class TeamsController : OpenAccessBaseApiController<TrackrModels.Team, TrackrModels.ClubManagement>, IScopableController<int>
+    public partial class TeamsController : OpenAccessBaseApiController<TrackrModels.Team, TrackrModels.ClubManagement>, IScopableController<Team, int>
     {
         private class TeamsScopeController : IScopable<Team, int>
         {
@@ -78,6 +78,23 @@ namespace Trackr
         public List<int> GetScopedIDs(int UserID, string permission, Expression<Func<Team, bool>> filter)
         {
             return ScopeController<TeamsScopeController, Team, int>.GetScopedIDList(UserID, permission, filter);
+        }
+
+        public Team GetScopedEntity(int UserID, string permission, int primaryKey)
+        {
+            return GetScopedEntity(UserID, permission, primaryKey, new FetchStrategy());
+        }
+
+        public Team GetScopedEntity(int UserID, string permission, int primaryKey, FetchStrategy fetch)
+        {
+            List<int> teamIDs = ScopeController<TeamsScopeController, Team, int>.GetScopedIDList(UserID, permission, i => i.TeamID == primaryKey);
+            return GetWhere(i => i.TeamID == primaryKey && teamIDs.Contains(i.TeamID), fetch).FirstOrDefault();
+        }
+
+        public IEnumerable<Team> GetScopedEntities(int UserID, string permission, FetchStrategy fetch)
+        {
+            List<int> teamIDs = ScopeController<TeamsScopeController, Team, int>.GetScopedIDList(UserID, permission, i => true == true);
+            return GetWhere(i => teamIDs.Contains(i.TeamID), fetch);
         }
     }
 }

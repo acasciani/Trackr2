@@ -9,7 +9,7 @@ using System.Web.UI.WebControls;
 
 namespace Trackr.Source.Controls
 {
-    public partial class TrackrGridView : GridView
+    public partial class TrackrGridView<T> : GridView
     {
         public bool DisplayPagingSummary { get; set; }
         public bool DisplayResultsPerPageOptions { get; set; }

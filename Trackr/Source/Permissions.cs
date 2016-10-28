@@ -36,6 +36,8 @@ namespace Trackr
         public class TeamManagement
         {
             public const string ViewTeams = "TeamManagement.ViewTeams";
+            public const string CreateTeam = "TeamManagement.CreateTeam";
+            public const string EditTeam = "TeamManagement.EditTeam";
         }
     }
 }

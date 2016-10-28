@@ -9,7 +9,7 @@ using TrackrModels;
 
 namespace Trackr
 {
-    public partial class WebUsersController : OpenAccessBaseApiController<TrackrModels.WebUser, TrackrModels.UserManagement>, IScopableController<int>
+    public partial class WebUsersController : OpenAccessBaseApiController<TrackrModels.WebUser, TrackrModels.UserManagement>, IScopableController<WebUser, int>
     {/*
         [Route("api/WebUsers/GetScoped/{UserID}/{permission}")]
         [HttpGet]
@@ -128,6 +128,12 @@ namespace Trackr
             var allowCount = ScopeController<WebUsersScopeController, WebUser, int>.GetScopeAssignments(userID, permission, false);
 
             return /*denyCount.Count() == 0 && */allowCount.Count() > 0;
+        }
+
+        public IEnumerable<WebUser> GetScopedEntities(int UserID, string permission, FetchStrategy fetch)
+        {
+            List<int> webUserIDs = ScopeController<WebUsersScopeController, WebUser, int>.GetScopedIDList(UserID, permission, i => true == true);
+            return GetWhere(i => webUserIDs.Contains(i.UserID), fetch);
         }
     }
 }
