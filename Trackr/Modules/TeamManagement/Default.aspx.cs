@@ -75,7 +75,7 @@ namespace Trackr.Modules.TeamManagement
                 }
                 else
                 {
-                    if (Profile.TeamManagement.RegistrationProgress_TeamIDsHide.Contains(control.TeamID))
+                    if ((Profile.TeamManagement.RegistrationProgress_TeamIDsHide ?? new List<int>()).Contains(control.TeamID))
                     {
                         control.Show(false);
                     }
