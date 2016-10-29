@@ -687,13 +687,13 @@
         </orm:identity>
         <orm:concurrency strategy="changed" />
         <orm:field name="_registrationRuleID" property="RegistrationRuleID" behavior="readwrite" uniqueId="d3253cc0-67d4-4b36-8136-945c5533c01c" type="System.Int32">
-          <orm:column name="RegistrationRuleID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+          <orm:column name="RegistrationRuleID" sql-type="integer" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
         </orm:field>
         <orm:field name="_oldTeamID" property="OldTeamID" behavior="readwrite" uniqueId="e096dc70-7fb8-4cde-9115-c8b334d557a6" type="System.Nullable`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
-          <orm:column name="OldTeamID" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+          <orm:column name="OldTeamID" sql-type="integer" nullable="true" length="0" scale="0" ado-type="Int32" />
         </orm:field>
         <orm:field name="_newTeamID" property="NewTeamID" behavior="readwrite" uniqueId="a33e00a9-55d8-4ce0-8618-2af38722395b" type="System.Int32">
-          <orm:column name="NewTeamID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+          <orm:column name="NewTeamID" sql-type="integer" nullable="false" length="0" scale="0" ado-type="Int32" />
         </orm:field>
         <orm:field name="_registrationOpens" property="RegistrationOpens" behavior="readwrite" uniqueId="b12417ac-03d8-4bb7-b06d-3d2badd615db" type="System.DateTime">
           <orm:column name="RegistrationOpens" sql-type="datetime" nullable="false" length="0" scale="0" ado-type="DateTime" />
@@ -703,6 +703,9 @@
         </orm:field>
         <orm:field name="_dateOfBirthCutoff" property="DateOfBirthCutoff" behavior="readwrite" uniqueId="6f5a362b-f227-40a2-adc6-44bb40c1193a" type="System.Nullable`1[[System.DateTime, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
           <orm:column name="DateOfBirthCutoff" sql-type="datetime" nullable="true" length="0" scale="0" ado-type="DateTime" />
+        </orm:field>
+        <orm:field name="_active" property="Active" behavior="readwrite" uniqueId="31ce2976-30e1-49ac-b4a0-4b3c297580e4" type="bool">
+          <orm:column name="Active" sql-type="tinyint" nullable="false" length="0" scale="0" ado-type="Byte" />
         </orm:field>
         <orm:field name="_team" property="OldTeam" behavior="readwrite" uniqueId="05de8698-d53a-44cc-b418-aa44c5e39a69" type="TrackrModels.Team">
           <orm:reference uniqueId="e309b3be-863f-4451-afd4-b6d03e966c1f" association-name="RegistrationRuleHasTeam">
@@ -716,6 +719,16 @@
             <orm:constraint name="FK_RegistrationRules_NewTeams" delete-action="dbdefaultrule" destination-table="Teams" />
           </orm:reference>
         </orm:field>
+        <orm:index name="FK_RegistrationRules_OldTeams_idx">
+          <orm:columnMapping>
+            <orm:column name="OldTeamID" sql-type="integer" nullable="true" length="0" scale="0" ado-type="Int32" />
+          </orm:columnMapping>
+        </orm:index>
+        <orm:index name="FK_RegistrationRules_NewTeams_idx">
+          <orm:columnMapping>
+            <orm:column name="NewTeamID" sql-type="integer" nullable="false" length="0" scale="0" ado-type="Int32" />
+          </orm:columnMapping>
+        </orm:index>
       </orm:class>
     </orm:namespace>
     <orm:schema schema="">
@@ -980,17 +993,28 @@
         </orm:constraint>
       </orm:table>
       <orm:table name="RegistrationRules">
-        <orm:column name="RegistrationRuleID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
-        <orm:column name="OldTeamID" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
-        <orm:column name="NewTeamID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        <orm:column name="RegistrationRuleID" sql-type="integer" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        <orm:column name="OldTeamID" sql-type="integer" nullable="true" length="0" scale="0" ado-type="Int32" />
+        <orm:column name="NewTeamID" sql-type="integer" nullable="false" length="0" scale="0" ado-type="Int32" />
         <orm:column name="RegistrationOpens" sql-type="datetime" nullable="false" length="0" scale="0" ado-type="DateTime" />
         <orm:column name="RegistrationCloses" sql-type="datetime" nullable="false" length="0" scale="0" ado-type="DateTime" />
         <orm:column name="DateOfBirthCutoff" sql-type="datetime" nullable="true" length="0" scale="0" ado-type="DateTime" />
+        <orm:column name="Active" sql-type="tinyint" nullable="false" length="0" scale="0" ado-type="Byte" />
+        <orm:index name="FK_RegistrationRules_OldTeams_idx">
+          <orm:columnMapping>
+            <orm:column name="OldTeamID" sql-type="integer" nullable="true" length="0" scale="0" ado-type="Int32" />
+          </orm:columnMapping>
+        </orm:index>
+        <orm:index name="FK_RegistrationRules_NewTeams_idx">
+          <orm:columnMapping>
+            <orm:column name="NewTeamID" sql-type="integer" nullable="false" length="0" scale="0" ado-type="Int32" />
+          </orm:columnMapping>
+        </orm:index>
         <orm:constraint name="FK_RegistrationRules_OldTeams" delete-action="dbdefaultrule" destination-table="Teams">
-          <orm:column name="OldTeamID" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+          <orm:column name="OldTeamID" sql-type="integer" nullable="true" length="0" scale="0" ado-type="Int32" />
         </orm:constraint>
         <orm:constraint name="FK_RegistrationRules_NewTeams" delete-action="dbdefaultrule" destination-table="Teams">
-          <orm:column name="NewTeamID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+          <orm:column name="NewTeamID" sql-type="integer" nullable="false" length="0" scale="0" ado-type="Int32" />
         </orm:constraint>
       </orm:table>
     </orm:schema>
@@ -1002,7 +1026,7 @@
   </orm:orm>
   <ModelSettings xmlns="">
     <AppConfigConnectionPropertyName>ClubManagementConnection</AppConfigConnectionPropertyName>
-    <AppConfigConnectionString>data source=aa1rkzfjc1zm4wp.czrmlqzwnyeu.us-west-2.rds.amazonaws.com,1433;initial catalog=ClubManagement;persist security info=True;user id=alex;password=casciani</AppConfigConnectionString>
+    <AppConfigConnectionString>server=192.168.201.64;database=ClubManagement;uid=WWW_Public;pwd=g#PF9hwsPQ@7n49</AppConfigConnectionString>
     <InitialCatalog>ClubManagement</InitialCatalog>
     <NamingSettings>
       <ClassRules>
@@ -1555,6 +1579,7 @@
       <Property Id="0f4ace64-9843-41f0-a30f-6bd0fd1e9d97" name="RegistrationCloses" type="DateTime" label="RegistrationCloses : DateTime" kind="Persistent" fieldName="_registrationCloses" />
       <Property Id="b12417ac-03d8-4bb7-b06d-3d2badd615db" name="RegistrationOpens" type="DateTime" label="RegistrationOpens : DateTime" kind="Persistent" fieldName="_registrationOpens" />
       <Property Id="6f5a362b-f227-40a2-adc6-44bb40c1193a" name="DateOfBirthCutoff" type="DateTime" label="DateOfBirthCutoff : DateTime" nullable="true" kind="Persistent" fieldName="_dateOfBirthCutoff" />
+      <Property Id="31ce2976-30e1-49ac-b4a0-4b3c297580e4" name="Active" type="bool" label="Active : bool" kind="Persistent" fieldName="_active" />
       <AssociationTargets>
         <Association Id="e309b3be-863f-4451-afd4-b6d03e966c1f" SourceMultiplicity="One" name="RegistrationRuleHasTeam">
           <DomainClassMoniker name="/ClubManagement/Team" />

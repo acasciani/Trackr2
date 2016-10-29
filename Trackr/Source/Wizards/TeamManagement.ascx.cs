@@ -164,13 +164,30 @@ namespace Trackr.Source.Wizards
             {
                 int teamID = TeamManager.SaveData(CurrentUser.UserID);
 
-                if (TeamSavedSuccess != null)
+                // now try to save registration rules
+                try
                 {
-                    TeamSavedSuccess(null, new TeamSavedEventArgs() { TeamID = teamID });
+                    TeamManager.SaveRegistrationRules(teamID);
+
+                    if (TeamSavedSuccess != null)
+                    {
+                        TeamSavedSuccess(null, new TeamSavedEventArgs() { TeamID = teamID });
+                    }
+                    else
+                    {
+                        AlertBox.AddAlert("Successfully saved changes.");
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    AlertBox.AddAlert("Successfully saved changes.");
+                    AlertBox.AddAlert("Successfully saved basic information but failed to save registration rules.", false, UI.AlertBoxType.Error);
+
+                    if (TeamSavedError != null)
+                    {
+                        TeamSavedError(null, new TeamSavedEventArgs() { TeamID = teamID });
+                    }
+
+                    Page.Master.HandleException(ex);
                 }
             }
             catch (TeamModifiedByAnotherProcessException ex)
@@ -200,163 +217,132 @@ namespace Trackr.Source.Wizards
         public IQueryable gvRegRules_GetData()
         {
 
-            return TeamManager.Team.Guardians.Where(i => i.Active).Select(i => new
+            return TeamManager.RegistrationRules.Where(i => i.Active).Select(i => new
             {
-                Guardian = i.Person.FName + " " + i.Person.LName,
+                TeamName = i.OldTeam == null ? "" : i.OldTeam.TeamName,
                 IsRemovable = true,
-                GuardianID = i.GuardianID,
-                EditToken = i.EditToken,
-                PersonEditToken = i.Person.EditToken
-            }).OrderByDescending(i => i.Guardian).AsQueryable();
+                RegistrationRuleID = i.RegistrationRuleID,
+                EditToken = i.EditToken
+            }).OrderByDescending(i => i.TeamName).AsQueryable();
         }
 
         private void ClearRegistrationRuleForm()
         {
-            txtGuardianFirstName.Text = null;
-            txtGuardianMiddleInitial.Text = null;
-            txtGuardianLastName.Text = null;
-            AddressBook.Reset();
-            EmailBook.Reset();
-            PhoneNumberBook.Reset();
-            mvGuardianTabs.ActiveViewIndex = 0;
-            pnlAddGuardian.Visible = false;
-            lnkAddGuardian.Visible = true;
-            UpdateGuardianTabs();
+            ptpPicker_PreviousTeam.SelectedProgramID = null;
+            ptpPicker_PreviousTeam.SelectedTeamID = null;
+            ptpPicker_PreviousTeam.Populate();
+            txtRegistrationOpenFrom.Text = "";
+            txtRegistrationOpenTo.Text = "";
+            txtAgeCutoff.Text = "";
         }
 
         private Guid SaveRegistrationRule(Guid? editToken)
         {
             if (!editToken.HasValue)
             {
-                editToken = PlayerManager.AddGuardian(ClubID);
+                editToken = TeamManager.AddRegistrationRule();
             }
 
-            Guid playerEditToken = PlayerManager.Player.Guardians.First(i => i.EditToken == editToken.Value).Person.EditToken;
-
-            char? mInitial = string.IsNullOrWhiteSpace(txtGuardianMiddleInitial.Text) ? (char?)null : txtGuardianMiddleInitial.Text[0];
-            PlayerManager.UpdatePerson(playerEditToken, txtGuardianFirstName.Text, txtGuardianLastName.Text, mInitial, null);
+            TeamManager.UpdateRegistrationRule(editToken.Value, ptpPicker_PreviousTeam.SelectedTeamID, DateTime.Parse(txtRegistrationOpenFrom.Text), DateTime.Parse(txtRegistrationOpenTo.Text), string.IsNullOrWhiteSpace(txtAgeCutoff.Text) ? (DateTime?)null : DateTime.Parse(txtAgeCutoff.Text));
 
             return editToken.Value;
         }
 
-        private void Populate_RegistrationRuleEdit(Guid guardianEditToken)
+        private void Populate_RegistrationRuleEdit(Guid registrationRuleEditToken)
         {
-            ClearGuardianForm();
+            ClearRegistrationRuleForm();
 
             // populate
-            Guardian guardian = PlayerManager.Player.Guardians.First(i => i.EditToken == guardianEditToken);
-            txtGuardianFirstName.Text = guardian.Person.FName;
-            txtGuardianMiddleInitial.Text = guardian.Person.MInitial.HasValue ? guardian.Person.MInitial.Value.ToString() : "";
-            txtGuardianLastName.Text = guardian.Person.LName;
+            RegistrationRule rule = TeamManager.RegistrationRules.First(i => i.EditToken == registrationRuleEditToken);
 
-            pnlAddGuardian.Visible = true;
-            lnkAddGuardian.Visible = false;
+            txtRegistrationOpenFrom.Text = rule.RegistrationOpens.ToString("yyyy-MM-dd");
+            txtRegistrationOpenTo.Text = rule.RegistrationCloses.ToString("yyyy-MM-dd");
+            txtAgeCutoff.Text = rule.DateOfBirthCutoff.HasValue ? rule.DateOfBirthCutoff.Value.ToString("yyyy-MM-dd") : "";
+
+            // set picker
+            if (rule.OldTeamID.HasValue)
+            {
+                ptpPicker_PreviousTeam.SelectedProgramID = rule.OldTeam.ProgramID;
+                ptpPicker_PreviousTeam.SelectedTeamID = rule.OldTeamID;
+                ptpPicker_PreviousTeam.Populate();
+            }
+
+            pnlAddRegistrationRule.Visible = true;
+            lnkAddRegistrationRule.Visible = false;
         }
 
         protected void gvRegRules_RowEditing(object sender, GridViewEditEventArgs e)
         {
-            Guid editToken = (Guid)gvGuardians.DataKeys[e.NewEditIndex].Value;
-            Populate_GuardianEdit(editToken);
-            gvGuardians.EditIndex = e.NewEditIndex;
-            gvGuardians.DataBind();
-            UpdateGuardianTabs();
+            Guid editToken = (Guid)gvRegRules.DataKeys[e.NewEditIndex].Value;
+            Populate_RegistrationRuleEdit(editToken);
+            gvRegRules.EditIndex = e.NewEditIndex;
+            gvRegRules.DataBind();
         }
 
         protected void gvRegRules_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
         {
-            gvGuardians.EditIndex = -1;
-            gvGuardians.DataBind();
-            UpdateGuardianTabs();
+            gvRegRules.EditIndex = -1;
+            gvRegRules.DataBind();
         }
 
         public void gvRegRules_DeleteItem(Guid editToken)
         {
-            ClearGuardianForm();
-            PlayerManager.DeleteGuardian(editToken);
-            gvGuardians.DataBind();
+            ClearRegistrationRuleForm();
+            TeamManager.DeleteRegistrationRule(editToken);
+            gvRegRules.DataBind();
+            pnlAddRegistrationRule.Visible = false;
+            lnkAddRegistrationRule.Visible = true;
         }
 
         protected void lnkAddRegistrationRule_Click(object sender, EventArgs e)
         {
-            ClearGuardianForm();
-            pnlAddGuardian.Visible = true;
-            lnkAddGuardian.Visible = false;
-            gvGuardians.EditIndex = -1;
-            gvGuardians.DataBind();
-            UpdateGuardianTabs();
+            ClearRegistrationRuleForm();
+            pnlAddRegistrationRule.Visible = true;
+            lnkAddRegistrationRule.Visible = false;
+            gvRegRules.EditIndex = -1;
+            gvRegRules.DataBind();
         }
 
         protected void lnkSaveRegistrationRule_Click(object sender, EventArgs e)
         {
-            if (!Page.IsValid || HasGuardianMatches())
+            if (!Page.IsValid)
             {
                 return;
             }
 
-            SaveGuardian_Step1();
+            SaveRegistrationRule();
+            pnlAddRegistrationRule.Visible = false;
+            lnkAddRegistrationRule.Visible = true;
         }
 
-        private void SaveRegistrationRule_Step1()
+        private void SaveRegistrationRule()
         {
-            Guid? editToken = gvGuardians.EditIndex != -1 ? (Guid)gvGuardians.DataKeys[gvGuardians.EditIndex].Value : (Guid?)null;
-            editToken = SaveGuardian(editToken);
-            gvGuardians.DataBind();
+            Guid? editToken = gvRegRules.EditIndex != -1 ? (Guid)gvRegRules.DataKeys[gvRegRules.EditIndex].Value : (Guid?)null;
+            editToken = SaveRegistrationRule(editToken);
+            gvRegRules.DataBind();
 
-            for (int i = 0; i < gvGuardians.DataKeys.Count; i++)
+            for (int i = 0; i < gvRegRules.DataKeys.Count; i++)
             {
-                if (editToken.Value == (Guid)gvGuardians.DataKeys[i].Value)
+                if (editToken.Value == (Guid)gvRegRules.DataKeys[i].Value)
                 {
-                    gvGuardians.EditIndex = i;
+                    gvRegRules.EditIndex = i;
                     break;
                 }
             }
 
             if (!editToken.HasValue)
             {
-                ClearGuardianForm();
+                ClearRegistrationRuleForm();
             }
-            else
-            {
-                UpdateGuardianTabs();
-            }
-
-            lnkGuardianTab_Click(lnkGuardianAddress, new EventArgs() { });
         }
 
         protected void lnkAddEditRegistrationRuleClose_Click(object sender, EventArgs e)
         {
-            AddressBook.Reset();
-            mvGuardianTabs.ActiveViewIndex = 0;
-            pnlAddGuardian.Visible = false;
-            lnkAddGuardian.Visible = true;
-            gvGuardians.EditIndex = -1;
-            gvGuardians.DataBind();
-            UpdateGuardianTabs();
-        }
-
-        protected void lnkSelectRegistrationRule_Click(object sender, EventArgs e)
-        {
-            LinkButton button = (LinkButton)sender;
-            int personID = int.Parse(button.CommandArgument);
-
-            PlayerManager.AddGuardians(new List<int>() { personID });
-
-            pnlPossibleGuardianMatches.Visible = false;
-            gvGuardians.EditIndex = -1;
-            gvGuardians.DataBind();
-            ClearGuardianForm();
+            pnlAddRegistrationRule.Visible = false;
+            lnkAddRegistrationRule.Visible = true;
+            gvRegRules.EditIndex = -1;
+            gvRegRules.DataBind();
         }
         #endregion
-
-        // The return type can be changed to IEnumerable, however to support
-        // paging and sorting, the following parameters must be added:
-        //     int maximumRows
-        //     int startRowIndex
-        //     out int totalRowCount
-        //     string sortByExpression
-        public IQueryable gvRegRules_GetData1()
-        {
-            return null;
-        }
     }
 }

@@ -120,7 +120,7 @@
         </asp:WizardStep>
 
 
-        <asp:WizardStep runat="server" ID="Step2_RegistrationRule" StepType="Step" Title="Registration Rules">
+        <asp:WizardStep runat="server" ID="Step2_RegistrationRule" StepType="Finish" Title="Registration">
             <asp:GridView runat="server" ID="gvRegRules" AutoGenerateColumns="false" SelectMethod="gvRegRules_GetData" EmptyDataText="This team does not have any registration rules." CssClass="table table-striped table-hover" 
                 OnRowEditing="gvRegRules_RowEditing" OnRowCancelingEdit="gvRegRules_RowCancelingEdit" DeleteMethod="gvRegRules_DeleteItem" DataKeyNames="EditToken">
                 <Columns>
@@ -145,7 +145,7 @@
 
             <asp:Panel runat="server" ID="pnlAddRegistrationRule" Visible="false">
                 <div class="well">
-
+                    <div class="tab-pane full">
                     <div class="form-group row">
                         <label class="col-sm-12 control-label">Previous Team</label>
                         <div class="col-sm-12">
@@ -158,7 +158,7 @@
                     </div>
 
                     <div class="row form-group">
-                        <label for="<%=txtRegistrationOpenFrom.ClientID %>" class="control-label col-sm-12">Registration Active</label>
+                        <label for="<%=txtRegistrationOpenFrom.ClientID %>" class="control-label col-xs-12">Registration Active</label>
                         <div class="col-xs-5">
                             <asp:TextBox runat="server" ID="txtRegistrationOpenFrom" CssClass="form-control" MaxLength="30" TextMode="Date" />
                         </div>
@@ -170,20 +170,28 @@
                         </div>
 
                         <div class="col-sm-12">
-                            <asp:CustomValidator Display="Dynamic" runat="server" ControlToValidate="txtRegistrationOpenFrom" CssClass="text-danger" ErrorMessage="The registraion open from date must be entered in the format: MM/DD/YYYY and must be greater than or equal to January 1, 1900 and less than or equal to January 1, 2200." OnServerValidate="validatorDateTimeParses_ServerValidate" />
-                            <asp:CustomValidator Display="Dynamic" runat="server" ControlToValidate="txtRegistrationOpenTo" CssClass="text-danger" ErrorMessage="The registration open to date must be entered in the format: MM/DD/YYYY and must be greater than or equal to January 1, 1900 and less than or equal to January 1, 2200." OnServerValidate="validatorDateTimeParses_ServerValidate" />
-                            <asp:RequiredFieldValidator Display="Dynamic" runat="server" ControlToValidate="txtRegistrationOpenFrom" CssClass="text-danger" ErrorMessage="The registration open from date is required." />
-                            <asp:RequiredFieldValidator Display="Dynamic" runat="server" ControlToValidate="txtRegistrationOpenTo" CssClass="text-danger" ErrorMessage="The registration open to date is required." />
-                            <asp:CompareValidator Display="Dynamic" runat="server" ControlToValidate="txtRegistrationOpenTo" CssClass="text-danger" ErrorMessage="The registration open to date must be greater than or equal to the registration open from date." ControlToCompare="txtRegistrationOpenFrom" Operator="GreaterThanEqual" Type="Date" />
+                            <asp:CustomValidator Display="Dynamic" runat="server" ControlToValidate="txtRegistrationOpenFrom" CssClass="text-danger" ErrorMessage="The registraion open date must be entered in the format: MM/DD/YYYY and must be greater than or equal to January 1, 1900 and less than or equal to January 1, 2200." OnServerValidate="validatorDateTimeParses_ServerValidate" />
+                            <asp:CustomValidator Display="Dynamic" runat="server" ControlToValidate="txtRegistrationOpenTo" CssClass="text-danger" ErrorMessage="The registration close date must be entered in the format: MM/DD/YYYY and must be greater than or equal to January 1, 1900 and less than or equal to January 1, 2200." OnServerValidate="validatorDateTimeParses_ServerValidate" />
+                            <asp:RequiredFieldValidator Display="Dynamic" runat="server" ControlToValidate="txtRegistrationOpenFrom" CssClass="text-danger" ErrorMessage="The registration open date is required." />
+                            <asp:RequiredFieldValidator Display="Dynamic" runat="server" ControlToValidate="txtRegistrationOpenTo" CssClass="text-danger" ErrorMessage="The registration close date is required." />
+                            <asp:CompareValidator Display="Dynamic" runat="server" ControlToValidate="txtRegistrationOpenTo" CssClass="text-danger" ErrorMessage="The registration close date must be greater than or equal to the registration open date." ControlToCompare="txtRegistrationOpenFrom" Operator="GreaterThanEqual" Type="Date" />
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <label for="<%=txtAgeCutoff.ClientID %>" class="control-label col-xs-12">Age Cutoff</label>
+                        <div class="col-xs-12">
+                            <asp:TextBox runat="server" ID="txtAgeCutoff" CssClass="form-control" MaxLength="30" TextMode="Date" />
+                            <asp:CustomValidator Display="Dynamic" runat="server" ControlToValidate="txtAgeCutoff" CssClass="text-danger" ErrorMessage="The age cutoff date must be entered in the format: MM/DD/YYYY and must be greater than or equal to January 1, 1900 and less than or equal to January 1, 2200." OnServerValidate="validatorDateTimeParses_ServerValidate" />
                         </div>
                     </div>
 
                     <div class="row">
-                        <div class="col-sm-6 text-left">
+                        <div class="col-sm-12 text-left">
                             <asp:LinkButton runat="server" ID="lnkSaveRegistrationRule" CausesValidation="true" OnClick="lnkSaveRegistrationRule_Click"><span class="glyphicon glyphicon-save"></span>Save Registration Rule Information</asp:LinkButton>
                         </div>
                     </div>
-
+                        </div>
                     <asp:LinkButton runat="server" ID="lnkAddEditRegistrationRuleClose" CausesValidation="false" OnClick="lnkAddEditRegistrationRuleClose_Click">
                         <span class="glyphicon glyphicon-folder-close"></span>Cancel
                     </asp:LinkButton>

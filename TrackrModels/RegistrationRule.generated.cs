@@ -103,6 +103,19 @@ namespace TrackrModels
 			}
 		}
 		
+		private bool _active;
+		public virtual bool Active
+		{
+			get
+			{
+				return this._active;
+			}
+			set
+			{
+				this._active = value;
+			}
+		}
+		
 		private Team _team;
 		public virtual Team OldTeam
 		{
@@ -143,6 +156,7 @@ namespace TrackrModels
 			this.RegistrationOpens = (DateTime)info.GetValue("RegistrationOpens", typeof(DateTime));
 			this.RegistrationCloses = (DateTime)info.GetValue("RegistrationCloses", typeof(DateTime));
 			this.DateOfBirthCutoff = (DateTime?)info.GetValue("DateOfBirthCutoff", typeof(DateTime?));
+			this.Active = info.GetBoolean("Active");
 			CustomizeDeserializationProcess(info, context);
 		}
 		
@@ -154,6 +168,7 @@ namespace TrackrModels
 			info.AddValue("RegistrationOpens", this.RegistrationOpens, typeof(DateTime));
 			info.AddValue("RegistrationCloses", this.RegistrationCloses, typeof(DateTime));
 			info.AddValue("DateOfBirthCutoff", this.DateOfBirthCutoff, typeof(DateTime?));
+			info.AddValue("Active", this.Active, typeof(bool));
 			CustomizeSerializationProcess(info, context);
 		}
 		

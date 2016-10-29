@@ -65,7 +65,14 @@ namespace Trackr.Source.Wizards
                 var temp = cm.Teams.LoadWith(TeamFetchStrategy).Where(i => i.TeamID == teamID).First();
                 _Team = cm.CreateDetachedCopy<Team>(temp, TeamFetchStrategy);
 
-                _RegistrationRules = cm.RegistrationRules.LoadWith(TeamFetchStrategy).Where(i => i.NewTeamID == teamID).ToList();
+                var temp2 = cm.RegistrationRules.LoadWith(TeamFetchStrategy).Where(i => i.NewTeamID == teamID);
+                _RegistrationRules = cm.CreateDetachedCopy<RegistrationRule>(temp2, TeamFetchStrategy).ToList()
+                    .Select(i => Serializer.DeepClone<RegistrationRule>(i)).ToList();
+            }
+
+            foreach (RegistrationRule registrationRule in _RegistrationRules)
+            {
+                registrationRule.EditToken = Guid.NewGuid();
             }
         }
 
@@ -101,35 +108,50 @@ namespace Trackr.Source.Wizards
         #endregion
 
         
-        #region Guardians
-        public static Guid AddRegistrationRule(int? oldTeamID, DateTime registrationOpens, DateTime registrationCloses, DateTime? ageCutoff)
+        #region Registration Rules
+        public static void UpdateRegistrationRule(Guid registrationRuleEditToken, int? oldTeamID, DateTime registrationOpens, DateTime registrationCloses, DateTime? ageCutoff)
+        {
+            RegistrationRule obj = _RegistrationRules.First(i => i.EditToken == registrationRuleEditToken);
+
+            if (oldTeamID.HasValue)
+            {
+                using (ClubManagement cm = new ClubManagement())
+                {
+                    obj.OldTeam = cm.Teams.First(i => i.TeamID == oldTeamID.Value);
+                }
+            }
+
+            obj.WasModified = true;
+            obj.OldTeamID = oldTeamID;
+            obj.RegistrationOpens = registrationOpens;
+            obj.RegistrationCloses = registrationCloses;
+            obj.DateOfBirthCutoff = ageCutoff;
+        }
+
+        public static Guid AddRegistrationRule()
         {
             RegistrationRule obj = new RegistrationRule() { EditToken = Guid.NewGuid() };
             obj.WasModified = true;
-
-            obj.OldTeamID = oldTeamID;
-            obj.RegistrationOpens = 
-
+            obj.Active = true;
             _RegistrationRules.Add(obj);
-
             return obj.EditToken;
         }
 
-        public static void DeleteGuardian(Guid guardianEditToken)
+        public static void DeleteRegistrationRule(Guid registrationRuleEditToken)
         {
-            Guardian obj = (Guardian)FindEditableObject(guardianEditToken);
-            if (obj.GuardianID > 0)
+            RegistrationRule obj = _RegistrationRules.First(i => i.EditToken == registrationRuleEditToken);
+            if (obj.RegistrationRuleID > 0)
             {
                 obj.Active = false;
                 obj.WasModified = true;
             }
             else
             {
-                _Player.Guardians.Remove(obj);
+                _RegistrationRules.Remove(obj);
             }
         }
         #endregion
-        */
+        
 
         public static int SaveData(int modifiedByUser)
         {
@@ -165,6 +187,40 @@ namespace Trackr.Source.Wizards
                         cm.SaveChanges();
                         return freshCopy.TeamID;
                     }
+                }
+                catch (Exception ex)
+                {
+                    cm.ClearChanges();
+                    throw ex;
+                }
+            }
+        }
+
+        public static void SaveRegistrationRules(int teamID)
+        {
+            //returns team id
+            using (ClubManagement cm = new ClubManagement())
+            {
+                try
+                {
+                    foreach (RegistrationRule rule in _RegistrationRules)
+                    {
+                        RegistrationRule freshCopy = rule.RegistrationRuleID > 0 ? cm.RegistrationRules.Where(i => i.RegistrationRuleID == rule.RegistrationRuleID).First() : new RegistrationRule();
+
+                        freshCopy.DateOfBirthCutoff = rule.DateOfBirthCutoff;
+                        freshCopy.NewTeamID = teamID;
+                        freshCopy.OldTeamID = rule.OldTeamID;
+                        freshCopy.RegistrationCloses = rule.RegistrationCloses;
+                        freshCopy.RegistrationOpens = rule.RegistrationOpens;
+                        freshCopy.Active = rule.Active;
+
+                        if (freshCopy.RegistrationRuleID == 0)
+                        {
+                            cm.Add(freshCopy);
+                        }
+                    }
+
+                    cm.SaveChanges();
                 }
                 catch (Exception ex)
                 {

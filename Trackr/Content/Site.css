@@ -26,6 +26,11 @@
     background-color:#ffffff;
 }
 
+.tab-pane.full {
+    border-top: 1px solid #ddd;
+    border-radius: 5px 5px 5px 5px;
+}
+
 .nav-tabs {
     margin-bottom: 0;
 }

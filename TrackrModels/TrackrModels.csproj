@@ -118,7 +118,11 @@
     <Compile Include="ModelPartials\Person.Partial.cs" />
     <Compile Include="ModelPartials\PhoneNumber.Partial.cs" />
     <Compile Include="ModelPartials\PlayerPass.Partial.cs" />
+    <Compile Include="ModelPartials\Program.Partial.cs" />
+    <Compile Include="ModelPartials\RegistrationRule.Partial.cs" />
+    <Compile Include="ModelPartials\Team.Partial.cs" />
     <Compile Include="ModelPartials\TeamPlayer.Partial.cs" />
+    <Compile Include="ModelPartials\TeamSchedule.Partial.cs" />
     <Compile Include="NewUserMapping.generated.cs">
       <DependentUpon>UserManagement.rlinq</DependentUpon>
     </Compile>

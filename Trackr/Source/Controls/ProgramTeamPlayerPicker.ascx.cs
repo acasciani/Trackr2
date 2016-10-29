@@ -90,6 +90,10 @@ namespace Trackr.Source.Controls
                     }
                 }
             }
+            else
+            {
+                ddlProgram_SelectedIndexChanged(null, null);
+            }
         }
 
         private void BindPrograms()
