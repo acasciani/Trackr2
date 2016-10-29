@@ -243,6 +243,27 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Account\Account.master.cs">
+      <DependentUpon>Account.master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Account\Account.master.designer.cs">
+      <DependentUpon>Account.master</DependentUpon>
+    </Compile>
+    <Compile Include="Account\ManagePassword.aspx.cs">
+      <DependentUpon>ManagePassword.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Account\ManagePassword.aspx.designer.cs">
+      <DependentUpon>ManagePassword.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Account\ManageProfile.aspx.cs">
+      <DependentUpon>ManageProfile.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Account\ManageProfile.aspx.designer.cs">
+      <DependentUpon>ManageProfile.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Controllers\Models\Attendances.cs" />
     <Compile Include="Controllers\Models\BaseModel.cs" />
     <Compile Include="Controllers\Partials\AttendancesController.Partial.cs" />
@@ -344,6 +365,8 @@
       <DependentUpon>Recipients.ashx</DependentUpon>
     </Compile>
     <Content Include="Account\Login.aspx" />
+    <Content Include="Account\ManagePassword.aspx" />
+    <Content Include="Account\ManageProfile.aspx" />
     <Content Include="Account\Register.aspx" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
@@ -394,6 +417,7 @@
     <Content Include="Content\bootstrap-tokenfield\tokenfield-typeahead.less" />
     <Content Include="Content\bootstrap-tokenfield\bootstrap-tokenfield.less" />
     <Content Include="Modules\TeamManagement\TeamManagement.master" />
+    <Content Include="Account\Account.master" />
     <None Include="Properties\PublishProfiles\Stage.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\bloodhound.js" />

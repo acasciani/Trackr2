@@ -7,72 +7,63 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Trackr {
+namespace Trackr.Account {
     
     
-    public partial class SiteMaster {
+    public partial class ManagePassword {
         
         /// <summary>
-        /// navLeftNavigation control.
+        /// updPanel control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::Trackr.Source.Controls.LeftNavigation navLeftNavigation;
+        protected global::System.Web.UI.UpdatePanel updPanel;
         
         /// <summary>
-        /// top control.
+        /// AlertBox control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl top;
+        protected global::Trackr.UI.AlertBox AlertBox;
         
         /// <summary>
-        /// navTopNavigation control.
+        /// txtCurrentPassword control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::Trackr.Source.Controls.LeftNavigation navTopNavigation;
+        protected global::System.Web.UI.WebControls.TextBox txtCurrentPassword;
         
         /// <summary>
-        /// lnkLogout control.
+        /// txtPassword control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton lnkLogout;
+        protected global::System.Web.UI.WebControls.TextBox txtPassword;
         
         /// <summary>
-        /// ExceptionAlerts control.
+        /// txtPasswordConfirm control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::Trackr.UI.AlertBox ExceptionAlerts;
+        protected global::System.Web.UI.WebControls.TextBox txtPasswordConfirm;
         
         /// <summary>
-        /// NotificationTooltips control.
+        /// lnkSavePassword control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::Trackr.UI.AlertBox NotificationTooltips;
-        
-        /// <summary>
-        /// MainContent control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.ContentPlaceHolder MainContent;
+        protected global::System.Web.UI.WebControls.Button lnkSavePassword;
     }
 }

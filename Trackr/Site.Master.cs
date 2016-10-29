@@ -75,6 +75,12 @@ namespace Trackr
         {
             Context.GetOwinContext().Authentication.SignOut();
         }
+
+        protected void lnkLogout_Click(object sender, EventArgs e)
+        {
+            FormsAuthentication.SignOut();
+            FormsAuthentication.RedirectToLoginPage();
+        }
     }
 
 }

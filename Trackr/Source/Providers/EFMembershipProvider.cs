@@ -270,10 +270,10 @@ namespace TrackrProviders.Security
 
                 try
                 {
-                    swuc.Put(user.UserID, user);
+                    swuc.Update(user);
                     return true;
                 }
-                catch
+                catch(Exception ex)
                 {
                     return false;
                 }
@@ -314,11 +314,11 @@ namespace TrackrProviders.Security
                 try
                 {
                     user.Password = EncodePassword(newPassword);
+                    swuc.Update(user);
 
-                    swuc.Put(user.UserID, user);
                     return newPassword;
                 }
-                catch
+                catch(Exception ex)
                 {
                     throw new MembershipPasswordException("User not found, or user is locked out. Password not Reset.");
                 }
