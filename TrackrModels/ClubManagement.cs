@@ -186,6 +186,38 @@ namespace TrackrModels
 			}
 		}
 		
+		public IQueryable<TournamentTeam> TournamentTeams 
+		{
+			get
+			{
+				return this.GetAll<TournamentTeam>();
+			}
+		}
+		
+		public IQueryable<Tournament> Tournaments 
+		{
+			get
+			{
+				return this.GetAll<Tournament>();
+			}
+		}
+		
+		public IQueryable<TournamentRoster> TournamentRosters 
+		{
+			get
+			{
+				return this.GetAll<TournamentRoster>();
+			}
+		}
+		
+		public IQueryable<TournamentBracket> TournamentBrackets 
+		{
+			get
+			{
+				return this.GetAll<TournamentBracket>();
+			}
+		}
+		
 		public static BackendConfiguration GetBackendConfiguration()
 		{
 			BackendConfiguration backend = new BackendConfiguration();
@@ -277,6 +309,22 @@ namespace TrackrModels
 			get;
 		}
 		IQueryable<RegistrationRule> RegistrationRules
+		{
+			get;
+		}
+		IQueryable<TournamentTeam> TournamentTeams
+		{
+			get;
+		}
+		IQueryable<Tournament> Tournaments
+		{
+			get;
+		}
+		IQueryable<TournamentRoster> TournamentRosters
+		{
+			get;
+		}
+		IQueryable<TournamentBracket> TournamentBrackets
 		{
 			get;
 		}

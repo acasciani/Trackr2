@@ -166,6 +166,18 @@
     <Compile Include="TeamSchedule.generated.cs">
       <DependentUpon>ClubManagement.rlinq</DependentUpon>
     </Compile>
+    <Compile Include="Tournament.generated.cs">
+      <DependentUpon>ClubManagement.rlinq</DependentUpon>
+    </Compile>
+    <Compile Include="TournamentBracket.generated.cs">
+      <DependentUpon>ClubManagement.rlinq</DependentUpon>
+    </Compile>
+    <Compile Include="TournamentRoster.generated.cs">
+      <DependentUpon>ClubManagement.rlinq</DependentUpon>
+    </Compile>
+    <Compile Include="TournamentTeam.generated.cs">
+      <DependentUpon>ClubManagement.rlinq</DependentUpon>
+    </Compile>
     <Compile Include="Transaction.generated.cs">
       <DependentUpon>ClubManagement.rlinq</DependentUpon>
     </Compile>

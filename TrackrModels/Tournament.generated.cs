@@ -23,8 +23,21 @@ using TrackrModels;
 namespace TrackrModels	
 {
 	[System.Serializable()]
-	public partial class Club : System.Runtime.Serialization.ISerializable
+	public partial class Tournament : System.Runtime.Serialization.ISerializable
 	{
+		private int _tournamentID;
+		public virtual int TournamentID
+		{
+			get
+			{
+				return this._tournamentID;
+			}
+			set
+			{
+				this._tournamentID = value;
+			}
+		}
+		
 		private int _clubID;
 		public virtual int ClubID
 		{
@@ -38,54 +51,60 @@ namespace TrackrModels
 			}
 		}
 		
-		private string _clubName;
-		public virtual string ClubName
+		private string _name;
+		public virtual string Name
 		{
 			get
 			{
-				return this._clubName;
+				return this._name;
 			}
 			set
 			{
-				this._clubName = value;
+				this._name = value;
 			}
 		}
 		
-		private IList<Program> _programs = new List<Program>();
-		public virtual IList<Program> Programs
+		private Club _club;
+		public virtual Club Club
 		{
 			get
 			{
-				return this._programs;
+				return this._club;
+			}
+			set
+			{
+				this._club = value;
 			}
 		}
 		
-		private IList<Tournament> _tournaments = new List<Tournament>();
-		public virtual IList<Tournament> Tournaments
+		private IList<TournamentBracket> _tournamentBrackets = new List<TournamentBracket>();
+		public virtual IList<TournamentBracket> TournamentBrackets
 		{
 			get
 			{
-				return this._tournaments;
+				return this._tournamentBrackets;
 			}
 		}
 		
 		#region ISerializable Implementation
 		
-		public Club()
+		public Tournament()
 		{
 		}
 		
-		protected Club(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
+		protected Tournament(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
 		{
+			this.TournamentID = info.GetInt32("TournamentID");
 			this.ClubID = info.GetInt32("ClubID");
-			this.ClubName = info.GetString("ClubName");
+			this.Name = info.GetString("Name");
 			CustomizeDeserializationProcess(info, context);
 		}
 		
 		public virtual void GetObjectData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
 		{
+			info.AddValue("TournamentID", this.TournamentID, typeof(int));
 			info.AddValue("ClubID", this.ClubID, typeof(int));
-			info.AddValue("ClubName", this.ClubName, typeof(string));
+			info.AddValue("Name", this.Name, typeof(string));
 			CustomizeSerializationProcess(info, context);
 		}
 		

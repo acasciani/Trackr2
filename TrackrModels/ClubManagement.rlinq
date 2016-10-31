@@ -254,6 +254,9 @@
         <orm:field name="_programs" property="Programs" behavior="readwrite" uniqueId="822dee46-d5f1-463d-a1c9-9b8c29dd18b7" type="TrackrModels.Program">
           <orm:collection element-class="TrackrModels.Program" inverse-field="_club" order-by="" uniqueId="d5abb3e9-2dd5-4453-a355-45918f1fef23" />
         </orm:field>
+        <orm:field name="_tournaments" property="Tournaments" behavior="readwrite" uniqueId="106f98ec-d949-4f01-a38f-06a6659855c3" type="TrackrModels.Tournament">
+          <orm:collection element-class="TrackrModels.Tournament" inverse-field="_club" order-by="" uniqueId="572f5ff6-5b8a-4a4f-bb98-9ddcc47c1b0a" />
+        </orm:field>
       </orm:class>
       <orm:class name="PlayerPass" uniqueId="cc46e759-acc2-42af-82bd-c75dee018045">
         <orm:table name="PlayerPasses" />
@@ -730,6 +733,180 @@
           </orm:columnMapping>
         </orm:index>
       </orm:class>
+      <orm:class name="TournamentTeam" uniqueId="68fc8b50-7c48-4ccd-9e4f-261be4a68bf7">
+        <orm:table name="TournamentTeams" />
+        <orm:identity>
+          <orm:key-generator name="autoinc">
+            <orm:key-generator-member property-name="TournamentTeamID" />
+          </orm:key-generator>
+          <orm:single-field field-name="_tournamentTeamID" />
+        </orm:identity>
+        <orm:concurrency strategy="changed" />
+        <orm:field name="_tournamentTeamID" property="TournamentTeamID" behavior="readwrite" uniqueId="0552d3a0-9c70-4527-88d1-56e33b4030f9" type="System.Int32">
+          <orm:column name="TournamentTeamID" sql-type="integer" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_teamName" property="TeamName" behavior="readwrite" uniqueId="0898d0a8-472c-4245-b175-35f089b7a005" type="System.String">
+          <orm:column name="TeamName" sql-type="varchar" nullable="false" length="100" scale="0" ado-type="StringVariableLength" />
+        </orm:field>
+        <orm:field name="_tournamentBracketID" property="TournamentBracketID" behavior="readwrite" uniqueId="7f033403-7301-49ef-866d-55b0c9200273" type="System.Int32">
+          <orm:column name="TournamentBracketID" sql-type="integer" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_active" property="Active" behavior="readwrite" uniqueId="7a6c40b7-17cd-49db-870f-f8ab5b17f958" type="System.Boolean">
+          <orm:column name="Active" sql-type="bit" nullable="false" length="0" scale="0" ado-type="Bit" />
+        </orm:field>
+        <orm:field name="_createUserID" property="CreateUserID" behavior="readwrite" uniqueId="9114c855-b13c-43e7-88d2-f123ee02f9b7" type="System.Int32">
+          <orm:column name="CreateUserID" sql-type="integer" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_createDate" property="CreateDate" behavior="readwrite" uniqueId="a8fbed66-6c6b-4e6c-be7e-8c124d6c7e49" type="System.DateTime">
+          <orm:column name="CreateDate" sql-type="datetime" nullable="false" length="0" scale="0" ado-type="DateTime" />
+        </orm:field>
+        <orm:field name="_modifyUserID" property="ModifyUserID" behavior="readwrite" uniqueId="27b45d75-b328-4162-aeb3-f1f6b4311fc6" type="System.Nullable`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
+          <orm:column name="ModifyUserID" sql-type="integer" nullable="true" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_modifyDate" property="ModifyDate" behavior="readwrite" uniqueId="8bbb0a14-5c0d-46ac-8080-118189c7076b" type="System.Nullable`1[[System.DateTime, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
+          <orm:column name="ModifyDate" sql-type="datetime" nullable="true" length="0" scale="0" ado-type="DateTime" />
+        </orm:field>
+        <orm:field name="_deleteUserID" property="DeleteUserID" behavior="readwrite" uniqueId="d5f43867-e2fb-458b-9242-b829a715b0b5" type="System.Nullable`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
+          <orm:column name="DeleteUserID" sql-type="integer" nullable="true" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_deleteDate" property="DeleteDate" behavior="readwrite" uniqueId="42a24e00-d70d-47fa-82d8-132bc5ff6a62" type="System.Nullable`1[[System.DateTime, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
+          <orm:column name="DeleteDate" sql-type="datetime" nullable="true" length="0" scale="0" ado-type="DateTime" />
+        </orm:field>
+        <orm:field name="_tournamentBracket" property="TournamentBracket" behavior="readwrite" uniqueId="4604d920-4d42-41c3-95dc-c68b5f5cad66" type="TrackrModels.TournamentBracket">
+          <orm:reference uniqueId="0cf74ba8-1f21-4224-8a97-048b48e45c93" association-name="TournamentTeamHasTournamentBracket">
+            <orm:sharedfield name="_tournamentBracketID" target-class="TrackrModels.TournamentBracket" target-field="_tournamentBracketID" />
+            <orm:constraint name="FK_TournamentBrackets_TournamentTeams" delete-action="dbdefaultrule" destination-table="TournamentBrackets" />
+          </orm:reference>
+        </orm:field>
+        <orm:field name="_tournamentRosters" property="TournamentRosters" behavior="readwrite" uniqueId="443f5f61-7a10-4b22-8e1c-20ab6b0813ba" type="TrackrModels.TournamentRoster">
+          <orm:collection element-class="TrackrModels.TournamentRoster" inverse-field="_tournamentTeam" order-by="" uniqueId="2cabae83-8faf-47c5-ac4e-a974d3a098b7" />
+        </orm:field>
+        <orm:index name="FK_WebUsers_TournamentTeams_Modify_idx">
+          <orm:columnMapping>
+            <orm:column name="ModifyUserID" sql-type="integer" nullable="true" length="0" scale="0" ado-type="Int32" />
+          </orm:columnMapping>
+        </orm:index>
+        <orm:index name="FK_WebUsers_TournamentTeams_Delete_idx">
+          <orm:columnMapping>
+            <orm:column name="DeleteUserID" sql-type="integer" nullable="true" length="0" scale="0" ado-type="Int32" />
+          </orm:columnMapping>
+        </orm:index>
+        <orm:index name="FK_WebUsers_TournamentTeams_Create_idx">
+          <orm:columnMapping>
+            <orm:column name="CreateUserID" sql-type="integer" nullable="false" length="0" scale="0" ado-type="Int32" />
+          </orm:columnMapping>
+        </orm:index>
+        <orm:index name="FK_TournamentBrackets_TournamentTeams_idx">
+          <orm:columnMapping>
+            <orm:column name="TournamentBracketID" sql-type="integer" nullable="false" length="0" scale="0" ado-type="Int32" />
+          </orm:columnMapping>
+        </orm:index>
+      </orm:class>
+      <orm:class name="Tournament" uniqueId="2536b002-6cc2-45cb-baf2-1fd4b3fc9374">
+        <orm:table name="Tournaments" />
+        <orm:identity>
+          <orm:key-generator name="autoinc">
+            <orm:key-generator-member property-name="TournamentID" />
+          </orm:key-generator>
+          <orm:single-field field-name="_tournamentID" />
+        </orm:identity>
+        <orm:concurrency strategy="changed" />
+        <orm:field name="_tournamentID" property="TournamentID" behavior="readwrite" uniqueId="0a82fc1b-283b-4026-b7b1-20f19e817923" type="System.Int32">
+          <orm:column name="TournamentID" sql-type="integer" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_clubID" property="ClubID" behavior="readwrite" uniqueId="82321fd8-d352-42d5-b52f-0062e58b5eb7" type="System.Int32">
+          <orm:column name="ClubID" sql-type="integer" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_name" property="Name" behavior="readwrite" uniqueId="5b910793-5098-4f0f-9d0d-9583e505cc32" type="System.String">
+          <orm:column name="Name" sql-type="varchar" nullable="false" length="100" scale="0" ado-type="StringVariableLength" />
+        </orm:field>
+        <orm:field name="_club" property="Club" behavior="readwrite" uniqueId="f334a779-468c-483f-b9f7-b467605749d3" type="TrackrModels.Club">
+          <orm:reference uniqueId="572f5ff6-5b8a-4a4f-bb98-9ddcc47c1b0a" association-name="TournamentHasClub">
+            <orm:sharedfield name="_clubID" target-class="TrackrModels.Club" target-field="_clubID" />
+            <orm:constraint name="FK_Tournaments_Clubs" delete-action="dbdefaultrule" destination-table="Clubs" />
+          </orm:reference>
+        </orm:field>
+        <orm:field name="_tournamentBrackets" property="TournamentBrackets" behavior="readwrite" uniqueId="9eec2334-8e16-41ef-bca3-983535c65834" type="TrackrModels.TournamentBracket">
+          <orm:collection element-class="TrackrModels.TournamentBracket" inverse-field="_tournament" order-by="" uniqueId="b2176bb4-e568-4a28-9812-1f2ae6151b63" />
+        </orm:field>
+        <orm:index name="FK_Tournaments_Clubs_idx">
+          <orm:columnMapping>
+            <orm:column name="ClubID" sql-type="integer" nullable="false" length="0" scale="0" ado-type="Int32" />
+          </orm:columnMapping>
+        </orm:index>
+      </orm:class>
+      <orm:class name="TournamentRoster" uniqueId="1a7e072c-e461-406d-865d-b676f82fb853">
+        <orm:table name="TournamentRosters" />
+        <orm:identity>
+          <orm:key-generator name="autoinc">
+            <orm:key-generator-member property-name="PlayerID" />
+          </orm:key-generator>
+          <orm:single-field field-name="_playerID" />
+        </orm:identity>
+        <orm:concurrency strategy="changed" />
+        <orm:field name="_playerID" property="PlayerID" behavior="readwrite" uniqueId="6de4051a-72e8-4d3d-b4ef-aea7e82ca02f" type="System.Int32">
+          <orm:column name="PlayerID" sql-type="integer" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_fName" property="FName" behavior="readwrite" uniqueId="d47c1cbc-25fc-4a39-8e00-4a72fb7bdcc3" type="System.String">
+          <orm:column name="FName" sql-type="varchar" nullable="false" length="30" scale="0" ado-type="StringVariableLength" />
+        </orm:field>
+        <orm:field name="_lName" property="LName" behavior="readwrite" uniqueId="58c0a282-b06a-40b4-a299-395dfb82914a" type="System.String">
+          <orm:column name="LName" sql-type="varchar" nullable="false" length="30" scale="0" ado-type="StringVariableLength" />
+        </orm:field>
+        <orm:field name="_dateOfBirth" property="DateOfBirth" behavior="readwrite" uniqueId="08748ed6-cbd7-44cf-893f-6a4b2afd9872" type="System.DateTime">
+          <orm:column name="DateOfBirth" sql-type="date" nullable="false" length="0" scale="0" ado-type="Date" />
+        </orm:field>
+        <orm:field name="_tournamentTeamID" property="TournamentTeamID" behavior="readwrite" uniqueId="0aee0bad-ba85-448d-aaed-5d9b0fb51088" type="System.Int32">
+          <orm:column name="TournamentTeamID" sql-type="integer" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_tournamentTeam" property="TournamentTeam" behavior="readwrite" uniqueId="da8a5407-3a2d-4607-b464-f1e4624db381" type="TrackrModels.TournamentTeam">
+          <orm:reference uniqueId="2cabae83-8faf-47c5-ac4e-a974d3a098b7" association-name="TournamentRosterHasTournamentTeam">
+            <orm:sharedfield name="_tournamentTeamID" target-class="TrackrModels.TournamentTeam" target-field="_tournamentTeamID" />
+            <orm:constraint name="FK_TournamentTeams_TournamentRosters" delete-action="dbdefaultrule" destination-table="TournamentTeams" />
+          </orm:reference>
+        </orm:field>
+        <orm:index name="FK_TournamentTeams_TournamentRosters_idx">
+          <orm:columnMapping>
+            <orm:column name="TournamentTeamID" sql-type="integer" nullable="false" length="0" scale="0" ado-type="Int32" />
+          </orm:columnMapping>
+        </orm:index>
+      </orm:class>
+      <orm:class name="TournamentBracket" uniqueId="a433caa6-87e7-4a22-9f6a-489770766878">
+        <orm:table name="TournamentBrackets" />
+        <orm:identity>
+          <orm:key-generator name="autoinc">
+            <orm:key-generator-member property-name="TournamentBracketID" />
+          </orm:key-generator>
+          <orm:single-field field-name="_tournamentBracketID" />
+        </orm:identity>
+        <orm:concurrency strategy="changed" />
+        <orm:field name="_tournamentBracketID" property="TournamentBracketID" behavior="readwrite" uniqueId="071fa038-81c8-435e-a452-bd5781569340" type="System.Int32">
+          <orm:column name="TournamentBracketID" sql-type="integer" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_bracketName" property="BracketName" behavior="readwrite" uniqueId="03cfae01-7de7-45f1-ac08-8891c5cc09ab" type="System.String">
+          <orm:column name="BracketName" sql-type="varchar" nullable="false" length="100" scale="0" ado-type="StringVariableLength" />
+        </orm:field>
+        <orm:field name="_teamLimit" property="TeamLimit" behavior="readwrite" uniqueId="8ab0d670-f610-4e83-a4c2-b6b7439b7608" type="System.Int16">
+          <orm:column name="TeamLimit" sql-type="smallint" nullable="false" length="0" scale="0" ado-type="Int16" />
+        </orm:field>
+        <orm:field name="_tournamentID" property="TournamentID" behavior="readwrite" uniqueId="fe89e407-4205-4920-9414-02a703c5ec1a" type="System.Int32">
+          <orm:column name="TournamentID" sql-type="integer" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_tournamentTeams" property="TournamentTeams" behavior="readwrite" uniqueId="0f9cf531-4262-403c-a1c4-d6095890471f" type="TrackrModels.TournamentTeam">
+          <orm:collection element-class="TrackrModels.TournamentTeam" inverse-field="_tournamentBracket" order-by="" uniqueId="0cf74ba8-1f21-4224-8a97-048b48e45c93" />
+        </orm:field>
+        <orm:field name="_tournament" property="Tournament" behavior="readwrite" uniqueId="764acb63-c380-4cd8-9b56-16b451f4fb77" type="TrackrModels.Tournament">
+          <orm:reference uniqueId="b2176bb4-e568-4a28-9812-1f2ae6151b63" association-name="TournamentBracketHasTournament">
+            <orm:sharedfield name="_tournamentID" target-class="TrackrModels.Tournament" target-field="_tournamentID" />
+            <orm:constraint name="FK_TournamentBrackets_Tournaments" delete-action="dbdefaultrule" destination-table="Tournaments" />
+          </orm:reference>
+        </orm:field>
+        <orm:index name="FK_TournamentBrackets_Tournaments_idx">
+          <orm:columnMapping>
+            <orm:column name="TournamentID" sql-type="integer" nullable="false" length="0" scale="0" ado-type="Int32" />
+          </orm:columnMapping>
+        </orm:index>
+      </orm:class>
     </orm:namespace>
     <orm:schema schema="">
       <orm:table name="WebUserInfo">
@@ -1017,6 +1194,83 @@
           <orm:column name="NewTeamID" sql-type="integer" nullable="false" length="0" scale="0" ado-type="Int32" />
         </orm:constraint>
       </orm:table>
+      <orm:table name="TournamentTeams">
+        <orm:column name="TournamentTeamID" sql-type="integer" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        <orm:column name="TeamName" sql-type="varchar" nullable="false" length="100" scale="0" ado-type="StringVariableLength" />
+        <orm:column name="TournamentBracketID" sql-type="integer" nullable="false" length="0" scale="0" ado-type="Int32" />
+        <orm:column name="Active" sql-type="bit" nullable="false" length="0" scale="0" ado-type="Bit" />
+        <orm:column name="CreateUserID" sql-type="integer" nullable="false" length="0" scale="0" ado-type="Int32" />
+        <orm:column name="CreateDate" sql-type="datetime" nullable="false" length="0" scale="0" ado-type="DateTime" />
+        <orm:column name="ModifyUserID" sql-type="integer" nullable="true" length="0" scale="0" ado-type="Int32" />
+        <orm:column name="ModifyDate" sql-type="datetime" nullable="true" length="0" scale="0" ado-type="DateTime" />
+        <orm:column name="DeleteUserID" sql-type="integer" nullable="true" length="0" scale="0" ado-type="Int32" />
+        <orm:column name="DeleteDate" sql-type="datetime" nullable="true" length="0" scale="0" ado-type="DateTime" />
+        <orm:index name="FK_WebUsers_TournamentTeams_Modify_idx">
+          <orm:columnMapping>
+            <orm:column name="ModifyUserID" sql-type="integer" nullable="true" length="0" scale="0" ado-type="Int32" />
+          </orm:columnMapping>
+        </orm:index>
+        <orm:index name="FK_WebUsers_TournamentTeams_Delete_idx">
+          <orm:columnMapping>
+            <orm:column name="DeleteUserID" sql-type="integer" nullable="true" length="0" scale="0" ado-type="Int32" />
+          </orm:columnMapping>
+        </orm:index>
+        <orm:index name="FK_WebUsers_TournamentTeams_Create_idx">
+          <orm:columnMapping>
+            <orm:column name="CreateUserID" sql-type="integer" nullable="false" length="0" scale="0" ado-type="Int32" />
+          </orm:columnMapping>
+        </orm:index>
+        <orm:index name="FK_TournamentBrackets_TournamentTeams_idx">
+          <orm:columnMapping>
+            <orm:column name="TournamentBracketID" sql-type="integer" nullable="false" length="0" scale="0" ado-type="Int32" />
+          </orm:columnMapping>
+        </orm:index>
+        <orm:constraint name="FK_TournamentBrackets_TournamentTeams" delete-action="dbdefaultrule" destination-table="TournamentBrackets">
+          <orm:column name="TournamentBracketID" sql-type="integer" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:constraint>
+      </orm:table>
+      <orm:table name="Tournaments">
+        <orm:column name="TournamentID" sql-type="integer" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        <orm:column name="ClubID" sql-type="integer" nullable="false" length="0" scale="0" ado-type="Int32" />
+        <orm:column name="Name" sql-type="varchar" nullable="false" length="100" scale="0" ado-type="StringVariableLength" />
+        <orm:index name="FK_Tournaments_Clubs_idx">
+          <orm:columnMapping>
+            <orm:column name="ClubID" sql-type="integer" nullable="false" length="0" scale="0" ado-type="Int32" />
+          </orm:columnMapping>
+        </orm:index>
+        <orm:constraint name="FK_Tournaments_Clubs" delete-action="dbdefaultrule" destination-table="Clubs">
+          <orm:column name="ClubID" sql-type="integer" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:constraint>
+      </orm:table>
+      <orm:table name="TournamentRosters">
+        <orm:column name="PlayerID" sql-type="integer" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        <orm:column name="FName" sql-type="varchar" nullable="false" length="30" scale="0" ado-type="StringVariableLength" />
+        <orm:column name="LName" sql-type="varchar" nullable="false" length="30" scale="0" ado-type="StringVariableLength" />
+        <orm:column name="DateOfBirth" sql-type="date" nullable="false" length="0" scale="0" ado-type="Date" />
+        <orm:column name="TournamentTeamID" sql-type="integer" nullable="false" length="0" scale="0" ado-type="Int32" />
+        <orm:index name="FK_TournamentTeams_TournamentRosters_idx">
+          <orm:columnMapping>
+            <orm:column name="TournamentTeamID" sql-type="integer" nullable="false" length="0" scale="0" ado-type="Int32" />
+          </orm:columnMapping>
+        </orm:index>
+        <orm:constraint name="FK_TournamentTeams_TournamentRosters" delete-action="dbdefaultrule" destination-table="TournamentTeams">
+          <orm:column name="TournamentTeamID" sql-type="integer" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:constraint>
+      </orm:table>
+      <orm:table name="TournamentBrackets">
+        <orm:column name="TournamentBracketID" sql-type="integer" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        <orm:column name="BracketName" sql-type="varchar" nullable="false" length="100" scale="0" ado-type="StringVariableLength" />
+        <orm:column name="TeamLimit" sql-type="smallint" nullable="false" length="0" scale="0" ado-type="Int16" />
+        <orm:column name="TournamentID" sql-type="integer" nullable="false" length="0" scale="0" ado-type="Int32" />
+        <orm:index name="FK_TournamentBrackets_Tournaments_idx">
+          <orm:columnMapping>
+            <orm:column name="TournamentID" sql-type="integer" nullable="false" length="0" scale="0" ado-type="Int32" />
+          </orm:columnMapping>
+        </orm:index>
+        <orm:constraint name="FK_TournamentBrackets_Tournaments" delete-action="dbdefaultrule" destination-table="Tournaments">
+          <orm:column name="TournamentID" sql-type="integer" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:constraint>
+      </orm:table>
     </orm:schema>
     <orm:relational-naming-settings>
       <orm:remove-leading-underscore>False</orm:remove-leading-underscore>
@@ -1262,6 +1516,9 @@
       <navigationalProperties>
         <classHasNavigationalProperties Id="c7c5bfce-79a5-43e6-9404-f646d5b7b2e1">
           <NavigationalProperty Id="822dee46-d5f1-463d-a1c9-9b8c29dd18b7" name="Programs" type="IList&lt;Program&gt;" label="Programs : IList&lt;Program&gt;" nullable="true" kind="Persistent" fieldName="_programs" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+        <classHasNavigationalProperties Id="402206ae-88ac-4d05-9c8c-a44ac24a3673">
+          <NavigationalProperty Id="106f98ec-d949-4f01-a38f-06a6659855c3" name="Tournaments" type="IList&lt;Tournament&gt;" label="Tournaments : IList&lt;Tournament&gt;" nullable="true" kind="Persistent" fieldName="_tournaments" isDependent="false" isManaged="false" />
         </classHasNavigationalProperties>
       </navigationalProperties>
     </DomainClass>
@@ -1607,6 +1864,125 @@
         </classHasNavigationalProperties>
       </navigationalProperties>
     </DomainClass>
+    <DomainClass Id="68fc8b50-7c48-4ccd-9e4f-261be4a68bf7" name="TournamentTeam" namespace="TrackrModels" showPropertiesCompartment="true" identityMechanism="DatabaseServerCalculated" concurrencyMode="Changed" showNavigationCompartment="true" showImplementationCompartment="true" identityMechanismMember="TournamentTeamID">
+      <Property Id="0552d3a0-9c70-4527-88d1-56e33b4030f9" name="TournamentTeamID" type="Int32" label="TournamentTeamID : Int32" kind="Persistent" identity="true" fieldName="_tournamentTeamID" />
+      <Property Id="7a6c40b7-17cd-49db-870f-f8ab5b17f958" name="Active" type="Boolean" label="Active : Boolean" kind="Persistent" fieldName="_active" />
+      <Property Id="a8fbed66-6c6b-4e6c-be7e-8c124d6c7e49" name="CreateDate" type="DateTime" label="CreateDate : DateTime" kind="Persistent" fieldName="_createDate" />
+      <Property Id="9114c855-b13c-43e7-88d2-f123ee02f9b7" name="CreateUserID" type="Int32" label="CreateUserID : Int32" kind="Persistent" fieldName="_createUserID" />
+      <Property Id="42a24e00-d70d-47fa-82d8-132bc5ff6a62" name="DeleteDate" type="DateTime" label="DeleteDate : DateTime" nullable="true" kind="Persistent" fieldName="_deleteDate" />
+      <Property Id="d5f43867-e2fb-458b-9242-b829a715b0b5" name="DeleteUserID" type="Int32" label="DeleteUserID : Int32" nullable="true" kind="Persistent" fieldName="_deleteUserID" />
+      <Property Id="8bbb0a14-5c0d-46ac-8080-118189c7076b" name="ModifyDate" type="DateTime" label="ModifyDate : DateTime" nullable="true" kind="Persistent" fieldName="_modifyDate" />
+      <Property Id="27b45d75-b328-4162-aeb3-f1f6b4311fc6" name="ModifyUserID" type="Int32" label="ModifyUserID : Int32" nullable="true" kind="Persistent" fieldName="_modifyUserID" />
+      <Property Id="0898d0a8-472c-4245-b175-35f089b7a005" name="TeamName" label="TeamName : String" kind="Persistent" fieldName="_teamName" />
+      <Property Id="7f033403-7301-49ef-866d-55b0c9200273" name="TournamentBracketID" type="Int32" label="TournamentBracketID : Int32" kind="Persistent" fieldName="_tournamentBracketID" />
+      <AssociationTargets>
+        <Association Id="0cf74ba8-1f21-4224-8a97-048b48e45c93" SourceMultiplicity="One" name="TournamentTeamHasTournamentBracket">
+          <DomainClassMoniker name="/ClubManagement/TournamentBracket" />
+          <targetNavigationalProperty>
+            <associationDefinesTargetProperty Id="6777fcdc-bc7f-437c-b0f2-63bec875273f">
+              <NavigationalPropertyMoniker name="/ClubManagement/TournamentBracket/TournamentTeams" />
+            </associationDefinesTargetProperty>
+          </targetNavigationalProperty>
+          <sourceNavigationalProperty>
+            <associationDefinesSourceProperty Id="694ecf5b-90af-435c-83d9-f123cd9f0296">
+              <NavigationalPropertyMoniker name="/ClubManagement/TournamentTeam/TournamentBracket" />
+            </associationDefinesSourceProperty>
+          </sourceNavigationalProperty>
+        </Association>
+      </AssociationTargets>
+      <navigationalProperties>
+        <classHasNavigationalProperties Id="0ed4b3de-4830-45c2-8712-6807d8ce9ce2">
+          <NavigationalProperty Id="4604d920-4d42-41c3-95dc-c68b5f5cad66" name="TournamentBracket" type="TournamentBracket" label="TournamentBracket : TournamentBracket" nullable="true" kind="Persistent" fieldName="_tournamentBracket" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+        <classHasNavigationalProperties Id="2fc6f523-234f-4f88-983d-07518a869166">
+          <NavigationalProperty Id="443f5f61-7a10-4b22-8e1c-20ab6b0813ba" name="TournamentRosters" type="IList&lt;TournamentRoster&gt;" label="TournamentRosters : IList&lt;TournamentRoster&gt;" nullable="true" kind="Persistent" fieldName="_tournamentRosters" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+      </navigationalProperties>
+    </DomainClass>
+    <DomainClass Id="2536b002-6cc2-45cb-baf2-1fd4b3fc9374" name="Tournament" namespace="TrackrModels" showPropertiesCompartment="true" identityMechanism="DatabaseServerCalculated" concurrencyMode="Changed" showNavigationCompartment="true" showImplementationCompartment="true" identityMechanismMember="TournamentID">
+      <Property Id="0a82fc1b-283b-4026-b7b1-20f19e817923" name="TournamentID" type="Int32" label="TournamentID : Int32" kind="Persistent" identity="true" fieldName="_tournamentID" />
+      <Property Id="82321fd8-d352-42d5-b52f-0062e58b5eb7" name="ClubID" type="Int32" label="ClubID : Int32" kind="Persistent" fieldName="_clubID" />
+      <Property Id="5b910793-5098-4f0f-9d0d-9583e505cc32" name="Name" label="Name : String" kind="Persistent" fieldName="_name" />
+      <AssociationTargets>
+        <Association Id="572f5ff6-5b8a-4a4f-bb98-9ddcc47c1b0a" SourceMultiplicity="One" name="TournamentHasClub">
+          <DomainClassMoniker name="/ClubManagement/Club" />
+          <targetNavigationalProperty>
+            <associationDefinesTargetProperty Id="b42e4d54-a078-476d-a634-81e2439deeb1">
+              <NavigationalPropertyMoniker name="/ClubManagement/Club/Tournaments" />
+            </associationDefinesTargetProperty>
+          </targetNavigationalProperty>
+          <sourceNavigationalProperty>
+            <associationDefinesSourceProperty Id="39f91fae-6884-4dbb-9bd0-f3f2ab690aa5">
+              <NavigationalPropertyMoniker name="/ClubManagement/Tournament/Club" />
+            </associationDefinesSourceProperty>
+          </sourceNavigationalProperty>
+        </Association>
+      </AssociationTargets>
+      <navigationalProperties>
+        <classHasNavigationalProperties Id="7b30f0e4-1dbe-424f-9a06-9dd7907d6875">
+          <NavigationalProperty Id="f334a779-468c-483f-b9f7-b467605749d3" name="Club" type="Club" label="Club : Club" nullable="true" kind="Persistent" fieldName="_club" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+        <classHasNavigationalProperties Id="1cd631a8-4fa6-422f-a48b-926a92aaa670">
+          <NavigationalProperty Id="9eec2334-8e16-41ef-bca3-983535c65834" name="TournamentBrackets" type="IList&lt;TournamentBracket&gt;" label="TournamentBrackets : IList&lt;TournamentBracket&gt;" nullable="true" kind="Persistent" fieldName="_tournamentBrackets" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+      </navigationalProperties>
+    </DomainClass>
+    <DomainClass Id="1a7e072c-e461-406d-865d-b676f82fb853" name="TournamentRoster" namespace="TrackrModels" showPropertiesCompartment="true" identityMechanism="DatabaseServerCalculated" concurrencyMode="Changed" showNavigationCompartment="true" showImplementationCompartment="true" identityMechanismMember="PlayerID">
+      <Property Id="6de4051a-72e8-4d3d-b4ef-aea7e82ca02f" name="PlayerID" type="Int32" label="PlayerID : Int32" kind="Persistent" identity="true" fieldName="_playerID" />
+      <Property Id="08748ed6-cbd7-44cf-893f-6a4b2afd9872" name="DateOfBirth" type="DateTime" label="DateOfBirth : DateTime" kind="Persistent" fieldName="_dateOfBirth" />
+      <Property Id="d47c1cbc-25fc-4a39-8e00-4a72fb7bdcc3" name="FName" label="FName : String" kind="Persistent" fieldName="_fName" />
+      <Property Id="58c0a282-b06a-40b4-a299-395dfb82914a" name="LName" label="LName : String" kind="Persistent" fieldName="_lName" />
+      <Property Id="0aee0bad-ba85-448d-aaed-5d9b0fb51088" name="TournamentTeamID" type="Int32" label="TournamentTeamID : Int32" kind="Persistent" fieldName="_tournamentTeamID" />
+      <AssociationTargets>
+        <Association Id="2cabae83-8faf-47c5-ac4e-a974d3a098b7" SourceMultiplicity="One" name="TournamentRosterHasTournamentTeam">
+          <DomainClassMoniker name="/ClubManagement/TournamentTeam" />
+          <targetNavigationalProperty>
+            <associationDefinesTargetProperty Id="e1e1d9cb-7a8c-49ad-9be2-0cfb138f1e2e">
+              <NavigationalPropertyMoniker name="/ClubManagement/TournamentTeam/TournamentRosters" />
+            </associationDefinesTargetProperty>
+          </targetNavigationalProperty>
+          <sourceNavigationalProperty>
+            <associationDefinesSourceProperty Id="caf61240-531d-4f1e-8e22-bca578137f15">
+              <NavigationalPropertyMoniker name="/ClubManagement/TournamentRoster/TournamentTeam" />
+            </associationDefinesSourceProperty>
+          </sourceNavigationalProperty>
+        </Association>
+      </AssociationTargets>
+      <navigationalProperties>
+        <classHasNavigationalProperties Id="1b9c36c0-2b03-4e34-bd1f-69210d264ebb">
+          <NavigationalProperty Id="da8a5407-3a2d-4607-b464-f1e4624db381" name="TournamentTeam" type="TournamentTeam" label="TournamentTeam : TournamentTeam" nullable="true" kind="Persistent" fieldName="_tournamentTeam" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+      </navigationalProperties>
+    </DomainClass>
+    <DomainClass Id="a433caa6-87e7-4a22-9f6a-489770766878" name="TournamentBracket" namespace="TrackrModels" showPropertiesCompartment="true" identityMechanism="DatabaseServerCalculated" concurrencyMode="Changed" showNavigationCompartment="true" showImplementationCompartment="true" identityMechanismMember="TournamentBracketID">
+      <Property Id="071fa038-81c8-435e-a452-bd5781569340" name="TournamentBracketID" type="Int32" label="TournamentBracketID : Int32" kind="Persistent" identity="true" fieldName="_tournamentBracketID" />
+      <Property Id="03cfae01-7de7-45f1-ac08-8891c5cc09ab" name="BracketName" label="BracketName : String" kind="Persistent" fieldName="_bracketName" />
+      <Property Id="8ab0d670-f610-4e83-a4c2-b6b7439b7608" name="TeamLimit" type="Int16" label="TeamLimit : Int16" kind="Persistent" fieldName="_teamLimit" />
+      <Property Id="fe89e407-4205-4920-9414-02a703c5ec1a" name="TournamentID" type="Int32" label="TournamentID : Int32" kind="Persistent" fieldName="_tournamentID" />
+      <AssociationTargets>
+        <Association Id="b2176bb4-e568-4a28-9812-1f2ae6151b63" SourceMultiplicity="One" name="TournamentBracketHasTournament">
+          <DomainClassMoniker name="/ClubManagement/Tournament" />
+          <targetNavigationalProperty>
+            <associationDefinesTargetProperty Id="b0a9e05c-550f-4a99-b5c5-69032afd669a">
+              <NavigationalPropertyMoniker name="/ClubManagement/Tournament/TournamentBrackets" />
+            </associationDefinesTargetProperty>
+          </targetNavigationalProperty>
+          <sourceNavigationalProperty>
+            <associationDefinesSourceProperty Id="1b48be3e-e679-46f1-8fc2-6a2e0084701c">
+              <NavigationalPropertyMoniker name="/ClubManagement/TournamentBracket/Tournament" />
+            </associationDefinesSourceProperty>
+          </sourceNavigationalProperty>
+        </Association>
+      </AssociationTargets>
+      <navigationalProperties>
+        <classHasNavigationalProperties Id="6f3a5cc6-eb51-460a-a67f-8175d9045a0d">
+          <NavigationalProperty Id="0f9cf531-4262-403c-a1c4-d6095890471f" name="TournamentTeams" type="IList&lt;TournamentTeam&gt;" label="TournamentTeams : IList&lt;TournamentTeam&gt;" nullable="true" kind="Persistent" fieldName="_tournamentTeams" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+        <classHasNavigationalProperties Id="e8897e71-df8e-458c-a0d8-392e8273a140">
+          <NavigationalProperty Id="764acb63-c380-4cd8-9b56-16b451f4fb77" name="Tournament" type="Tournament" label="Tournament : Tournament" nullable="true" kind="Persistent" fieldName="_tournament" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+      </navigationalProperties>
+    </DomainClass>
   </Types>
   <domainContext>
     <domainModelHasDomainContext Id="242d1b49-d412-485c-b5ca-793640a0667d">
@@ -1628,6 +2004,10 @@
         <entitySetProperty name="TeamSchedules" namespace="TrackrModels" type="TeamSchedule" label="TeamSchedules : IQueryable&lt;TrackrModels.TeamSchedule&gt;" />
         <entitySetProperty name="Attendances" namespace="TrackrModels" type="Attendance" label="Attendances : IQueryable&lt;TrackrModels.Attendance&gt;" />
         <entitySetProperty name="RegistrationRules" namespace="TrackrModels" type="RegistrationRule" label="RegistrationRules : IQueryable&lt;TrackrModels.RegistrationRule&gt;" />
+        <entitySetProperty name="TournamentTeams" namespace="TrackrModels" type="TournamentTeam" label="TournamentTeams : IQueryable&lt;TrackrModels.TournamentTeam&gt;" />
+        <entitySetProperty name="Tournaments" namespace="TrackrModels" type="Tournament" label="Tournaments : IQueryable&lt;TrackrModels.Tournament&gt;" />
+        <entitySetProperty name="TournamentRosters" namespace="TrackrModels" type="TournamentRoster" label="TournamentRosters : IQueryable&lt;TrackrModels.TournamentRoster&gt;" />
+        <entitySetProperty name="TournamentBrackets" namespace="TrackrModels" type="TournamentBracket" label="TournamentBrackets : IQueryable&lt;TrackrModels.TournamentBracket&gt;" />
       </domainContainer>
     </domainModelHasDomainContext>
   </domainContext>
