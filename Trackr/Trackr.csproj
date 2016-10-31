@@ -305,6 +305,20 @@
     <Compile Include="Modules\TeamManagement\TeamManagement.master.designer.cs">
       <DependentUpon>TeamManagement.master</DependentUpon>
     </Compile>
+    <Compile Include="Modules\Tournament\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Tournament\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Tournament\Tournament.master.cs">
+      <DependentUpon>Tournament.master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Tournament\Tournament.master.designer.cs">
+      <DependentUpon>Tournament.master</DependentUpon>
+    </Compile>
     <Compile Include="Modules\UserManagement\Spoof.aspx.cs">
       <DependentUpon>Spoof.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -393,6 +407,7 @@
     <Content Include="Modules\PlayerManagement\Manage.aspx" />
     <Content Include="Modules\TeamManagement\Default.aspx" />
     <Content Include="Modules\TeamManagement\Manage.aspx" />
+    <Content Include="Modules\Tournament\Default.aspx" />
     <Content Include="Modules\UserManagement\Default.aspx" />
     <Content Include="Modules\UserManagement\Manage.aspx" />
     <Content Include="Modules\UserManagement\NonUserGuardians.aspx" />
@@ -418,6 +433,7 @@
     <Content Include="Content\bootstrap-tokenfield\bootstrap-tokenfield.less" />
     <Content Include="Modules\TeamManagement\TeamManagement.master" />
     <Content Include="Account\Account.master" />
+    <Content Include="Modules\Tournament\Tournament.master" />
     <None Include="Properties\PublishProfiles\Stage.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\bloodhound.js" />
